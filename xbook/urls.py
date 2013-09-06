@@ -9,6 +9,8 @@ urlpatterns = patterns('',
     # url(r'^$', 'xbook.views.home', name='home'),
     # url(r'^xbook/', include('xbook.foo.urls')),
 
+    url(r'^ajax/', include('xbook.ajax.urls')),
+
     # Uncomment the admin/doc line below to enable admin documentation:
     # url(r'^admin/doc/', include('django.contrib.admindocs.urls')),
 
