@@ -6,15 +6,15 @@ import os.path
 BASE_PATH = os.path.dirname(os.path.abspath(__file__))
 DATA_PATH = os.path.join(BASE_PATH, 'data')
 
-class Ajax(HttpResponse):
-	def __init__(self, *args, **kwargs):
-		super(Ajax, self).__init__(*args, **kwargs)
-		self['Access-Control-Allow-Origin'] = '*'
-		self["Access-Control-Allow-Methods"] = "POST, GET, OPTIONS"
-		self["Access-Control-Max-Age"] = "1000"
-		self["Access-Control-Allow-Headers"] = "*"
+def Ajax(*args, **kwargs):
+	resp = HttpResponse(*args, **kwargs)
+	resp['Access-Control-Allow-Origin'] = '*'
+	resp["Access-Control-Allow-Methods"] = "POST, GET, OPTIONS"
+	resp["Access-Control-Max-Age"] = "1000"
+	resp["Access-Control-Allow-Headers"] = "*"
+	return resp # HttpResponse
 
-def test(request):
-	with open(os.path.join(DATA_PATH, 'testdata.json')) as f:
+def ajaxJSON(request, json="testdata.json"):
+	with open(os.path.join(DATA_PATH, json)) as f:
 		resp = Ajax(f.read(), content_type='application/json')
 		return resp

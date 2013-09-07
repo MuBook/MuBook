@@ -1,0 +1,271 @@
+{
+ "name": "flare",
+ "children": [
+  {
+   "name": "analytics",
+   "children": [
+    {
+     "name": "cluster",
+     "children": [
+      {"name": "AgglomerativeCluster"},
+      {"name": "MergeEdge"}
+     ]
+    },
+    {
+     "name": "graph",
+     "children": [
+      {"name": "BetweennessCentrality"},
+      {"name": "SpanningTree"}
+     ]
+    },
+    {
+     "name": "optimization",
+     "children": [
+      {"name": "AspectRatioBanker"}
+     ]
+    }
+   ]
+  },
+  {
+   "name": "animate",
+   "children": [
+    {"name": "Easing"},
+    {"name": "FunctionSequence"},
+    {
+     "name": "interpolate",
+     "children": [
+      {"name": "ArrayInterpolator"},
+      {"name": "PointInterpolator"},
+      {"name": "RectangleInterpolator"}
+     ]
+    },
+    {"name": "Tween"}
+   ]
+  },
+  {
+   "name": "data",
+   "children": [
+    {
+     "name": "converters",
+     "children": [
+      {"name": "JSONConverter"}
+     ]
+    },
+    {"name": "DataField"},
+    {"name": "DataSchema"},
+    {"name": "DataSet"},
+    {"name": "DataSource"},
+    {"name": "DataTable"},
+    {"name": "DataUtil"}
+   ]
+  },
+  {
+   "name": "display",
+   "children": [
+    {"name": "DirtySprite"},
+    {"name": "LineSprite"},
+    {"name": "RectSprite"},
+    {"name": "TextSprite"}
+   ]
+  },
+  {
+   "name": "flex",
+   "children": [
+    {"name": "FlareVis"}
+   ]
+  },
+  {
+   "name": "physics",
+   "children": [
+    {"name": "DragForce"},
+    {"name": "GravityForce"},
+    {"name": "IForce"},
+    {"name": "NBodyForce"},
+    {"name": "Particle"},
+    {"name": "Simulation"},
+    {"name": "Spring"},
+    {"name": "SpringForce"}
+   ]
+  },
+  {
+   "name": "query",
+   "children": [
+    {"name": "Match"},
+    {"name": "Maximum"},
+    {
+     "name": "methods",
+     "children": [
+      {"name": "xor"},
+      {"name": "_"}
+     ]
+    },
+    {"name": "Minimum"},
+    {"name": "Not"},
+    {"name": "Or"},
+    {"name": "Variance"},
+    {"name": "Xor"}
+   ]
+  },
+  {
+   "name": "scale",
+   "children": [
+    {"name": "ScaleType"},
+    {"name": "TimeScale"}
+   ]
+  },
+  {
+   "name": "util",
+   "children": [
+    {"name": "Arrays"},
+    {"name": "Colors"},
+    {"name": "Dates"},
+    {"name": "Displays"},
+    {"name": "Filter"},
+    {"name": "Geometry"},
+    {
+     "name": "heap",
+     "children": [
+      {"name": "FibonacciHeap"},
+      {"name": "HeapNode"}
+     ]
+    },
+    {"name": "IEvaluable"},
+    {"name": "IPredicate"},
+    {"name": "IValueProxy"},
+    {
+     "name": "math",
+     "children": [
+      {"name": "DenseMatrix"},
+      {"name": "IMatrix"},
+      {"name": "SparseMatrix"}
+     ]
+    },
+    {"name": "Maths"},
+    {"name": "Orientation"},
+    {
+     "name": "palette",
+     "children": [
+      {"name": "ColorPalette"},
+      {"name": "Palette"},
+      {"name": "ShapePalette"},
+      {"name": "SizePalette"}
+     ]
+    },
+    {"name": "Property"},
+    {"name": "Shapes"},
+    {"name": "Sort"},
+    {"name": "Stats"},
+    {"name": "Strings"}
+   ]
+  },
+  {
+   "name": "vis",
+   "children": [
+    {
+     "name": "axis",
+     "children": [
+      {"name": "Axes"},
+      {"name": "Axis"},
+      {"name": "AxisGridLine"},
+      {"name": "AxisLabel"},
+      {"name": "CartesianAxes"}
+     ]
+    },
+    {
+     "name": "controls",
+     "children": [
+      {"name": "AnchorControl"},
+      {"name": "ClickControl"},
+      {"name": "Control"},
+      {"name": "TooltipControl"}
+     ]
+    },
+    {
+     "name": "data",
+     "children": [
+      {"name": "NodeSprite"},
+      {
+       "name": "render",
+       "children": [
+        {"name": "ShapeRenderer"}
+       ]
+      },
+      {"name": "ScaleBinding"},
+      {"name": "Tree"},
+      {"name": "TreeBuilder"}
+     ]
+    },
+    {
+     "name": "events",
+     "children": [
+      {"name": "DataEvent"},
+      {"name": "VisualizationEvent"}
+     ]
+    },
+    {
+     "name": "legend",
+     "children": [
+      {"name": "Legend"},
+      {"name": "LegendItem"},
+      {"name": "LegendRange"}
+     ]
+    },
+    {
+     "name": "operator",
+     "children": [
+      {
+       "name": "distortion",
+       "children": [
+        {"name": "BifocalDistortion"},
+        {"name": "Distortion"},
+        {"name": "FisheyeDistortion"}
+       ]
+      },
+      {
+       "name": "encoder",
+       "children": [
+        {"name": "ColorEncoder"},
+        {"name": "Encoder"},
+        {"name": "PropertyEncoder"},
+        {"name": "ShapeEncoder"},
+        {"name": "SizeEncoder"}
+       ]
+      },
+      {
+       "name": "filter",
+       "children": [
+        {"name": "FisheyeTreeFilter"},
+        {"name": "GraphDistanceFilter"},
+        {"name": "VisibilityFilter"}
+       ]
+      },
+      {"name": "IOperator"},
+      {
+       "name": "label",
+       "children": [
+        {"name": "Labeler"},
+        {"name": "RadialLabeler"},
+        {"name": "StackedAreaLabeler"}
+       ]
+      },
+      {
+       "name": "layout",
+       "children": [
+        {"name": "AxisLayout"},
+        {"name": "BundledEdgeRouter"},
+        {"name": "StackedAreaLayout"},
+        {"name": "TreeMapLayout"}
+       ]
+      },
+      {"name": "Operator"},
+      {"name": "OperatorList"},
+      {"name": "OperatorSequence"},
+      {"name": "OperatorSwitch"},
+      {"name": "SortOperator"}
+     ]
+    },
+    {"name": "Visualization"}
+   ]
+  }
+ ]
+}
