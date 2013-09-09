@@ -1,0 +1,41 @@
+<!doctype html>
+<html lang="en">
+<head>
+	<meta charset="UTF-8">
+	<title>Demo</title>
+	<link rel="stylesheet" href="static/style/visual.css">
+</head>
+<body>
+	<input id="root" type="text" placeholder="http://projectxbook.herokuapp.com/ajax/test">
+	<button id="load">Load</button>
+	<div id="graph"></div>
+	<script src="http://d3js.org/d3.v3.min.js" charset="utf-8"></script>
+	<script src="static/script/visualize.js"></script>
+	<script>
+		(function(){
+			var input = document.getElementById("root");
+			var load = document.getElementById("load");
+			var graph = document.getElementById("graph");
+
+			function loadTree(){
+				graph.innerHTML = "";
+				url = input.value || "ajax/test";
+				visualize(url);
+			}
+
+			loadTree();
+
+			input.addEventListener("keyup", function(e){
+				if(e.which == 13){
+					loadTree();
+				}
+			});
+
+			load.addEventListener("click", function(){
+				loadTree();
+			});
+
+		})();
+	</script>
+</body>
+</html>

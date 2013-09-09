@@ -1,0 +1,32 @@
+html, body{
+	padding: 0;
+	margin: 0;
+}
+
+#root{
+	width: 500px;
+}
+
+.center{
+	margin: auto;
+}
+
+.background {
+	fill: #fff;
+}
+
+.node circle {
+	fill: #fff;
+	stroke: #38f;
+	stroke-width: 1.5px;
+}
+
+.node {
+	font: 15px sans-serif;
+}
+
+.link {
+	fill: none;
+	stroke: #ccc;
+	stroke-width: 2px;
+}

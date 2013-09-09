@@ -12,9 +12,13 @@ def Ajax(*args, **kwargs):
 	resp["Access-Control-Allow-Methods"] = "POST, GET, OPTIONS"
 	resp["Access-Control-Max-Age"] = "1000"
 	resp["Access-Control-Allow-Headers"] = "*"
-	return resp # HttpResponse
+	return resp
 
 def ajaxJSON(request, json="testdata.json"):
-	with open(os.path.join(DATA_PATH, json)) as f:
-		resp = Ajax(f.read(), content_type='application/json')
-		return resp
+	try:
+		with open(os.path.join(DATA_PATH, json)) as f:
+			resp = Ajax(f.read(), content_type='application/json')
+			return resp
+	except:
+		print(json + " is requested but does not exist")
+		return HttpResponse('{"name": "??"}')
