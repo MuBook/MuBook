@@ -4,3 +4,5 @@ venv
 
 *.exe
 *.sublime*
+
+*.db
