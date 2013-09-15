@@ -1,6 +1,5 @@
 from django.db import models
 
-# Create your models here.
 class Subject(models.Model):
 	name = models.CharField(max_length=100)
 	code = models.CharField(max_length=20)
@@ -9,6 +8,9 @@ class Subject(models.Model):
 	assessment = models.CharField(max_length=200)
 	link = models.URLField()
 
+	def __unicode__(self):
+		return self.code
+
 class Course(models.Model):
 	name = models.CharField(max_length=100)
 	code = models.CharField(max_length=20)
@@ -16,15 +18,27 @@ class Course(models.Model):
 	atar_cutoff = models.DecimalField(max_digits=5, decimal_places=2)
 	link = models.URLField()
 
+	def __unicode__(self):
+		return self.code
+
 class Major(models.Model):
 	name = models.CharField(max_length=100)
 	credit_requirement = models.DecimalField(max_digits=5, decimal_places=2)
-	course = models.ForeignKey(Subject)
+	course = models.ForeignKey(Course)
+
+	def __unicode__(self):
+		return self.name
 
 class SubjectPrereq(models.Model):
 	subject = models.ForeignKey(Subject, related_name='master')
 	prereq = models.ForeignKey(Subject, related_name='servant')
 
+	def __unicode__(self):
+		return self.subject.code + ": " + self.prereq.code
+
 class MajorRequirement(models.Model):
 	major = models.ForeignKey(Major)
 	required = models.ForeignKey(Subject)
+
+	def __unicode__(self):
+		return self.major.name + ": " + self.required.code
