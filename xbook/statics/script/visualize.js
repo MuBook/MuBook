@@ -10,7 +10,7 @@ function visualize(url){
 	d3.json(url, function(error, data){
 		console.log(error);
 		var tree = d3.layout.tree()
-			.size([800, 500])
+			.size([1000, 800])
 			.separation(
 				function(a, b){ return (a.parent == b.parent ? 80 : 100); }
 			);
@@ -19,17 +19,17 @@ function visualize(url){
 
 		var svg = d3.select("div#graph").append("div")
 			.classed("center", 1)
-			.style({"width": "1000px"})
+			.style({"width": "1200px"})
 			.append("svg")
-				.attr("width", 1000)
-				.attr("height", 800);
+				.attr("width", 1200)
+				.attr("height", 1000);
 
 		svg.append("rect")
-			.attr("width", 1000)
-			.attr("height", 800)
+			.attr("width", 1200)
+			.attr("height", 1000)
 			.classed("background", 1);
 
-		svg = svg.append("g").attr("transform", "translate(100, 100)");
+		svg = svg.append("g").attr("transform", "translate(0, 100)");
 
 		(function(root){
 			var nodes = tree.nodes(root),
@@ -49,7 +49,7 @@ function visualize(url){
 						function(d){ return "translate(" + d.x + ", " + d.y + ")"; });
 
 			node.append("circle")
-				.attr("r", 40);
+				.attr("r", 50);
 
 			node.append("text")
 				.attr("dy", ".31em")
