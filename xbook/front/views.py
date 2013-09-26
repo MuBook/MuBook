@@ -21,3 +21,6 @@ def error404(request, path):
 	message = request.META.get('REMOTE_ADDR') + '/' +\
 		path + " is not a valid path!"
 	return HttpResponse(message)
+
+def study(request):
+	return HttpResponse(str(request.__dict__['session'].__dict__))

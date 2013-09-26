@@ -31,7 +31,7 @@ DATABASES = {
     }
 }
 
-DATABASES['default'] = dj_database_url.config()
+# DATABASES['default'] = dj_database_url.config()
 
 # Absolute path to the directory static files should be collected to.
 # Don't put anything in this directory yourself; store your static files

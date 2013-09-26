@@ -10,9 +10,9 @@ function visualize(url){
 	d3.json(url, function(error, data){
 		console.log(error);
 		var tree = d3.layout.tree()
-			.size([1000, 800])
+			.size([1200, 800])
 			.separation(
-				function(a, b){ return (a.parent == b.parent ? 80 : 100); }
+				function(a, b){ return (a.parent == b.parent ? 100 : 120); }
 			);
 
 		var diagonal = d3.svg.diagonal();

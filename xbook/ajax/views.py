@@ -3,6 +3,7 @@ import os.path
 import json
 
 from django.http import HttpResponse
+from django.core.exceptions import ObjectDoesNotExist
 from xbook.ajax.models import Subject, SubjectPrereq, NonallowedSubject
 
 BASE_PATH = os.path.dirname(os.path.abspath(__file__))
@@ -27,15 +28,18 @@ def ajaxJSON(request, json="testdata.json"):
 
 def subjectCollector(uni, code, parent=None):
 	d = {}
-	subject = Subject.objects.get(code=code)
+	try:
+		subject = Subject.objects.get(code=code)
+	except ObjectDoesNotExist as e:
+		return {"name": "??"}
 	d['name'] = subject.code
 	d['fullname'] = subject.name
 	prereqs = SubjectPrereq.objects.filter(subject__code=code)
 	if len(prereqs) > 0:
-		d['children'] = []
+		ch = d['children'] = []
 		for pair in prereqs:
-			if parent and pair.prereq.code == parent: continue
-			d['children'].append(subjectCollector(uni, pair.prereq.code, code))
+			if pair.prereq.code == parent: continue
+			ch.append(subjectCollector(uni, pair.prereq.code, code))
 	return d
 
 def subject(request, uni, code, pretty=False):
