@@ -2,6 +2,8 @@
 import os.path
 import json
 
+from collections import deque
+
 from django.http import HttpResponse
 from django.core.exceptions import ObjectDoesNotExist
 from xbook.ajax.models import Subject, SubjectPrereq, NonallowedSubject
@@ -26,7 +28,43 @@ def ajaxJSON(request, json="testdata.json"):
 		print(json + " is requested but does not exist")
 		return HttpResponse('{"name": "??"}')
 
-def subjectCollector(uni, code, parent=None):
+def subjectGraphCollector(uni, code):
+	d = {"nodes": [], "links": []}
+	ss, ssHistory = deque(), set()
+
+	nodes = d['nodes']
+	links = d['links']
+
+	try:
+		subject = Subject.objects.get(code=code)
+		ss.append(subject)
+	except ObjectDoesNotExist as e:
+		nodes.append({"name": "??"})
+		return d
+
+	parent = -1
+	index = 0
+	while ss:
+		parent += 1
+		subj = ss.popleft()
+		nodes.append({
+			"name": subj.code,
+			"fullname": subj.name,
+			"url": subj.link,
+			"root": index == 0 and True or False
+		})
+		prereqs = SubjectPrereq.objects.filter(subject__code=subj.code)
+
+		for prereq in prereqs:
+			if not prereq.prereq in ssHistory: index += 1
+			links.append({"source": parent, "target": index, "value":1})
+			if prereq.prereq in ssHistory: continue
+			ss.append(prereq.prereq)
+			ssHistory.add(prereq.prereq)
+
+	return d
+
+def subjectTreeCollector(uni, code, parent=None):
 	d = {}
 	try:
 		subject = Subject.objects.get(code=code)
@@ -45,7 +83,7 @@ def subjectCollector(uni, code, parent=None):
 def subject(request, uni, code, pretty=False):
 	return Ajax(
 		json.dumps(
-			subjectCollector(uni, code.upper()),
+			subjectGraphCollector(uni, code.upper()),
 			indent=4 if pretty else None
 		),
 		content_type='application/json'

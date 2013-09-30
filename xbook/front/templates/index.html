@@ -6,7 +6,7 @@
 	<link rel="stylesheet" href="static/style/visual.css">
 </head>
 <body>
-	<input id="root" type="text" placeholder="http://projectxbook.herokuapp.com/ajax/test">
+	<input id="root" type="text" placeholder="http://projectxbook.herokuapp.com/ajax/u-melbourne/subject/comp10002">
 	<button id="load">Load</button>
 	<div id="graph"></div>
 	<script src="http://d3js.org/d3.v3.min.js" charset="utf-8"></script>
@@ -19,8 +19,8 @@
 
 			function loadTree(){
 				graph.innerHTML = "";
-				url = input.value || "ajax/test";
-				visualize(url);
+				url = input.value || "ajax/u-1/subject/comp30018";
+				visualizeGraph(url);
 			}
 
 			loadTree();

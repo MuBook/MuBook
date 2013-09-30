@@ -11,22 +11,46 @@ html, body{
 	margin: auto;
 }
 
-.background {
-	fill: #fff;
+.node{
+	cursor: pointer;
+	z-index: 200;
 }
 
-.node circle {
+.node:hover{
+	z-index: 999;
+}
+
+.node circle{
 	fill: #fff;
 	stroke: #38f;
 	stroke-width: 1.5px;
-}
-
-.node {
 	font: 15px sans-serif;
+	transition: all 0.3s;
 }
 
-.link {
-	fill: none;
-	stroke: #ccc;
-	stroke-width: 2px;
+.node:hover circle{
+	fill: #079;
+	stroke: #079 !important;
+}
+
+.node:hover text{
+	fill: #fff;
+}
+
+path.link {
+    fill: none;
+    stroke: #666;
+    stroke-width: 1.5px;
+}
+
+marker#licensing {
+    fill: green;
+}
+
+path.link.licensing {
+    stroke: green;
+}
+
+path.link.resolved {
+    stroke-dasharray: 0, 2 1;
 }
