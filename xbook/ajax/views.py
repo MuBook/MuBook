@@ -81,10 +81,12 @@ def subjectTreeCollector(uni, code, parent=None):
 	return d
 
 def subject(request, uni, code, pretty=False):
-	return Ajax(
-		json.dumps(
+	info = json.dumps(
 			subjectGraphCollector(uni, code.upper()),
 			indent=4 if pretty else None
-		),
-		content_type='application/json'
-	)
+		)
+	if "callback" in request.GET:
+		format = request.GET['callback'] + "({})".format(info)
+	else:
+		format = info
+	return Ajax(format, content_type='application/json')

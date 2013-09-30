@@ -6,3 +6,4 @@ venv
 *.sublime*
 
 *.db
+*.dump
