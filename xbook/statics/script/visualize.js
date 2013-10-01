@@ -43,7 +43,9 @@ function visualizeGraph(url){
     .attr("d", "M0,-5L10,0L0,5");
 
   d3.json(url, function(error, graph) {
-    console.log(error);
+    if(error){
+      console.log(error);
+    }
 
     var n = graph.nodes.length;
 
@@ -95,7 +97,7 @@ function visualizeGraph(url){
     node.append("text")
       .attr("dy", ".31em")
       .attr("text-anchor", "middle")
-      .text(function(d) { return d.name; });
+      .text(function(d) { return d.code; });
 
     node.attr("transform",
         function(d){ return "translate(" + d.x + ", " + d.y + ")"; });

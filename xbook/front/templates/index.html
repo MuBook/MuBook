@@ -3,39 +3,32 @@
 <head>
 	<meta charset="UTF-8">
 	<title>Demo</title>
-	<link rel="stylesheet" href="static/style/visual.css">
+	<link rel="stylesheet" href="static/style/visual.min.css">
+	<script src="http://ajax.googleapis.com/ajax/libs/angularjs/1.1.5/angular.min.js"></script>
 </head>
-<body>
-	<input id="root" type="text" placeholder="http://projectxbook.herokuapp.com/ajax/u-melbourne/subject/comp10002">
-	<button id="load">Load</button>
+<body ng-app="SubjectGraph">
+	<header ng-controller="UICtrl" ng-click="search()" id="heading">
+		<span ng-bind="getCode()" class="title"></span>
+	</header>
+
 	<div id="graph"></div>
+
+	<div id="searchScreen" ng-controller="SearchCtrl" ng-show="isVisiable()" ng-cloak>
+		<div id="searchBox">
+			<input id="searchInput" type="text" ng-model="search" placeholder="Find subject..  or press ESC to quit" ng-keypress="esc($event)">
+			<div id="searchResult">
+				<table>
+					<tr ng-click="replacePath(node.code)" ng-repeat="node in subjects | filter:search | limitTo: 100">
+						<td>{{node.code}}</td>
+						<td>{{node.name}}</td>
+					</tr>
+				</table>
+			</div>
+		</div>
+	</div>
+
 	<script src="http://d3js.org/d3.v3.min.js" charset="utf-8"></script>
 	<script src="static/script/visualize.js"></script>
-	<script>
-		(function(){
-			var input = document.getElementById("root");
-			var load = document.getElementById("load");
-			var graph = document.getElementById("graph");
-
-			function loadTree(){
-				graph.innerHTML = "";
-				url = input.value || "ajax/u-1/subject/comp30018";
-				visualizeGraph(url);
-			}
-
-			loadTree();
-
-			input.addEventListener("keyup", function(e){
-				if(e.which == 13){
-					loadTree();
-				}
-			});
-
-			load.addEventListener("click", function(){
-				loadTree();
-			});
-
-		})();
-	</script>
+	<script src="static/script/main.js"></script>
 </body>
 </html>

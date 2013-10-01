@@ -7,4 +7,8 @@ urlpatterns = patterns('xbook.ajax',
 	url(r'^u-(?P<uni>.*?)/subject/(?P<code>.*?)$', 'views.subject'),
 	url(r'^p/u-(?P<uni>.*?)/subject/(?P<code>.*?)$',
 		'views.subject', {'pretty': True}),
+
+	url(r'^u-(?P<uni>.*?)/subjectlist/?$', 'views.subjectList'),
+	url(r'^p/u-(?P<uni>.*?)/subjectlist/?$',
+		'views.subjectList', {'pretty': True}),
 )
