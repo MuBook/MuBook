@@ -24,7 +24,8 @@ loadTree();
 var myApp = angular.module('SubjectGraph', []);
 
 myApp.factory('Subjects', function($http){
-  return $http.jsonp("http://127.0.0.1:8000/ajax/u-123/subjectlist?callback=JSON_CALLBACK");
+  // return $http.jsonp("ajax/u-123/subjectlist?callback=JSON_CALLBACK");
+  return $http.get("ajax/u-123/subjectlist");
 });
 
 myApp.factory('GlobalCV', function(){
