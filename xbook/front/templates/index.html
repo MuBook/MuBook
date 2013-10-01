@@ -15,7 +15,7 @@
 
 	<div id="searchScreen" ng-controller="SearchCtrl" ng-show="isVisiable()" ng-cloak>
 		<div id="searchBox">
-			<input id="searchInput" type="text" ng-model="search" placeholder="Find subject..  or press ESC to quit" ng-keypress="esc($event)">
+			<input id="searchInput" type="text" ng-model="search" placeholder="Find subject..  or press ESC to quit" ng-keyup="esc($event)">
 			<div id="searchResult">
 				<table>
 					<tr ng-click="replacePath(node.code)" ng-repeat="node in subjects | filter:search | limitTo: 100">

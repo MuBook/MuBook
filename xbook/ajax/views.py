@@ -31,6 +31,7 @@ class MemoString(Memo):
 	def __call__(self, *args):
 		if args in self.memo:
 			return zlib.decompress(self.memo[args])
+			# return self.memo[args]
 		rt = self.call(*args)
 		self.memo[args] = zlib.compress(rt)
 		return rt

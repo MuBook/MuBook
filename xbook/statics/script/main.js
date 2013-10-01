@@ -56,7 +56,7 @@ function SearchCtrl($scope, Subjects, GlobalCV){
     }
   };
 
-  $scope.subjects = [{"code": "Nahh", "name": "waiting for data"}];
+  $scope.subjects = [{"code": "Nahhhhh", "name": "waiting for data"}];
   Subjects.success(function(data){
     $scope.subjects = data.subjList;
   }).error(function(a, b, c, d){
