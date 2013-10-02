@@ -9,7 +9,7 @@
 function visualizeGraph(url){
   var width = 1200,
       height = 1000;
-      ticks = 16;
+      ticks = 1000;
       markerWidth = 6,
       markerHeight = 6,
       cRadius = 50,
