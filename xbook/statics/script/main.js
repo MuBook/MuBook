@@ -48,7 +48,7 @@ function SearchCtrl($scope, Subjects, GlobalCV){
 
   $scope.esc = function esc(e){
     if (e.keyCode == 27) {
-      e.preventDefault();
+      // e.preventDefault();
       GlobalCV.isSearching = false;
     } else if (e.keyCode == 13) {
       var s = document.querySelector("tr:first-child").children[0].innerHTML;

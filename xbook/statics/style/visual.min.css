@@ -5,4 +5,4 @@ path.link.licensing{stroke:green}path.link.resolved{stroke-dasharray:0,2 1}body>
 #searchBox{position:absolute;top:0;bottom:0;left:0;right:0;width:800px;height:600px;margin:auto;background-color:#38f;box-shadow:0 0 15px 5px #000}#searchInput{width:100%;height:50px;line-height:50px;font-size:1.5em;text-align:center;margin:0;padding:0;border:0}
 #searchResult{position:absolute;height:550px;top:50px;bottom:0;width:100%;color:#000;overflow-y:hidden}#searchResult table{width:100%;border-collapse:collapse}
 #searchResult tr{height:25px;cursor:pointer}#searchResult tr:first-child{background-color:rgba(80,80,80,0.7)}#searchResult tr:hover{background-color:rgba(180,180,180,0.7)}
-#searchResult td{text-align:center}#searchResult td:first-child{text-align:right;width:200px}
+#searchResult td{text-align:center}#searchResult td:first-child{text-align:right;width:200px}#cover{position:absolute;width:100%;height:100%;top:0;bottom:0;left:0;right:0}
