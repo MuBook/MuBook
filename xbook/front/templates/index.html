@@ -14,6 +14,7 @@
 	<div id="graph"></div>
 
 	<div id="searchScreen" ng-controller="SearchCtrl" ng-show="isVisiable()" ng-cloak>
+		<div id="cover" ng-click="esc({keyCode:27})"></div>
 		<div id="searchBox">
 			<input id="searchInput" type="text" ng-model="search" placeholder="Find subject..  or press ESC to quit" ng-keyup="esc($event)">
 			<div id="searchResult">
