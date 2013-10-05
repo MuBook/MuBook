@@ -46,10 +46,6 @@ a:hover{
 	z-index: 100;
 }
 
-.selected circle{
-	fill: #ff0 !important;
-}
-
 .node{
 	cursor: pointer;
 	z-index: 200;
@@ -73,6 +69,14 @@ a:hover{
 }
 
 .node:hover text{
+	fill: #fff;
+}
+
+.selected circle{
+	fill: #38f;
+}
+
+.selected text{
 	fill: #fff;
 }
 
