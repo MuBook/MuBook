@@ -81,9 +81,19 @@ function visualizeGraph(url){
       .attr("class", "node")
       .call(force.drag);
 
+    var sc = document.querySelector("#selectedCode");
+    var sn = document.querySelector("#selectedName");
+    var sl = document.querySelector("#selectedLink");
+    var ns = document.querySelectorAll(".node");
+
     node.on("click", function(d){
-      console.log(d);
-      window.location.href = d.url;
+      sc.innerHTML = d.code;
+      sn.innerHTML = d.name;
+      sl.href = d.url;
+      for (var n of ns) {
+        n.classList.remove("selected");
+      }
+      this.classList.add("selected");
     });
 
     node.append("circle")

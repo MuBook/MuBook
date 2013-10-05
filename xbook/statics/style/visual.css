@@ -6,6 +6,24 @@ html, body{
 	margin: 0;
 }
 
+body{
+	position: relative;
+}
+
+h1, h2, h3, h4, h5{
+	margin: 0 0 20px 0;
+}
+
+a{
+	text-decoration: none;
+	color: inherit;
+	transition: color 0.3s;
+}
+
+a:hover{
+	color: #039;
+}
+
 /************
 * =Effects
 *************/
@@ -20,6 +38,18 @@ html, body{
 /************
 * =Graph related
 *************/
+#graph{
+	position: absolute;
+	top: 50px;
+	left: 300px;
+	right: 0;
+	z-index: 100;
+}
+
+.selected circle{
+	fill: #ff0 !important;
+}
+
 .node{
 	cursor: pointer;
 	z-index: 200;
@@ -74,20 +104,48 @@ body > header{
 	cursor: pointer;
 	border: none;
 	width: 100%;
-	height: 50px;
-	line-height: 50px;
+	height: 60px;
+	line-height: 60px;
 	text-align: center;
 	font-family: sans-serif;
 	text-transform: uppercase;
 	font-size: 2em;
 	color: #f83;
-	background-color: #ccc;
+	background-color: rgba(40, 40, 40, 0.7);
+	z-index: 900;
 }
 
 .title{
 	background-color: #fff;
 	border-radius: 5px;
 	padding: 3px 10px;
+}
+
+/************
+* =SidePane
+*************/
+#sidePane{
+	position: fixed;
+	top: 60px;
+	left: 0;
+	width: 300px;
+	bottom: 0;
+	z-index: 1000;
+	background-color: rgba(40, 40, 40, 0.7);
+	color: #eee;
+	text-align: center;
+}
+
+#sidePane > header{
+	padding: 10px 15px;
+}
+
+#sidePane > footer{
+	position: absolute;
+	width: 100%;
+	height: 60px;
+	line-height: 60px;
+	bottom: 0;
 }
 
 /************
@@ -100,6 +158,7 @@ body > header{
 	top: 0;
 	left: 0;
 	background-color: rgba(120, 120, 120, 0.3);
+	z-index: 1000;
 }
 
 #searchBox{

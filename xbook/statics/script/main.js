@@ -67,28 +67,28 @@ myApp.factory('Subjects', function($http){
   return $http.get("ajax/u-123/subjectlist");
 });
 
-myApp.factory('GlobalCV', function(){
+myApp.factory('Global', function(){
   return {
     code: 'comp30018',
+    selected: {},
     isSearching: false
   };
 });
 
-function SearchCtrl($scope, Subjects, GlobalCV){
+function SearchCtrl($scope, Subjects, Global){
   $scope.replacePath = function replacePath(code){
     loadTree(code);
-    GlobalCV.isSearching = false;
-    GlobalCV.code = code;
+    Global.isSearching = false;
+    Global.code = code;
   };
 
   $scope.isVisiable = function isVisiable(){
-    return GlobalCV.isSearching;
+    return Global.isSearching;
   };
 
   $scope.esc = function esc(e){
     if (e.keyCode == 27) {
-      // e.preventDefault();
-      GlobalCV.isSearching = false;
+      Global.isSearching = false;
     } else if (e.keyCode == 13) {
       var s = document.querySelector("tr:first-child").children[0].innerHTML;
       $scope.replacePath(s);
@@ -106,16 +106,27 @@ function SearchCtrl($scope, Subjects, GlobalCV){
   });
 }
 
-function UICtrl($scope, $timeout, GlobalCV){
+function UICtrl($scope, $timeout, Global){
   $scope.getCode = function code(){
-    return GlobalCV.code;
+    return Global.code;
   };
   loadTree(docCookies.getItem("subjCode"));
-  GlobalCV.code = docCookies.getItem("subjCode");
+  Global.code = docCookies.getItem("subjCode");
+
   $scope.search = function search(){
-    GlobalCV.isSearching = true;
+    Global.isSearching = true;
     $timeout(function(){
       inp.focus();
     });
   };
+}
+
+function GraphCtrl($scope, Global){
+  $scope.yell = function scream(){
+    alert("fuck this!");
+  };
+}
+
+function SidePaneCtrl($scope, Global){
+
 }
