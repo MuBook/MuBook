@@ -90,8 +90,8 @@ function visualizeGraph(url){
       sc.innerHTML = d.code;
       sn.innerHTML = d.name;
       sl.href = d.url;
-      for (var n of ns) {
-        n.classList.remove("selected");
+      for (var i = ns.length - 1; i >=0; --i) {
+        ns[i].classList.remove("selected");
       }
       this.classList.add("selected");
     });
