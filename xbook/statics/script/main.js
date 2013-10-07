@@ -8,11 +8,9 @@
 var graph = document.getElementById("graph");
 var inp = document.getElementById("searchInput");
 
-
-
 function loadTree(code){
   code = code || "comp30018";
-  url = "http://projectxbook.herokuapp.com/ajax/u-123/subject/" + code;
+  url = "ajax/u-123/subject/" + code;
   graph.innerHTML = "";
   visualizeGraph(url);
   docCookies.setItem("subjCode", code);
@@ -66,7 +64,7 @@ var docCookies = {
 var myApp = angular.module('SubjectGraph', []);
 
 myApp.factory('Subjects', function($http){
-  return $http.get("http://projectxbook.herokuapp.com/ajax/u-123/subjectlist");
+  return $http.get("ajax/u-123/subjectlist");
 });
 
 myApp.factory('Global', function(){
