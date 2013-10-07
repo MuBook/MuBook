@@ -11,7 +11,22 @@
 		<span ng-bind="getCode()" class="title"></span>
 	</header>
 
-	<div id="graph"></div>
+	<div id="sidePane" ng-controller="SidePaneCtrl">
+		<header>
+			<h1 id="selectedCode">Subject Code</h1>
+			<h2 id="selectedName">Subject Name</h2>
+		</header>
+		<section id="sideSection">
+			<a id="selectedLink" href="#">
+				[Subject Page link]
+			</a>
+		</section>
+		<footer>
+			<a href="https://handbook.unimelb.edu.au/">[Handbook link]</a>
+		</footer>
+	</div>
+
+	<div id="graph" ng-controller="GraphCtrl"></div>
 
 	<div id="searchScreen" ng-controller="SearchCtrl" ng-show="isVisiable()" ng-cloak>
 		<div id="cover" ng-click="esc({keyCode:27})"></div>

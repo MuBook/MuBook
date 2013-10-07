@@ -30,7 +30,7 @@ DATABASES = {
         'PORT': '',                      # Set to empty string for default.
     }
 }
-
+# Comment out the following line to run locally
 DATABASES['default'] = dj_database_url.config()
 
 # Absolute path to the directory static files should be collected to.
