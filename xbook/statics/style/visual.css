@@ -209,7 +209,7 @@ body > header{
 	cursor: pointer;
 }
 
-#searchResult tr:first-child{
+#searchResult tr[class~="highlight"]{
 	background-color: rgba(80, 80, 80, 0.7);
 }
 
@@ -221,7 +221,7 @@ body > header{
 	text-align: center;
 }
 
-#searchResult td:first-child{
+#searchResult td[class~="highlight"]{
 	text-align: right;
 	width: 200px;
 }

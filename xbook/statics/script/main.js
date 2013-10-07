@@ -8,9 +8,11 @@
 var graph = document.getElementById("graph");
 var inp = document.getElementById("searchInput");
 
+
+
 function loadTree(code){
   code = code || "comp30018";
-  url = "ajax/u-123/subject/" + code;
+  url = "http://projectxbook.herokuapp.com/ajax/u-123/subject/" + code;
   graph.innerHTML = "";
   visualizeGraph(url);
   docCookies.setItem("subjCode", code);
@@ -64,7 +66,7 @@ var docCookies = {
 var myApp = angular.module('SubjectGraph', []);
 
 myApp.factory('Subjects', function($http){
-  return $http.get("ajax/u-123/subjectlist");
+  return $http.get("http://projectxbook.herokuapp.com/ajax/u-123/subjectlist");
 });
 
 myApp.factory('Global', function(){
@@ -76,6 +78,8 @@ myApp.factory('Global', function(){
 });
 
 function SearchCtrl($scope, Subjects, Global){
+  var curSelection = null;
+
   $scope.replacePath = function replacePath(code){
     loadTree(code);
     Global.isSearching = false;
@@ -87,12 +91,32 @@ function SearchCtrl($scope, Subjects, Global){
   };
 
   $scope.esc = function esc(e){
+    var firstResult = document.querySelector("tr:first-child");
+
     if (e.keyCode == 27) {
       Global.isSearching = false;
     } else if (e.keyCode == 13) {
-      var s = document.querySelector("tr:first-child").children[0].innerHTML;
+      var s = curSelection[0].children[0].innerHTML;
       $scope.replacePath(s);
-    }
+    } else if (e.keyCode == 38) {
+      $prev = $(curSelection).prev();
+      if ($prev.length == 0) {
+        curSelection = firstResult;
+      } else {
+        $(curSelection).removeClass("highlight");
+        curSelection = $prev;
+      }
+    } else if (e.keyCode == 40) {
+      $next = $(curSelection).next();
+      if ($next.length == 0) {
+        curSelection = firstResult;
+      } else {
+        $(curSelection).removeClass("highlight");
+        curSelection = $next;
+      } 
+    } 
+    $(curSelection).addClass("highlight");
+
   };
 
   $scope.subjects = [{"code": "Nahhhhh", "name": "waiting for data"}];
