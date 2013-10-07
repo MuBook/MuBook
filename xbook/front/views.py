@@ -17,7 +17,11 @@ del f
 
 
 def index(request):
-	# return render(request, "index.html")
+	# use this when doing local testing
+	# with open(INDEX_PATH) as index:
+	# 	return HttpResponse(index.read())
+
+	# use this when pushing to remote
 	return HttpResponse(INDEX_CACHE)
 
 
