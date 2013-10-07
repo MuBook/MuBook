@@ -76,6 +76,8 @@ myApp.factory('Global', function(){
 });
 
 function SearchCtrl($scope, Subjects, Global){
+  var curSelection = null;
+
   $scope.replacePath = function replacePath(code){
     loadTree(code);
     Global.isSearching = false;
@@ -87,12 +89,32 @@ function SearchCtrl($scope, Subjects, Global){
   };
 
   $scope.esc = function esc(e){
+    var firstResult = document.querySelector("tr:first-child");
+
     if (e.keyCode == 27) {
       Global.isSearching = false;
     } else if (e.keyCode == 13) {
-      var s = document.querySelector("tr:first-child").children[0].innerHTML;
+      var s = curSelection[0].children[0].innerHTML;
       $scope.replacePath(s);
-    }
+    } else if (e.keyCode == 38) {
+      $prev = $(curSelection).prev();
+      if ($prev.length == 0) {
+        curSelection = firstResult;
+      } else {
+        $(curSelection).removeClass("highlight");
+        curSelection = $prev;
+      }
+    } else if (e.keyCode == 40) {
+      $next = $(curSelection).next();
+      if ($next.length == 0) {
+        curSelection = firstResult;
+      } else {
+        $(curSelection).removeClass("highlight");
+        curSelection = $next;
+      } 
+    } 
+    $(curSelection).addClass("highlight");
+
   };
 
   $scope.subjects = [{"code": "Nahhhhh", "name": "waiting for data"}];
