@@ -99,19 +99,13 @@ function SearchCtrl($scope, $timeout, Subjects, Global){
       Global.filterList[Global.filterIndex].classList.remove("highlight");
       if (Global.filterIndex > 0) {
         Global.filterIndex -= 1;
-        console.log(Global.filterIndex);
-        console.log(Global.filterList[Global.filterIndex]);
       }
     } else if (e.keyCode == 40) {
       Global.filterList[Global.filterIndex].classList.remove("highlight");
       if (Global.filterIndex < 100) {
         Global.filterIndex += 1;
-        console.log(Global.filterIndex);
-        console.log(Global.filterList[Global.filterIndex]);
       }
     } else if (e.keyCode == 13) {
-      console.log(Global.filterIndex);
-      console.log(Global.filterList[Global.filterIndex]);
       var s = Global.filterList[Global.filterIndex].children[0].innerHTML;
       $scope.replacePath(s);
     } else {
