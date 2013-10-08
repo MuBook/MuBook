@@ -221,11 +221,6 @@ body > header{
 	text-align: center;
 }
 
-#searchResult .highlight{
-	text-align: right;
-	width: 200px;
-}
-
 #cover{
 	position: absolute;
 	width: 100%;
