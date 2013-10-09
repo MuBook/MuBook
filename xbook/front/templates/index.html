@@ -5,7 +5,6 @@
 	<title>Demo</title>
 	<link rel="stylesheet" href="static/style/visual.css">
 	<script src="http://ajax.googleapis.com/ajax/libs/angularjs/1.1.5/angular.min.js"></script>
-	<script src="http://code.jquery.com/jquery-1.10.1.min.js"></script>
 </head>
 <body ng-app="SubjectGraph">
 	<header ng-controller="UICtrl" ng-click="search()" id="heading">
@@ -32,7 +31,7 @@
 	<div id="searchScreen" ng-controller="SearchCtrl" ng-show="isVisiable()" ng-cloak>
 		<div id="cover" ng-click="esc({keyCode:27})"></div>
 		<div id="searchBox">
-			<input id="searchInput" type="text" ng-model="search" placeholder="Find subject..  or press ESC to quit" ng-keyup="esc($event)">
+			<input id="searchInput" type="text" ng-model="search" placeholder="Find subject..  or press ESC to quit" ng-keyup="esc($event)" ng-keydown="handle($event)">
 			<div id="searchResult">
 				<table>
 					<tr ng-click="replacePath(node.code)" ng-repeat="node in subjects | filter:search | limitTo: 100">
