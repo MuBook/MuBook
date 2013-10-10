@@ -8,6 +8,7 @@ html, body{
 
 body{
 	position: relative;
+	background-color: rgb(40, 40, 40);
 }
 
 h1, h2, h3, h4, h5{
@@ -40,9 +41,11 @@ a:hover{
 *************/
 #graph{
 	position: absolute;
-	top: 50px;
+	background-color: #fff;
+	box-shadow: 0 0 10px 2px #333 inset;
+	top: 60px;
 	left: 300px;
-	right: 0;
+	right: 20px;
 	z-index: 100;
 }
 
