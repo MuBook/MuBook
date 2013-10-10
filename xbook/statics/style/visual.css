@@ -43,6 +43,7 @@ a:hover{
 	position: absolute;
 	background-color: #fff;
 	box-shadow: 0 0 10px 2px #333 inset;
+	min-width: 1000px;
 	top: 60px;
 	left: 300px;
 	right: 20px;
@@ -52,10 +53,6 @@ a:hover{
 .node{
 	cursor: pointer;
 	z-index: 200;
-}
-
-.node:hover{
-	z-index: 999;
 }
 
 .node circle{
@@ -81,6 +78,18 @@ a:hover{
 
 .selected text{
 	fill: #fff;
+}
+
+.info{
+	display: none;
+}
+
+.info text{
+	fill: #000 !important;
+}
+
+.node:hover .info{
+	display: block;
 }
 
 path.link {

@@ -22,9 +22,7 @@ function visualizeGraph(url){
     .linkDistance(150)
     .size([width / 2, height / 2]);
 
-  var svg = d3.select("#graph").append("div")
-      .classed("center", 1)
-      .style({"width": width + "px"})
+  var svg = d3.select("#graph")
     .append("svg")
       .attr("width", width)
       .attr("height", height);
@@ -108,6 +106,16 @@ function visualizeGraph(url){
       .attr("dy", ".31em")
       .attr("text-anchor", "middle")
       .text(function(d) { return d.code; });
+
+    infoboxes = node.append("g")
+      .attr("class", "info");
+
+    infoboxes.append("text")
+      .text(function(d){
+        return d.name;
+      })
+      .attr("text-anchor", "middle")
+      .attr("transform", "translate(0, 24)");
 
     node.attr("transform",
         function(d){ return "translate(" + d.x + ", " + d.y + ")"; });
