@@ -8,6 +8,7 @@ html, body{
 
 body{
 	position: relative;
+	background-color: rgb(40, 40, 40);
 }
 
 h1, h2, h3, h4, h5{
@@ -40,19 +41,18 @@ a:hover{
 *************/
 #graph{
 	position: absolute;
-	top: 50px;
+	background-color: #fff;
+	box-shadow: 0 0 10px 2px #333 inset;
+	min-width: 1000px;
+	top: 60px;
 	left: 300px;
-	right: 0;
+	right: 20px;
 	z-index: 100;
 }
 
 .node{
 	cursor: pointer;
 	z-index: 200;
-}
-
-.node:hover{
-	z-index: 999;
 }
 
 .node circle{
@@ -78,6 +78,18 @@ a:hover{
 
 .selected text{
 	fill: #fff;
+}
+
+.info{
+	display: none;
+}
+
+.info text{
+	fill: #000 !important;
+}
+
+.node:hover .info{
+	display: block;
 }
 
 path.link {
@@ -114,15 +126,16 @@ body > header{
 	font-family: sans-serif;
 	text-transform: uppercase;
 	font-size: 2em;
-	color: #f83;
 	background-color: rgba(40, 40, 40, 0.7);
 	z-index: 900;
 }
 
 .title{
-	background-color: #fff;
-	border-radius: 5px;
+	color: #345;
+	background-color: rgb(200, 220, 220);
 	padding: 3px 10px;
+	border-right: 2px solid #aaa;
+	border-bottom: 2px solid #aaa;
 }
 
 /************
