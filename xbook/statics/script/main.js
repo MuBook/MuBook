@@ -10,7 +10,7 @@ var inp = document.getElementById("searchInput");
 
 function loadTree(code){
   code = code || "comp30018";
-  url = "ajax/u-123/subject/" + code;
+  url = "ajax/u-123/postreq/" + code;
   graph.innerHTML = "";
   visualizeGraph(url);
   docCookies.setItem("subjCode", code);
