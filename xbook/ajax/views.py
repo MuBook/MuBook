@@ -72,7 +72,6 @@ def subjectGraphCollector(uni, code):
 		return d
 
 	index, parent = 0, -1
-	temp = {}
 	while ss:
 		parent += 1
 		subj = ss.popleft()
@@ -82,48 +81,73 @@ def subjectGraphCollector(uni, code):
 			"url": subj.link,
 			"root": index == 0 and True or False
 		})
+		
 		prereqs = SubjectPrereq.objects.filter(subject__code=subj.code)
 
 		for prereq in prereqs:
-			if not prereq.prereq in ssHistory:
-				index += 1
-				temp[prereq.prereq.code] = index
-			links.append({
-				"source": parent,
-				"target": temp[prereq.prereq.code],
-				"value": 1
-			})
 			if prereq.prereq in ssHistory:
 				continue
+			index += 1
+			links.append({
+				"source": parent,
+				"target": index,
+				"value": 1
+			})
 			ss.append(prereq.prereq)
 			ssHistory.add(prereq.prereq)
 
 	return d
 
+@Memo
+def postrequisiteGraph(uni, code):
+	d = {"nodes": [], "links": []}
+	ss, ssHistory = deque(), set()
 
-def subjectTreeCollector(uni, code, parent=None):
-	d = {}
+	nodes = d['nodes']
+	links = d['links']
+
 	try:
 		subject = Subject.objects.get(code=code)
+		ss.append(subject)
 	except ObjectDoesNotExist as e:
-		return {"name": "??"}
-	d['name'] = subject.code
-	d['fullname'] = subject.name
-	prereqs = SubjectPrereq.objects.filter(subject__code=code)
-	if len(prereqs) > 0:
-		ch = d['children'] = []
-		for pair in prereqs:
-			if pair.prereq.code == parent:
+		nodes.append({"name": "??"})
+		return d
+
+	index, parent = 0, -1
+	while ss:
+		parent += 1
+		subj = ss.popleft()
+		nodes.append({
+			"code": subj.code,
+			"name": subj.name,
+			"url": subj.link,
+			"root": index == 0 and True or False
+		})
+		prereqs = SubjectPrereq.objects.filter(prereq__code=subj.code)
+
+		for prereq in prereqs:
+			if prereq.subject in ssHistory:
 				continue
-			ch.append(subjectCollector(uni, pair.prereq.code, code))
+			index += 1
+			links.append({
+				"source": index,
+				"target": parent,
+				"value": 1
+			})
+			ss.append(prereq.subject)
+			ssHistory.add(prereq.subject)
+
 	return d
 
 
-def subject(request, uni, code, pretty=False):
-	info = json.dumps(
-		subjectGraphCollector(uni, code.upper()),
-		indent=4 if pretty else None
-	)
+def subject(request, uni, code, pretty=False, postreq=False):
+	if postreq:
+		data = postrequisiteGraph(uni, code.upper())
+	else:
+		data = subjectGraphCollector(uni, code.upper())
+
+	info = json.dumps(data, indent=4 if pretty else None)
+	
 	return Ajax(
 		ajaxCallback(request, info),
 		content_type='application/json'

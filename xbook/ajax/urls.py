@@ -4,9 +4,14 @@ urlpatterns = patterns('xbook.ajax',
 	url(r'^test', 'views.ajaxJSON'),
 	url(r'^(?P<json>.*?\.json)$', 'views.ajaxJSON'),
 
-	url(r'^u-(?P<uni>.*?)/subject/(?P<code>.*?)$', 'views.subject'),
-	url(r'^p/u-(?P<uni>.*?)/subject/(?P<code>.*?)$',
+	url(r'^u-(?P<uni>.*?)/prereq/(?P<code>.*?)$', 'views.subject'),
+	url(r'^p/u-(?P<uni>.*?)/prereq/(?P<code>.*?)$',
 		'views.subject', {'pretty': True}),
+
+	url(r'^u-(?P<uni>.*?)/postreq/(?P<code>.*?)$', 'views.subject',
+		{'postreq': True}),
+	url(r'^p/u-(?P<uni>.*?)/postreq/(?P<code>.*?)$',
+		'views.subject', {'pretty': True}, {'postreq': True}),
 
 	url(r'^u-(?P<uni>.*?)/subjectlist/?$', 'views.subjectList'),
 	url(r'^p/u-(?P<uni>.*?)/subjectlist/?$',
