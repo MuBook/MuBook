@@ -7,6 +7,7 @@
  */
 var graph = document.getElementById("graph");
 var inp = document.getElementById("searchInput");
+var relativePositionHighlight = 0;
 
 function loadTree(code){
   code = code || "comp30018";
@@ -99,11 +100,17 @@ function SearchCtrl($scope, $timeout, Subjects, Global){
       Global.filterList[Global.filterIndex].classList.remove("highlight");
       if (Global.filterIndex > 0) {
         Global.filterIndex -= 1;
+        if(relativePositionHighlight > 2) {
+          relativePositionHighlight -= 1;
+        }
       }
     } else if (e.keyCode == 40) {
       Global.filterList[Global.filterIndex].classList.remove("highlight");
-      if (Global.filterIndex < 100) {
+      if (Global.filterIndex < Global.filterList.length - 1) {
         Global.filterIndex += 1;
+        if(relativePositionHighlight < 19) {
+          relativePositionHighlight += 1;
+        }
       }
     } else if (e.keyCode == 13) {
       var s = Global.filterList[Global.filterIndex].children[0].innerHTML;
@@ -120,6 +127,9 @@ function SearchCtrl($scope, $timeout, Subjects, Global){
       return;
     }
     Global.filterList[Global.filterIndex].classList.add("highlight");
+    if(relativePositionHighlight <= 2 || relativePositionHighlight >= 19) {
+      $("#searchResult").scrollTop((Global.filterIndex - relativePositionHighlight) * 25);
+    }
   };
 
   $scope.subjects = [{"code": "Nahhhhh", "name": "waiting for data"}];

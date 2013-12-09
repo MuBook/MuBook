@@ -209,7 +209,7 @@ body > header{
 	bottom: 0;
 	width: 100%;
 	color: #000;
-	overflow-y: hidden;
+	overflow-y: auto;
 }
 
 #searchResult table{
