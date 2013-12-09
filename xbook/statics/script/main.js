@@ -59,6 +59,15 @@ var docCookies = {
 
 
 /**
+ * Object storing lower bounds and upper bounds of the highlighted result 
+*/
+var highlightScrollControl = {
+  LOWERBOUND : 2,
+  UPPERBOUND : 19,
+  HIGHLIGHT_HEIGHT : 25
+};
+
+/**
  * Subject Searching App
  * - subject picker/filter
  */
@@ -100,7 +109,7 @@ function SearchCtrl($scope, $timeout, Subjects, Global){
       Global.filterList[Global.filterIndex].classList.remove("highlight");
       if (Global.filterIndex > 0) {
         Global.filterIndex -= 1;
-        if(relativePositionHighlight > 2) {
+        if(relativePositionHighlight > highlightScrollControl.LOWERBOUND) {
           relativePositionHighlight -= 1;
         }
       }
@@ -108,7 +117,7 @@ function SearchCtrl($scope, $timeout, Subjects, Global){
       Global.filterList[Global.filterIndex].classList.remove("highlight");
       if (Global.filterIndex < Global.filterList.length - 1) {
         Global.filterIndex += 1;
-        if(relativePositionHighlight < 19) {
+        if(relativePositionHighlight < highlightScrollControl.UPPERBOUND) {
           relativePositionHighlight += 1;
         }
       }
@@ -127,8 +136,9 @@ function SearchCtrl($scope, $timeout, Subjects, Global){
       return;
     }
     Global.filterList[Global.filterIndex].classList.add("highlight");
-    if(relativePositionHighlight <= 2 || relativePositionHighlight >= 19) {
-      $("#searchResult").scrollTop((Global.filterIndex - relativePositionHighlight) * 25);
+    if(relativePositionHighlight <= highlightScrollControl.LOWERBOUND 
+      || relativePositionHighlight >= highlightScrollControl.UPPERBOUND) {
+      $("#searchResult").scrollTop((Global.filterIndex - relativePositionHighlight) * highlightScrollControl.HIGHLIGHT_HEIGHT);
     }
   };
 
