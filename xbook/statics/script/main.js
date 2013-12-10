@@ -7,6 +7,7 @@
  */
 var graph = document.getElementById("graph");
 var inp = document.getElementById("searchInput");
+var relativePositionHighlight = 0;
 
 function loadTree(code){
   code = code || "comp30018";
@@ -58,6 +59,15 @@ var docCookies = {
 
 
 /**
+ * Object storing lower bounds and upper bounds of the highlighted result 
+*/
+var highlightScrollControl = {
+  LOWERBOUND : 2,
+  UPPERBOUND : 19,
+  HIGHLIGHT_HEIGHT : 25
+};
+
+/**
  * Subject Searching App
  * - subject picker/filter
  */
@@ -99,11 +109,17 @@ function SearchCtrl($scope, $timeout, Subjects, Global){
       Global.filterList[Global.filterIndex].classList.remove("highlight");
       if (Global.filterIndex > 0) {
         Global.filterIndex -= 1;
+        if(relativePositionHighlight > highlightScrollControl.LOWERBOUND) {
+          relativePositionHighlight -= 1;
+        }
       }
     } else if (e.keyCode == 40) {
       Global.filterList[Global.filterIndex].classList.remove("highlight");
-      if (Global.filterIndex < 100) {
+      if (Global.filterIndex < Global.filterList.length - 1) {
         Global.filterIndex += 1;
+        if(relativePositionHighlight < highlightScrollControl.UPPERBOUND) {
+          relativePositionHighlight += 1;
+        }
       }
     } else if (e.keyCode == 13) {
       var s = Global.filterList[Global.filterIndex].children[0].innerHTML;
@@ -120,6 +136,10 @@ function SearchCtrl($scope, $timeout, Subjects, Global){
       return;
     }
     Global.filterList[Global.filterIndex].classList.add("highlight");
+    if(relativePositionHighlight <= highlightScrollControl.LOWERBOUND 
+      || relativePositionHighlight >= highlightScrollControl.UPPERBOUND) {
+      $("#searchResult").scrollTop((Global.filterIndex - relativePositionHighlight) * highlightScrollControl.HIGHLIGHT_HEIGHT);
+    }
   };
 
   $scope.subjects = [{"code": "Nahhhhh", "name": "waiting for data"}];
