@@ -60,7 +60,7 @@ var docCookies = {
 
 /**
  * Object storing lower bounds and upper bounds of the highlighted result 
-*/
+ */
 var highlightScrollControl = {
   LOWERBOUND : 2,
   UPPERBOUND : 19,
@@ -175,9 +175,7 @@ function UICtrl($scope, $timeout, Global){
 }
 
 function GraphCtrl($scope, Global){
-  $scope.yell = function scream(){
-    alert("fuck this!");
-  };
+
 }
 
 function SidePaneCtrl($scope, Global){
