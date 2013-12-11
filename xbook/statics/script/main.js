@@ -7,7 +7,7 @@
  */
 var graph = document.getElementById("graph");
 var inp = document.getElementById("searchInput");
-var relativePositionHighlight = 0;
+var highlightPosition = 0;
 
 function loadTree(code){
   code = code || "comp30018";
@@ -61,7 +61,7 @@ var docCookies = {
 /**
  * Object storing lower bounds and upper bounds of the highlighted result 
  */
-var highlightScrollControl = {
+var highlight = {
   LOWERBOUND : 2,
   UPPERBOUND : 19,
   HIGHLIGHT_HEIGHT : 25
@@ -87,6 +87,8 @@ myApp.factory('Global', function(){
   };
 });
 
+var $searchResult = $("#searchResult");
+
 function SearchCtrl($scope, $timeout, Subjects, Global){
   $scope.replacePath = function replacePath(code){
     loadTree(code);
@@ -109,16 +111,16 @@ function SearchCtrl($scope, $timeout, Subjects, Global){
       Global.filterList[Global.filterIndex].classList.remove("highlight");
       if (Global.filterIndex > 0) {
         Global.filterIndex -= 1;
-        if(relativePositionHighlight > highlightScrollControl.LOWERBOUND) {
-          relativePositionHighlight -= 1;
+        if(highlightPosition > highlight.LOWERBOUND) {
+          highlightPosition -= 1;
         }
       }
     } else if (e.keyCode == 40) {
       Global.filterList[Global.filterIndex].classList.remove("highlight");
       if (Global.filterIndex < Global.filterList.length - 1) {
         Global.filterIndex += 1;
-        if(relativePositionHighlight < highlightScrollControl.UPPERBOUND) {
-          relativePositionHighlight += 1;
+        if (highlightPosition < highlight.UPPERBOUND) {
+          highlightPosition += 1;
         }
       }
     } else if (e.keyCode == 13) {
@@ -132,14 +134,14 @@ function SearchCtrl($scope, $timeout, Subjects, Global){
         }
         Global.filterIndex = 0;
         Global.filterList[Global.filterIndex].classList.add("highlight");
-        $("#searchResult").scrollTop(0);
+        $searchResult.scrollTop(0);
       });
       return;
     }
     Global.filterList[Global.filterIndex].classList.add("highlight");
-    if(relativePositionHighlight <= highlightScrollControl.LOWERBOUND 
-      || relativePositionHighlight >= highlightScrollControl.UPPERBOUND) {
-      $("#searchResult").scrollTop((Global.filterIndex - relativePositionHighlight) * highlightScrollControl.HIGHLIGHT_HEIGHT);
+    if(highlightPosition <= highlight.LOWERBOUND 
+      || highlightPosition >= highlight.UPPERBOUND) {
+      $searchResult.scrollTop((Global.filterIndex - highlightPosition) * highlight.HIGHLIGHT_HEIGHT);
     }
   };
 
@@ -171,7 +173,7 @@ function UICtrl($scope, $timeout, Global){
       }
       Global.filterIndex = 0;
       Global.filterList[Global.filterIndex].classList.add("highlight");
-      $("#searchResult").scrollTop(0);
+      $searchResult.scrollTop(0);
     });
   };
 }
