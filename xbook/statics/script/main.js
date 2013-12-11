@@ -132,6 +132,7 @@ function SearchCtrl($scope, $timeout, Subjects, Global){
         }
         Global.filterIndex = 0;
         Global.filterList[Global.filterIndex].classList.add("highlight");
+        $("#searchResult").scrollTop(0);
       });
       return;
     }
@@ -170,6 +171,7 @@ function UICtrl($scope, $timeout, Global){
       }
       Global.filterIndex = 0;
       Global.filterList[Global.filterIndex].classList.add("highlight");
+      $("#searchResult").scrollTop(0);
     });
   };
 }
