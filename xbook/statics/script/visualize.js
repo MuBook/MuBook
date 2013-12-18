@@ -94,6 +94,12 @@ function visualizeGraph(url){
       this.classList.add("selected");
     });
 
+    node.on("dblclick", function(d) {
+      loadTree(d.code);
+      document.getElementById("heading").
+        getElementsByClassName("title")[0].innerHTML = d.code;
+    });
+
     node.append("circle")
       .attr("r", function(d){
         return d.root ? 60 : 50;
