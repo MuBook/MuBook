@@ -1,15 +1,9 @@
-/**
- * Tree Structure Visualization
- * Author: Po Chen
- * Last Update Date: 7-9-2013
- *
- * Credit: D3.js (d3js.org)
- */
+"use strict";
 
 function visualizeGraph(url){
   var width = 1200,
-      height = 1000;
-      ticks = 1000;
+      height = 1000,
+      ticks = 1000,
       markerWidth = 6,
       markerHeight = 6,
       cRadius = 50,
