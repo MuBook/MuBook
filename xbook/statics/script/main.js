@@ -64,7 +64,8 @@ var docCookies = {
 var highlight = {
   LOWERBOUND : 2,
   UPPERBOUND : 19,
-  HIGHLIGHT_HEIGHT : 25
+  HIGHLIGHT_HEIGHT : 25,
+  NUM_ROWS : 22
 };
 
 /**
@@ -90,6 +91,43 @@ myApp.factory('Global', function(){
 var $searchResult = $("#searchResult");
 
 function SearchCtrl($scope, $timeout, Subjects, Global){
+
+  function centerHighlight(){
+    if($searchResult.scrollTop() > Global.filterIndex * highlight.HIGHLIGHT_HEIGHT ||
+      $searchResult.scrollTop() + highlight.NUM_ROWS * highlight.HIGHLIGHT_HEIGHT <
+       Global.filterIndex * highlight.HIGHLIGHT_HEIGHT) {
+      $searchResult.scrollTop((Global.filterIndex - highlightPosition) * highlight.HIGHLIGHT_HEIGHT)
+    }
+  }
+
+  $searchResult.on("wheel", function(e) {
+    e.preventDefault();
+    var deltaY = window.event.wheelDeltaY;
+    if(deltaY > 0) {
+      Global.filterList[Global.filterIndex].classList.remove("highlight");
+      if (Global.filterIndex > 0) {
+        Global.filterIndex -= 1;
+        if(highlightPosition > highlight.LOWERBOUND) {
+          highlightPosition -= 1;
+        }
+      }
+    } else {
+      Global.filterList[Global.filterIndex].classList.remove("highlight");
+      if (Global.filterIndex < Global.filterList.length - 1) {
+        Global.filterIndex += 1;
+        if (highlightPosition < highlight.UPPERBOUND) {
+          highlightPosition += 1;
+        }
+      }
+    }
+    Global.filterList[Global.filterIndex].classList.add("highlight");
+    if(highlightPosition <= highlight.LOWERBOUND 
+      || highlightPosition >= highlight.UPPERBOUND) {
+      $searchResult.scrollTop((Global.filterIndex - highlightPosition) * highlight.HIGHLIGHT_HEIGHT);
+    }
+    centerHighlight();
+  });
+
   $scope.replacePath = function replacePath(code){
     loadTree(code);
     Global.isSearching = false;
@@ -143,6 +181,7 @@ function SearchCtrl($scope, $timeout, Subjects, Global){
       || highlightPosition >= highlight.UPPERBOUND) {
       $searchResult.scrollTop((Global.filterIndex - highlightPosition) * highlight.HIGHLIGHT_HEIGHT);
     }
+    centerHighlight();
   };
 
   $scope.subjects = [{"code": "Nahhhhh", "name": "waiting for data"}];
