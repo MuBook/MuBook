@@ -107,7 +107,7 @@ function visualizeGraph(url){
       .attr("text-anchor", "middle")
       .text(function(d) { return d.code; });
 
-    infoboxes = node.append("g")
+    var infoboxes = node.append("g")
       .attr("class", "info");
 
     infoboxes.append("text")
