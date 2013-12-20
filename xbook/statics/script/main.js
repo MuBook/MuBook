@@ -7,6 +7,7 @@
  */
 var graph = document.getElementById("graph");
 var inp = document.getElementById("searchInput");
+var highlightPosition = 0;
 
 function loadTree(code){
   code = code || "comp30018";
@@ -58,6 +59,15 @@ var docCookies = {
 
 
 /**
+ * Object storing lower bounds and upper bounds of the highlighted result 
+ */
+var highlight = {
+  LOWERBOUND : 2,
+  UPPERBOUND : 19,
+  HIGHLIGHT_HEIGHT : 25
+};
+
+/**
  * Subject Searching App
  * - subject picker/filter
  */
@@ -76,6 +86,8 @@ myApp.factory('Global', function(){
     filterList: null
   };
 });
+
+var $searchResult = $("#searchResult");
 
 function SearchCtrl($scope, $timeout, Subjects, Global){
   $scope.replacePath = function replacePath(code){
@@ -99,11 +111,17 @@ function SearchCtrl($scope, $timeout, Subjects, Global){
       Global.filterList[Global.filterIndex].classList.remove("highlight");
       if (Global.filterIndex > 0) {
         Global.filterIndex -= 1;
+        if(highlightPosition > highlight.LOWERBOUND) {
+          highlightPosition -= 1;
+        }
       }
     } else if (e.keyCode == 40) {
       Global.filterList[Global.filterIndex].classList.remove("highlight");
-      if (Global.filterIndex < 100) {
+      if (Global.filterIndex < Global.filterList.length - 1) {
         Global.filterIndex += 1;
+        if (highlightPosition < highlight.UPPERBOUND) {
+          highlightPosition += 1;
+        }
       }
     } else if (e.keyCode == 13) {
       var s = Global.filterList[Global.filterIndex].children[0].innerHTML;
@@ -116,10 +134,15 @@ function SearchCtrl($scope, $timeout, Subjects, Global){
         }
         Global.filterIndex = 0;
         Global.filterList[Global.filterIndex].classList.add("highlight");
+        $searchResult.scrollTop(0);
       });
       return;
     }
     Global.filterList[Global.filterIndex].classList.add("highlight");
+    if(highlightPosition <= highlight.LOWERBOUND 
+      || highlightPosition >= highlight.UPPERBOUND) {
+      $searchResult.scrollTop((Global.filterIndex - highlightPosition) * highlight.HIGHLIGHT_HEIGHT);
+    }
   };
 
   $scope.subjects = [{"code": "Nahhhhh", "name": "waiting for data"}];
@@ -150,14 +173,13 @@ function UICtrl($scope, $timeout, Global){
       }
       Global.filterIndex = 0;
       Global.filterList[Global.filterIndex].classList.add("highlight");
+      $searchResult.scrollTop(0);
     });
   };
 }
 
 function GraphCtrl($scope, Global){
-  $scope.yell = function scream(){
-    alert("fuck this!");
-  };
+
 }
 
 function SidePaneCtrl($scope, Global){

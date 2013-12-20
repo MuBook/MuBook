@@ -1,15 +1,9 @@
-/**
- * Tree Structure Visualization
- * Author: Po Chen
- * Last Update Date: 7-9-2013
- *
- * Credit: D3.js (d3js.org)
- */
+"use strict";
 
 function visualizeGraph(url){
   var width = 1200,
-      height = 1000;
-      ticks = 1000;
+      height = 1000,
+      ticks = 1000,
       markerWidth = 6,
       markerHeight = 6,
       cRadius = 50,
@@ -92,6 +86,12 @@ function visualizeGraph(url){
         ns[i].classList.remove("selected");
       }
       this.classList.add("selected");
+    });
+
+    node.on("dblclick", function(d) {
+      loadTree(d.code);
+      document.getElementById("heading").
+        getElementsByClassName("title")[0].innerHTML = d.code;
     });
 
     node.append("circle")
