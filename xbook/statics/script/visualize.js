@@ -89,7 +89,10 @@ function visualizeGraph(url){
     });
 
     node.on("dblclick", function(d) {
-      loadTree(d.code);
+      /* Temporary fix */
+      var reqType = document.getElementById("reqType").innerHTML;
+      /*****************/
+      loadTree(reqType, d.code);
       document.getElementById("heading").
         getElementsByClassName("title")[0].innerHTML = d.code;
     });

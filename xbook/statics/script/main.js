@@ -103,7 +103,7 @@ function SearchCtrl($scope, $timeout, Subjects, Global){
 
   $searchResult.on("wheel", function(e) {
     e.preventDefault();
-    var deltaY = window.event.wheelDeltaY;
+    var deltaY = e.originalEvent.wheelDeltaY || -e.originalEvent.deltaY;
     if(deltaY > 0) {
       Global.filterList[Global.filterIndex].classList.remove("highlight");
       if (Global.filterIndex > 0) {
