@@ -59,7 +59,7 @@ var docCookies = {
 
 
 /**
- * Object storing lower bounds and upper bounds of the highlighted result 
+ * Object storing lower bounds and upper bounds of the highlighted result
  */
 var highlight = {
   LOWERBOUND : 2,
@@ -122,7 +122,7 @@ function SearchCtrl($scope, $timeout, Subjects, Global){
       }
     }
     Global.filterList[Global.filterIndex].classList.add("highlight");
-    if(highlightPosition <= highlight.LOWERBOUND 
+    if(highlightPosition <= highlight.LOWERBOUND
       || highlightPosition >= highlight.UPPERBOUND) {
       $searchResult.scrollTop((Global.filterIndex - highlightPosition) * highlight.HIGHLIGHT_HEIGHT);
     }
@@ -130,7 +130,7 @@ function SearchCtrl($scope, $timeout, Subjects, Global){
   });
 
   $scope.replacePath = function replacePath(code){
-    loadTree(Global.reqType,code);
+    loadTree(Global.reqType, code);
     Global.isSearching = false;
     Global.code = code;
   };
@@ -178,7 +178,7 @@ function SearchCtrl($scope, $timeout, Subjects, Global){
       return;
     }
     Global.filterList[Global.filterIndex].classList.add("highlight");
-    if(highlightPosition <= highlight.LOWERBOUND 
+    if(highlightPosition <= highlight.LOWERBOUND
       || highlightPosition >= highlight.UPPERBOUND) {
       $searchResult.scrollTop((Global.filterIndex - highlightPosition) * highlight.HIGHLIGHT_HEIGHT);
     }
@@ -200,7 +200,7 @@ function UICtrl($scope, $timeout, Global){
   $scope.getCode = function code(){
     return Global.code;
   };
-  loadTree(Global.reqType,docCookies.getItem("subjCode"));
+  loadTree(Global.reqType, docCookies.getItem("subjCode"));
   Global.code = docCookies.getItem("subjCode");
 
   $scope.search = function search(){
@@ -224,9 +224,8 @@ function GraphCtrl($scope, Global){
 
 function SidePaneCtrl($scope, Global){
   $scope.reqSwitch = function reqSwitch(){
-    Global.reqType = (Global.reqType === "postreq") ?
-    "prereq" : "postreq";
-    loadTree(Global.reqType,docCookies.getItem("subjCode"));
+    Global.reqType = (Global.reqType === "postreq") ? "prereq" : "postreq";
+    loadTree(Global.reqType, docCookies.getItem("subjCode"));
   };
 
   $scope.reqType = function reqType(){

@@ -19,8 +19,13 @@
 * MANDATORY: Comment out this line in `settings.py` in the django project folder
 	- this line is for Heroku server
 	- so uncomment this line before you add/commit
-	
-```
+* TRICK: `index.html` is cached
+	- if changes are made, they are not shown until you restart server
+	- when testing locally, look into `front/views.py -> index`
+	- I have comments there saying what to do
+	- don't forget to change it back, like `settings.py`
+
+```python
 DATABASES['default'] = dj_database_url.config()
 ```
 
