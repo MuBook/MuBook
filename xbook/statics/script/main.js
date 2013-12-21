@@ -9,9 +9,9 @@ var graph = document.getElementById("graph");
 var inp = document.getElementById("searchInput");
 var highlightPosition = 0;
 
-function loadTree(code){
+function loadTree(type, code){
   code = code || "comp30018";
-  url = "ajax/u-123/postreq/" + code;
+  url = "ajax/u-123/" + type + "/" + code;
   graph.innerHTML = "";
   visualizeGraph(url);
   docCookies.setItem("subjCode", code);
@@ -81,6 +81,7 @@ myApp.factory('Subjects', function($http){
 myApp.factory('Global', function(){
   return {
     code: 'comp30018',
+    reqType: 'postreq',
     selected: {},
     isSearching: false,
     filterIndex: 0,
@@ -129,7 +130,7 @@ function SearchCtrl($scope, $timeout, Subjects, Global){
   });
 
   $scope.replacePath = function replacePath(code){
-    loadTree(code);
+    loadTree(Global.reqType,code);
     Global.isSearching = false;
     Global.code = code;
   };
@@ -199,7 +200,7 @@ function UICtrl($scope, $timeout, Global){
   $scope.getCode = function code(){
     return Global.code;
   };
-  loadTree(docCookies.getItem("subjCode"));
+  loadTree(Global.reqType,docCookies.getItem("subjCode"));
   Global.code = docCookies.getItem("subjCode");
 
   $scope.search = function search(){
@@ -222,5 +223,13 @@ function GraphCtrl($scope, Global){
 }
 
 function SidePaneCtrl($scope, Global){
+  $scope.reqSwitch = function reqSwitch(){
+    Global.reqType = (Global.reqType === "postreq") ?
+    "prereq" : "postreq";
+    loadTree(Global.reqType,docCookies.getItem("subjCode"));
+  };
 
+  $scope.reqType = function reqType(){
+    return Global.reqType;
+  };
 }
