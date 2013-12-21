@@ -90,7 +90,7 @@ function visualizeGraph(url){
 
     node.on("dblclick", function(d) {
       /* Temporary fix */
-      var reqType = document.getElementById("typeSwitch").getElementsByClassName("ng-binding")[0].innerHTML;
+      var reqType = document.getElementById("reqType").innerHTML;
       /*****************/
       loadTree(reqType, d.code);
       document.getElementById("heading").
