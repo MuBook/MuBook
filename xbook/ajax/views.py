@@ -1,4 +1,3 @@
-# Create your views here.
 import os.path
 import json
 import zlib
@@ -8,9 +7,6 @@ from collections import deque
 from django.http import HttpResponse
 from django.core.exceptions import ObjectDoesNotExist
 from xbook.ajax.models import Subject, SubjectPrereq, NonallowedSubject
-
-BASE_PATH = os.path.dirname(os.path.abspath(__file__))
-DATA_PATH = os.path.join(BASE_PATH, 'data')
 
 
 class Memo(object):
@@ -46,16 +42,6 @@ def Ajax(*args, **kwargs):
 	return resp
 
 
-def ajaxJSON(request, json="testdata.json"):
-	try:
-		with open(os.path.join(DATA_PATH, json)) as f:
-			resp = Ajax(f.read(), content_type='application/json')
-			return resp
-	except:
-		print(json + " is requested but does not exist")
-		return HttpResponse('{"name": "??"}')
-
-
 @Memo
 def subjectGraphCollector(uni, code):
 	d = {"nodes": [], "links": []}
@@ -81,7 +67,7 @@ def subjectGraphCollector(uni, code):
 			"url": subj.link,
 			"root": index == 0 and True or False
 		})
-		
+
 		prereqs = SubjectPrereq.objects.filter(subject__code=subj.code)
 
 		for prereq in prereqs:
@@ -147,7 +133,7 @@ def subject(request, uni, code, pretty=False, postreq=False):
 		data = subjectGraphCollector(uni, code.upper())
 
 	info = json.dumps(data, indent=4 if pretty else None)
-	
+
 	return Ajax(
 		ajaxCallback(request, info),
 		content_type='application/json'

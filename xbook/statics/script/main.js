@@ -5,58 +5,15 @@
  * - Cookie
  * - etc.
  */
-var graph = document.getElementById("graph");
 var inp = document.getElementById("searchInput");
 var highlightPosition = 0;
 
-function loadTree(type, code){
+function loadTree(type, code) {
   code = code || "comp30018";
   url = "ajax/u-123/" + type + "/" + code;
-  graph.innerHTML = "";
   visualizeGraph(url);
   docCookies.setItem("subjCode", code);
 }
-
-// docCookies
-// credit:https://developer.mozilla.org/en-US/docs/Web/API/document.cookie
-var docCookies = {
-  getItem: function (sKey) {
-    return decodeURIComponent(document.cookie.replace(new RegExp("(?:(?:^|.*;)\\s*" + encodeURIComponent(sKey).replace(/[\-\.\+\*]/g, "\\$&") + "\\s*\\=\\s*([^;]*).*$)|^.*$"), "$1")) || null;
-  },
-  setItem: function (sKey, sValue, vEnd, sPath, sDomain, bSecure) {
-    if (!sKey || /^(?:expires|max\-age|path|domain|secure)$/i.test(sKey)) { return false; }
-    var sExpires = "";
-    if (vEnd) {
-      switch (vEnd.constructor) {
-      case Number:
-        sExpires = vEnd === Infinity ? "; expires=Fri, 31 Dec 9999 23:59:59 GMT" : "; max-age=" + vEnd;
-        break;
-      case String:
-        sExpires = "; expires=" + vEnd;
-        break;
-      case Date:
-        sExpires = "; expires=" + vEnd.toUTCString();
-        break;
-      }
-    }
-    document.cookie = encodeURIComponent(sKey) + "=" + encodeURIComponent(sValue) + sExpires + (sDomain ? "; domain=" + sDomain : "") + (sPath ? "; path=" + sPath : "") + (bSecure ? "; secure" : "");
-    return true;
-  },
-  removeItem: function (sKey, sPath, sDomain) {
-    if (!sKey || !this.hasItem(sKey)) { return false; }
-    document.cookie = encodeURIComponent(sKey) + "=; expires=Thu, 01 Jan 1970 00:00:00 GMT" + ( sDomain ? "; domain=" + sDomain : "") + ( sPath ? "; path=" + sPath : "");
-    return true;
-  },
-  hasItem: function (sKey) {
-    return (new RegExp("(?:^|;\\s*)" + encodeURIComponent(sKey).replace(/[\-\.\+\*]/g, "\\$&") + "\\s*\\=")).test(document.cookie);
-  },
-  keys: /* optional method: you can safely remove it! */ function () {
-    var aKeys = document.cookie.replace(/((?:^|\s*;)[^\=]+)(?=;|$)|^\s*|\s*(?:\=[^;]*)?(?:\1|$)/g, "").split(/\s*(?:\=[^;]*)?;\s*/);
-    for (var nIdx = 0; nIdx < aKeys.length; nIdx++) { aKeys[nIdx] = decodeURIComponent(aKeys[nIdx]); }
-    return aKeys;
-  }
-};
-
 
 /**
  * Object storing lower bounds and upper bounds of the highlighted result
@@ -72,16 +29,28 @@ var highlight = {
  * Subject Searching App
  * - subject picker/filter
  */
-var myApp = angular.module('SubjectGraph', []);
+var app = angular.module("app", ["ngRoute"]);
 
-myApp.factory('Subjects', function($http){
+app.config(["$routeProvider",
+  function($routeProvider) {
+    $routeProvider
+      .when("/:reqType/:university/:subjectCode", {
+        templateUrl: "/template",
+        controller: "GraphCtrl"
+      })
+      .otherwise({
+        redirectTo: "/prereq/melbourne/comp30018"
+      });
+  }]);
+
+app.factory("Subjects", function($http) {
   return $http.get("ajax/u-123/subjectlist");
 });
 
-myApp.factory('Global', function(){
+app.factory("Global", function() {
   return {
-    code: 'comp30018',
-    reqType: 'postreq',
+    code: "comp30018",
+    reqType: "prereq",
     selected: {},
     isSearching: false,
     filterIndex: 0,
@@ -91,9 +60,9 @@ myApp.factory('Global', function(){
 
 var $searchResult = $("#searchResult");
 
-function SearchCtrl($scope, $timeout, Subjects, Global){
+app.controller("SearchCtrl", function SearchCtrl($scope, $timeout, $location, Subjects, Global) {
 
-  function centerHighlight(){
+  function centerHighlight() {
     if($searchResult.scrollTop() > Global.filterIndex * highlight.HIGHLIGHT_HEIGHT ||
       $searchResult.scrollTop() + highlight.NUM_ROWS * highlight.HIGHLIGHT_HEIGHT <
        Global.filterIndex * highlight.HIGHLIGHT_HEIGHT) {
@@ -129,23 +98,23 @@ function SearchCtrl($scope, $timeout, Subjects, Global){
     centerHighlight();
   });
 
-  $scope.replacePath = function replacePath(code){
-    loadTree(Global.reqType, code);
+  $scope.replacePath = function replacePath(code) {
     Global.isSearching = false;
     Global.code = code;
+    $location.path(Global.reqType + "/melbourne/" + code);
   };
 
-  $scope.isVisiable = function isVisiable(){
+  $scope.isVisiable = function isVisiable() {
     return Global.isSearching;
   };
 
-  $scope.esc = function esc(e){
+  $scope.esc = function esc(e) {
     if (e.keyCode == 27) {
       Global.isSearching = false;
     }
   };
 
-  $scope.handle = function handle(e){
+  $scope.handle = function handle(e) {
     if (e.keyCode == 38) {
       Global.filterList[Global.filterIndex].classList.remove("highlight");
       if (Global.filterIndex > 0) {
@@ -166,7 +135,7 @@ function SearchCtrl($scope, $timeout, Subjects, Global){
       var s = Global.filterList[Global.filterIndex].children[0].innerHTML;
       $scope.replacePath(s);
     } else {
-      $timeout(function(){
+      $timeout(function() {
         Global.filterList = document.querySelectorAll("#searchResult tr");
         for (var i = Global.filterList.length - 1; i >= 0; --i) {
           Global.filterList[i].classList.remove("highlight");
@@ -186,26 +155,26 @@ function SearchCtrl($scope, $timeout, Subjects, Global){
   };
 
   $scope.subjects = [{"code": "Nahhhhh", "name": "waiting for data"}];
-  Subjects.success(function(data){
+  Subjects.success(function(data) {
     $scope.subjects = data.subjList;
-  }).error(function(a, b, c, d){
+  }).error(function(a, b, c, d) {
     console.log(a);
     console.log(b);
     console.log(c);
     console.log(d);
   });
-}
+});
 
-function UICtrl($scope, $timeout, Global){
-  $scope.getCode = function code(){
+app.controller("UICtrl", function UICtrl($scope, $timeout, Global) {
+  $scope.getCode = function code() {
     return Global.code;
   };
-  loadTree(Global.reqType, docCookies.getItem("subjCode"));
+
   Global.code = docCookies.getItem("subjCode");
 
-  $scope.search = function search(){
+  $scope.search = function search() {
     Global.isSearching = true;
-    $timeout(function(){
+    $timeout(function() {
       inp.focus();
       Global.filterList = document.querySelectorAll("#searchResult tr");
       for (var i = Global.filterList.length - 1; i >= 0; --i) {
@@ -216,19 +185,77 @@ function UICtrl($scope, $timeout, Global){
       $searchResult.scrollTop(0);
     });
   };
-}
+});
 
-function GraphCtrl($scope, Global){
+app.controller("GraphCtrl", function GraphCtrl($scope, $routeParams, $location, Global) {
+  var status = { code: $routeParams.subjectCode };
+  switch ($routeParams.reqType) {
+    case "prereq":
+      status.reqType = "prereq";
+      break;
+    case "postreq":
+      status.reqType = "postreq";
+      break;
+    default:
+      $location.path("/prereq/melbourne/comp30018");
+  }
+  Global.code = status.code;
+  Global.reqType = status.reqType;
+  loadTree(status.reqType, $routeParams.subjectCode);
 
-}
+  $scope.update = function update(code) {
+    Global.code = code;
+    $location.path(Global.reqType + "/melbourne/" + code);
+  };
+});
 
-function SidePaneCtrl($scope, Global){
-  $scope.reqSwitch = function reqSwitch(){
-    Global.reqType = (Global.reqType === "postreq") ? "prereq" : "postreq";
-    loadTree(Global.reqType, docCookies.getItem("subjCode"));
+app.controller("SidePaneCtrl", function SidePaneCtrl($scope, $location, Global) {
+  $scope.reqSwitch = function reqSwitch() {
+    Global.reqType = (Global.reqType == "postreq") ? "prereq" : "postreq";
+    $location.path(Global.reqType + "/melbourne/" + Global.code);
   };
 
-  $scope.reqType = function reqType(){
+  $scope.reqType = function reqType() {
     return Global.reqType;
   };
-}
+});
+
+// docCookies
+// credit:https://developer.mozilla.org/en-US/docs/Web/API/document.cookie
+var docCookies = {
+  getItem: function(sKey) {
+    return decodeURIComponent(document.cookie.replace(new RegExp("(?:(?:^|.*;)\\s*" + encodeURIComponent(sKey).replace(/[\-\.\+\*]/g, "\\$&") + "\\s*\\=\\s*([^;]*).*$)|^.*$"), "$1")) || null;
+  },
+  setItem: function(sKey, sValue, vEnd, sPath, sDomain, bSecure) {
+    if (!sKey || /^(?:expires|max\-age|path|domain|secure)$/i.test(sKey)) { return false; }
+    var sExpires = "";
+    if (vEnd) {
+      switch (vEnd.constructor) {
+      case Number:
+        sExpires = vEnd === Infinity ? "; expires=Fri, 31 Dec 9999 23:59:59 GMT" : "; max-age=" + vEnd;
+        break;
+      case String:
+        sExpires = "; expires=" + vEnd;
+        break;
+      case Date:
+        sExpires = "; expires=" + vEnd.toUTCString();
+        break;
+      }
+    }
+    document.cookie = encodeURIComponent(sKey) + "=" + encodeURIComponent(sValue) + sExpires + (sDomain ? "; domain=" + sDomain : "") + (sPath ? "; path=" + sPath : "") + (bSecure ? "; secure" : "");
+    return true;
+  },
+  removeItem: function(sKey, sPath, sDomain) {
+    if (!sKey || !this.hasItem(sKey)) { return false; }
+    document.cookie = encodeURIComponent(sKey) + "=; expires=Thu, 01 Jan 1970 00:00:00 GMT" + ( sDomain ? "; domain=" + sDomain : "") + ( sPath ? "; path=" + sPath : "");
+    return true;
+  },
+  hasItem: function(sKey) {
+    return (new RegExp("(?:^|;\\s*)" + encodeURIComponent(sKey).replace(/[\-\.\+\*]/g, "\\$&") + "\\s*\\=")).test(document.cookie);
+  },
+  keys: /* optional method: you can safely remove it! */ function() {
+    var aKeys = document.cookie.replace(/((?:^|\s*;)[^\=]+)(?=;|$)|^\s*|\s*(?:\=[^;]*)?(?:\1|$)/g, "").split(/\s*(?:\=[^;]*)?;\s*/);
+    for (var nIdx = 0; nIdx < aKeys.length; nIdx++) { aKeys[nIdx] = decodeURIComponent(aKeys[nIdx]); }
+    return aKeys;
+  }
+};

@@ -31,5 +31,5 @@ def error404(request, path):
 	return HttpResponse(message)
 
 
-def study(request):
-	return HttpResponse(str(request.__dict__['session'].__dict__))
+def ngView(request):
+	return HttpResponse('<div id="graph"></div>')

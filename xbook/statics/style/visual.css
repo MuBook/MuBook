@@ -1,61 +1,62 @@
 /************
 * =General tags
 *************/
-html, body{
+html, body {
 	padding: 0;
 	margin: 0;
 }
 
-body{
+body {
 	position: relative;
-	background-color: rgb(40, 40, 40);
 }
 
-h1, h2, h3, h4, h5{
+h1, h2, h3, h4, h5 {
 	margin: 0 0 20px 0;
 }
 
-a{
+a {
 	text-decoration: none;
 	color: inherit;
 	transition: color 0.3s;
 }
 
-a:hover{
-	color: #039;
+a:hover {
+	color: #38f;
 }
 
 /************
 * =Effects
 *************/
-.center{
+.center {
 	margin: auto;
 }
 
-.hidden{
+.hidden {
 	display: none;
 }
 
 /************
 * =Graph related
 *************/
-#graph{
-	position: absolute;
-	background-color: #fff;
-	box-shadow: 0 0 10px 2px #333 inset;
-	min-width: 1000px;
-	top: 60px;
-	left: 300px;
-	right: 20px;
-	z-index: 100;
+#graphContainer {
+	position: fixed;
+	left: 240px;
+	right: 0;
+	top: 0;
+	bottom: 0;
+	overflow: auto;
 }
 
-.node{
+#graph {
+	background-color: #fff;
+}
+
+.node {
 	cursor: pointer;
 	z-index: 200;
 }
 
-.node circle{
+.node circle {
 	fill: #fff;
 	stroke: #38f;
 	stroke-width: 1.5px;
@@ -63,62 +64,58 @@ a:hover{
 	transition: all 0.3s;
 }
 
-.node:hover circle{
+.node:hover circle {
 	fill: #079;
 	stroke: #079 !important;
 }
 
-.node:hover text{
+.node:hover text {
 	fill: #fff;
 }
 
-.selected circle{
+.selected circle {
 	fill: #38f;
 }
 
-.selected text{
+.selected text {
 	fill: #fff;
 }
 
-.info{
+.info {
 	display: none;
 }
 
-.info text{
+.info text {
 	fill: #000 !important;
 }
 
-.node:hover .info{
+.node:hover .info {
 	display: block;
 }
 
 path.link {
-    fill: none;
-    stroke: #666;
-    stroke-width: 1.5px;
+  fill: none;
+  stroke: #666;
+  stroke-width: 1.5px;
 }
 
 marker#licensing {
-    fill: green;
+  fill: green;
 }
 
 path.link.licensing {
-    stroke: green;
+  stroke: green;
 }
 
 path.link.resolved {
-    stroke-dasharray: 0, 2 1;
+  stroke-dasharray: 0, 2 1;
 }
 
 /************
-* =Header
+* =SidePane
 *************/
-body > header{
-	position: fixed;
-	top: 0;
-	left: 0;
+#heading {
 	cursor: pointer;
-	border: none;
 	width: 100%;
 	height: 60px;
 	line-height: 60px;
@@ -126,11 +123,9 @@ body > header{
 	font-family: sans-serif;
 	text-transform: uppercase;
 	font-size: 2em;
-	background-color: rgba(40, 40, 40, 0.7);
-	z-index: 900;
 }
 
-.title{
+.title {
 	color: #345;
 	background-color: rgb(200, 220, 220);
 	padding: 3px 10px;
@@ -138,27 +133,19 @@ body > header{
 	border-bottom: 2px solid #aaa;
 }
 
-/************
-* =SidePane
-*************/
-#sidePane{
+#sidePane {
 	position: fixed;
-	top: 60px;
+	top: 0;
 	left: 0;
-	width: 300px;
+	width: 240px;
 	bottom: 0;
-	z-index: 1000;
-	background-color: rgba(40, 40, 40, 0.7);
+	background-color: #222;
 	color: #eee;
 	text-align: center;
 	overflow: auto;
 }
 
-#sidePane > header{
-	padding: 10px 15px;
-}
-
-#sidePane > footer{
+#sidePane > footer {
 	position: absolute;
 	width: 100%;
 	height: 60px;
@@ -175,7 +162,7 @@ body > header{
 /************
 * =Search
 *************/
-#searchScreen{
+#searchScreen {
 	width: 100%;
 	height: 100%;
 	position: fixed;
@@ -185,7 +172,7 @@ body > header{
 	z-index: 1000;
 }
 
-#searchBox{
+#searchBox {
 	position: absolute;
 	top: 0;
 	bottom: 0;
@@ -198,7 +185,7 @@ body > header{
 	box-shadow: 0 0 15px 5px #000;
 }
 
-#searchInput{
+#searchInput {
 	width: 100%;
 	height: 50px;
 	line-height: 50px;
@@ -209,7 +196,7 @@ body > header{
 	border: none;
 }
 
-#searchResult{
+#searchResult {
 	position: absolute;
 	height: 550px;
 	top: 50px;
@@ -219,29 +206,29 @@ body > header{
 	overflow-y: auto;
 }
 
-#searchResult table{
+#searchResult table {
 	width: 100%;
 	border-collapse: collapse;
 }
 
-#searchResult tr{
+#searchResult tr {
 	height: 25px;
 	cursor: pointer;
 }
 
-#searchResult .highlight{
+#searchResult .highlight {
 	background-color: rgba(80, 80, 80, 0.7);
 }
 
-#searchResult tr:hover{
+#searchResult tr:hover {
 	background-color: rgba(180, 180, 180, 0.7);
 }
 
-#searchResult td{
+#searchResult td {
 	text-align: center;
 }
 
-#cover{
+#cover {
 	position: absolute;
 	width: 100%;
 	height: 100%;

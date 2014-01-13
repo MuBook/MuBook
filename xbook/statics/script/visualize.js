@@ -73,14 +73,12 @@ function visualizeGraph(url){
       .attr("class", "node")
       .call(force.drag);
 
-    var sc = document.querySelector("#selectedCode");
     var sn = document.querySelector("#selectedName");
     var sl = document.querySelector("#selectedLink");
     var ns = document.querySelectorAll(".node");
     var sd = document.getElementsByClassName("subjectDetail");
 
     node.on("click", function(d){
-      sc.innerHTML = d.code;
       sn.innerHTML = d.name;
       for (var i = 0; i < sd.length; ++i) {
         sd[i].style.display = "block";
@@ -93,12 +91,9 @@ function visualizeGraph(url){
     });
 
     node.on("dblclick", function(d) {
-      /* Temporary fix */
-      var reqType = document.getElementById("reqType").innerHTML;
-      /*****************/
-      loadTree(reqType, d.code);
-      document.getElementById("heading").
-        getElementsByClassName("title")[0].innerHTML = d.code;
+      var $graph = angular.element($("#graphContainer")).scope();
+      $graph.update(d.code);
+      $graph.$apply();
     });
 
     node.append("circle")
