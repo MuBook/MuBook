@@ -15,63 +15,98 @@ function visualizeGraph(url){
     .charge(-2400)
     .linkDistance(150)
     .size([width / 2, height / 2]);
+  // var force = dagre.layout()
+  //   .nodeSep(20)
+  //   .rankDir("LR");
 
-  var svg = d3.select("#graph")
-    .append("svg")
-      .attr("width", width)
-      .attr("height", height);
+  // var svg = d3.select("#graph")
+  //   .append("svg")
+  //     .attr("width", width)
+  //     .attr("height", height);
 
-  svg.append("svg:defs").selectAll("marker")
-    .data(["suit", "licensing", "resolved"])
-    .enter().append("svg:marker")
-    .attr("id", String)
-    .attr("viewBox", "0 -5 10 10")
-    .attr("refX", refX)
-    .attr("refY", refY)
-    .attr("markerWidth", markerWidth)
-    .attr("markerHeight", markerHeight)
-    .attr("orient", "auto")
-    .append("svg:path")
-    .attr("d", "M0,-5L10,0L0,5");
+  // svg.append("svg:defs").selectAll("marker")
+  //   .data(["suit", "licensing", "resolved"])
+  //   .enter().append("svg:marker")
+  //   .attr("id", String)
+  //   .attr("viewBox", "0 -5 10 10")
+  //   .attr("refX", refX)
+  //   .attr("refY", refY)
+  //   .attr("markerWidth", markerWidth)
+  //   .attr("markerHeight", markerHeight)
+  //   .attr("orient", "auto")
+  //   .append("svg:path")
+  //   .attr("d", "M0,-5L10,0L0,5");
+
+  var makeNode = function(node) {
+    node["label"] = node["code"];
+    return node;
+  }
 
   d3.json(url, function(error, graph) {
     if(error){
       console.log(error);
     }
 
+    var g = new dagreD3.Digraph();
     var n = graph.nodes.length;
 
     force
       .nodes(graph.nodes)
-      .links(graph.links)
+      .links(graph.links);
 
-    graph.nodes.forEach(function(d, i) { d.x = d.y = width / n * i; });
+    for(var i = 0; i < n; ++i) {
+      g.addNode(i, makeNode(graph.nodes[i]));
+      console.log(graph.nodes[i]);
+    }
 
-    force.start();
-    for (var i = n * ticks; i > 0; --i) force.tick();
-    force.stop();
+    for(var i = 0; i < graph.links.length; ++i) {
+      g.addEdge(null, graph.links[i].source, graph.links[i].target);
+    }
 
-    var ox = 0, oy = 0;
-    graph.nodes.forEach(function(d) { ox += d.x, oy += d.y; });
-    ox = ox / n - width / 2, oy = oy / n - height / 2;
-    graph.nodes.forEach(function(d) { d.x -= ox, d.y -= oy; });
+    // graph.nodes.forEach(function(d, i) { d.x = d.y = width / n * i; });
 
-    var path = svg.append("svg:g").selectAll("path")
-        .data(force.links())
-        .enter().append("svg:path")
-        .attr("class", "link licensing")
-        .attr("marker-end", "url(#licensing)");
+    // force.start();
+    // for (var i = n * ticks; i > 0; --i) force.tick();
+    // force.stop();
 
-    path.attr("d", function (d) {
-        return "M" + d.source.x + "," + d.source.y
-            + "L" + d.target.x + "," + d.target.y;
-    });
+    // var ox = 0, oy = 0;
+    // graph.nodes.forEach(function(d) { ox += d.x, oy += d.y; });
+    // ox = ox / n - width / 2, oy = oy / n - height / 2;
+    // graph.nodes.forEach(function(d) { d.x -= ox, d.y -= oy; });
+
+
+
+    // var path = svg.append("svg:g").selectAll("path")
+    //     .data(force.links())
+    //     .enter().append("svg:path")
+    //     .attr("class", "link licensing")
+    //     .attr("marker-end", "url(#licensing)");
+
+    // path.attr("d", function (d) {
+    //     return "M" + d.source.x + "," + d.source.y
+    //         + "L" + d.target.x + "," + d.target.y;
+    // });
+
+    var layout = dagreD3.layout().run(g);
+    var renderer = new dagreD3.Renderer();
+    renderer.run(g, d3.select("#graph").append("svg").attr("width", width).attr("height", height).attr("id", "graphSVG"));
+
+    var svg = d3.select("#graphSVG").call(d3.behavior.zoom().scaleExtent([0.0001, 1]).on("zoom", zoomScale));
+    var nodes = d3.select(".nodes");
+    var edges = d3.select(".edgePaths");
+
+    // var node = svg.selectAll(".node enter")
+    //   .data(graph.nodes)
+    //   .enter().append("g")
+    //   .attr("class", "node")
+    //   .call(force.drag);
 
     var node = svg.selectAll(".node")
-      .data(graph.nodes)
-      .enter().append("g")
-      .attr("class", "node")
-      .call(force.drag);
+      .data(graph.nodes);
+    var rect = svg.selectAll(".node rect")
+      .data(graph.nodes);
+      
+
 
     var sn = document.querySelector("#selectedName");
     var sl = document.querySelector("#selectedLink");
@@ -95,19 +130,18 @@ function visualizeGraph(url){
       $graph.update(d.code);
       $graph.$apply();
     });
+    
 
-    node.append("circle")
-      .attr("r", function(d){
-        return d.root ? 60 : 50;
-      })
+    rect
       .attr("style", function(d){
+        console.log(d);
         return d.root ? "stroke: red" : "inherit";
       });
 
-    node.append("text")
-      .attr("dy", ".31em")
-      .attr("text-anchor", "middle")
-      .text(function(d) { return d.code; });
+    // node.append("text")
+    //   .attr("dy", ".31em")
+    //   .attr("text-anchor", "middle")
+    //   .text(function(d) { return d.code; });
 
     var infoboxes = node.append("g")
       .attr("class", "info");
@@ -119,8 +153,14 @@ function visualizeGraph(url){
       .attr("text-anchor", "middle")
       .attr("transform", "translate(0, 24)");
 
-    node.attr("transform",
-        function(d){ return "translate(" + d.x + ", " + d.y + ")"; });
+    function zoomScale() {
+      nodes.attr("transform", "translate(" + d3.event.translate + ")scale(" + d3.event.scale + ")");
+      edges.attr("transform", "translate(" + d3.event.translate + ")scale(" + d3.event.scale + ")");
+    }
+
+    // node.attr("transform",
+    //     function(d){ return "translate(" + d.x + ", " + d.y + ")"; });
+
   });
 }
 
