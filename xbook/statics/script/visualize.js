@@ -113,18 +113,18 @@ function visualizeGraph(url){
         yMax = node[0][0].getBoundingClientRect().bottom,
         yMaxX = node[0][0].getBoundingClientRect().left;
     for(var i = 0; i < node[0].length; ++i) {
-      if(node[0][i].getBoundingClientRect.bottom < yMin) {
+      if(node[0][i].getBoundingClientRect().bottom < yMin) {
         yMin = node[0][i].getBoundingClientRect().bottom;
         yMinX = node[0][i].getBoundingClientRect().left;
       }
-      if(node[0][i].getBoundingClientRect.bottom > yMax) {
+      if(node[0][i].getBoundingClientRect().bottom > yMax) {
         yMax = node[0][i].getBoundingClientRect().bottom;
         yMaxX = node[0][i].getBoundingClientRect().left;
       }
       console.log(yMinX);
     }
     var centerNodeTranslation = [
-      $reqType === "prereq" ? (-yMaxX + 240) + width / 2 : (-yMinX + 240) + width / 2,
+      $reqType === "prereq" ? (-yMinX + 240) + width / 2 : (-yMaxX + 240) + width / 2,
       $reqType === "prereq" ? height / 4 : 0
     ];
     console.log(centerNodeTranslation);
