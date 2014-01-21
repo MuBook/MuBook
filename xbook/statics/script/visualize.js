@@ -26,9 +26,9 @@ function visualizeGraph(url){
       g.addEdge(null, graph.links[i].source, graph.links[i].target);
     }
 
-    var layout = dagreD3.layout().run(g);
+    var layout = dagreD3.layout();
     var renderer = new dagreD3.Renderer();
-    renderer.run(g, d3.select("#graph").append("svg").attr("width", width).attr("height", height).attr("id", "graphSVG"));
+    renderer.layout(layout).run(g, d3.select("#graph").append("svg").attr("width", width).attr("height", height).attr("id", "graphSVG"));
 
     var nodes = d3.select(".nodes");
     var edges = d3.select(".edgePaths");
