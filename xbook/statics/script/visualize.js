@@ -107,7 +107,6 @@ function visualizeGraph(url){
       .data(graph.nodes);
 
     /* Center graph */
-    console.log(node[0][0].getBoundingClientRect());
     var yMin = node[0][0].getBoundingClientRect().bottom,
         yMinX = node[0][0].getBoundingClientRect().left,
         yMax = node[0][0].getBoundingClientRect().bottom,
@@ -121,13 +120,12 @@ function visualizeGraph(url){
         yMax = node[0][i].getBoundingClientRect().bottom;
         yMaxX = node[0][i].getBoundingClientRect().left;
       }
-      console.log(yMinX);
     }
     var centerNodeTranslation = [
       $reqType === "prereq" ? (-yMinX + 240) + width / 2 : (-yMaxX + 240) + width / 2,
       $reqType === "prereq" ? height / 4 : 0
     ];
-    console.log(centerNodeTranslation);
+
     nodes.attr("transform", "translate(" + centerNodeTranslation + ")");
     edges.attr("transform", "translate(" + centerNodeTranslation + ")");
 
