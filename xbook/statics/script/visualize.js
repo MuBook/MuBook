@@ -49,6 +49,7 @@ function visualizeGraph(url){
 
     var g = new dagreD3.Digraph();
     var n = graph.nodes.length;
+    var $reqType = angular.element($("#sidePane")).scope().reqType();
 
     force
       .nodes(graph.nodes)
@@ -56,7 +57,6 @@ function visualizeGraph(url){
 
     for(var i = 0; i < n; ++i) {
       g.addNode(i, makeNode(graph.nodes[i]));
-      console.log(graph.nodes[i]);
     }
 
     for(var i = 0; i < graph.links.length; ++i) {
@@ -91,9 +91,9 @@ function visualizeGraph(url){
     var renderer = new dagreD3.Renderer();
     renderer.run(g, d3.select("#graph").append("svg").attr("width", width).attr("height", height).attr("id", "graphSVG"));
 
-    var svg = d3.select("#graphSVG").call(d3.behavior.zoom().scaleExtent([0.0001, 1]).on("zoom", zoomScale));
     var nodes = d3.select(".nodes");
     var edges = d3.select(".edgePaths");
+    var svg = d3.select("#graphSVG");
 
     // var node = svg.selectAll(".node enter")
     //   .data(graph.nodes)
@@ -105,14 +105,43 @@ function visualizeGraph(url){
       .data(graph.nodes);
     var rect = svg.selectAll(".node rect")
       .data(graph.nodes);
-      
+
+    /* Center graph */
+    console.log(node[0][0].getBoundingClientRect());
+    var yMin = node[0][0].getBoundingClientRect().bottom,
+        yMinX = node[0][0].getBoundingClientRect().left,
+        yMax = node[0][0].getBoundingClientRect().bottom,
+        yMaxX = node[0][0].getBoundingClientRect().left;
+    for(var i = 0; i < node[0].length; ++i) {
+      if(node[0][i].getBoundingClientRect.bottom < yMin) {
+        yMin = node[0][i].getBoundingClientRect().bottom;
+        yMinX = node[0][i].getBoundingClientRect().left;
+      }
+      if(node[0][i].getBoundingClientRect.bottom > yMax) {
+        yMax = node[0][i].getBoundingClientRect().bottom;
+        yMaxX = node[0][i].getBoundingClientRect().left;
+      }
+      console.log(yMinX);
+    }
+    var centerNodeTranslation = [
+      $reqType === "prereq" ? (-yMaxX + 240) + width / 2 : (-yMinX + 240) + width / 2,
+      $reqType === "prereq" ? height / 4 : 0
+    ];
+    console.log(centerNodeTranslation);
+    nodes.attr("transform", "translate(" + centerNodeTranslation + ")");
+    edges.attr("transform", "translate(" + centerNodeTranslation + ")");
+
+    svg.call(d3.behavior.zoom()
+      .translate(centerNodeTranslation)
+      .scaleExtent([0.0001, 1])
+      .on("zoom", zoomScale));
+
 
 
     var sn = document.querySelector("#selectedName");
     var sl = document.querySelector("#selectedLink");
     var ns = document.querySelectorAll(".node");
     var sd = document.getElementsByClassName("subjectDetail");
-
     node.on("click", function(d){
       sn.innerHTML = d.name;
       for (var i = 0; i < sd.length; ++i) {
@@ -134,7 +163,6 @@ function visualizeGraph(url){
 
     rect
       .attr("style", function(d){
-        console.log(d);
         return d.root ? "stroke: red" : "inherit";
       });
 
