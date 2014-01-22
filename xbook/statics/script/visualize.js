@@ -72,11 +72,9 @@ function visualizeGraph(url){
     var sl = document.querySelector("#selectedLink");
     var ns = document.querySelectorAll(".node");
     var sd = document.getElementsByClassName("subjectDetail");
+    
     node.on("click", function(d){
       sn.innerHTML = d.name;
-      for (var i = 0; i < sd.length; ++i) {
-        sd[i].style.display = "block";
-      }
       sl.href = d.url;
       for (var i = ns.length - 1; i >=0; --i) {
         ns[i].classList.remove("selected");
