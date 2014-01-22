@@ -58,6 +58,7 @@ def subjectGraphCollector(uni, code):
 		return d
 
 	index, parent = 0, -1
+	temp = {}
 	while ss:
 		parent += 1
 		subj = ss.popleft()
@@ -67,18 +68,19 @@ def subjectGraphCollector(uni, code):
 			"url": subj.link,
 			"root": index == 0 and True or False
 		})
-
 		prereqs = SubjectPrereq.objects.filter(subject__code=subj.code)
 
 		for prereq in prereqs:
-			if prereq.prereq in ssHistory:
-				continue
-			index += 1
+			if not prereq.prereq in ssHistory:
+				index += 1
+				temp[prereq.prereq.code] = index
 			links.append({
 				"source": parent,
-				"target": index,
+				"target": temp[prereq.prereq.code],
 				"value": 1
 			})
+			if prereq.prereq in ssHistory:
+				continue
 			ss.append(prereq.prereq)
 			ssHistory.add(prereq.prereq)
 
