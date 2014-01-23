@@ -5,7 +5,7 @@ function visualizeGraph(url){
       height = 1000;
 
   var makeNode = function(node) {
-    node["label"] = node["code"];
+    node.label = node.code;
     return node;
   }
 
@@ -67,12 +67,11 @@ function visualizeGraph(url){
       .scaleExtent([0.0001, 1])
       .on("zoom", zoomScale));
 
-
     var sn = document.querySelector("#selectedName");
     var sl = document.querySelector("#selectedLink");
     var ns = document.querySelectorAll(".node");
     var sd = document.getElementsByClassName("subjectDetail");
-    
+
     node.on("click", function(d){
       sn.innerHTML = d.name;
       sl.href = d.url;
@@ -87,7 +86,6 @@ function visualizeGraph(url){
       $graph.update(d.code);
       $graph.$apply();
     });
-    
 
     rect
       .attr("style", function(d){
@@ -108,59 +106,5 @@ function visualizeGraph(url){
       nodes.attr("transform", "translate(" + d3.event.translate + ")scale(" + d3.event.scale + ")");
       edges.attr("transform", "translate(" + d3.event.translate + ")scale(" + d3.event.scale + ")");
     }
-  });
-}
-
-function visualizeTree(url){
-  d3.json(url, function(error, data){
-    console.log(error);
-    var tree = d3.layout.tree()
-      .size([1200, 800])
-      .separation(
-        function(a, b){ return (a.parent == b.parent ? 100 : 120); }
-      );
-
-    var diagonal = d3.svg.diagonal();
-
-    var svg = d3.select("#graph").append("div")
-      .classed("center", 1)
-      .style({"width": "1200px"})
-      .append("svg")
-        .attr("width", 1200)
-        .attr("height", 1000);
-
-    svg.append("rect")
-      .attr("width", 1200)
-      .attr("height", 1000)
-      .classed("background", 1);
-
-    svg = svg.append("g").attr("transform", "translate(0, 100)");
-
-    (function(root){
-      var nodes = tree.nodes(root),
-          links = tree.links(nodes);
-
-      var link = svg.selectAll(".link")
-          .data(links)
-        .enter().append("path")
-          .attr("class", "link")
-          .attr("d", diagonal);
-
-      var node = svg.selectAll(".node")
-          .data(nodes)
-        .enter().append("g")
-          .attr("class", "node")
-          .attr("transform",
-            function(d){ return "translate(" + d.x + ", " + d.y + ")"; });
-
-      node.append("circle")
-        .attr("r", 50);
-
-      node.append("text")
-        .attr("dy", ".31em")
-        .attr("text-anchor", "middle")
-        .text(function(d) { return d.name; });
-
-    })(data);
   });
 }
