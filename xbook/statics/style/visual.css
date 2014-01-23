@@ -56,7 +56,7 @@ a:hover {
 	z-index: 200;
 }
 
-.node circle {
+.node rect {
 	fill: #fff;
 	stroke: #38f;
 	stroke-width: 1.5px;
@@ -64,7 +64,7 @@ a:hover {
 	transition: all 0.3s;
 }
 
-.node:hover circle {
+.node:hover rect {
 	fill: #079;
 	stroke: #079 !important;
 }
@@ -73,7 +73,7 @@ a:hover {
 	fill: #fff;
 }
 
-.selected circle {
+.selected rect {
 	fill: #38f;
 }
 
@@ -93,9 +93,9 @@ a:hover {
 	display: block;
 }
 
-path.link {
+.edgePath {
   fill: none;
-  stroke: #666;
+  stroke: green;
   stroke-width: 1.5px;
 }
 
@@ -103,11 +103,11 @@ marker#licensing {
   fill: green;
 }
 
-path.link.licensing {
+edge.link.licensing {
   stroke: green;
 }
 
-path.link.resolved {
+edge.link.resolved {
   stroke-dasharray: 0, 2 1;
 }
 
@@ -142,6 +142,7 @@ path.link.resolved {
 	background-color: #222;
 	color: #eee;
 	text-align: center;
+	overflow: auto;
 }
 
 #sidePane > footer {
