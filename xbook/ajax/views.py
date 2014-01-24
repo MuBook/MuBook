@@ -53,12 +53,13 @@ def subjectGraphCollector(uni, code):
 	try:
 		subject = Subject.objects.get(code=code)
 		ss.append(subject)
+		ssHistory.add(subject)
 	except ObjectDoesNotExist as e:
 		nodes.append({"name": "??"})
 		return d
 
 	index, parent = 0, -1
-	temp = {}
+	temp = { subject.code: 0 }
 	while ss:
 		parent += 1
 		subj = ss.popleft()
