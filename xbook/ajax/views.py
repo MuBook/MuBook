@@ -44,68 +44,65 @@ def Ajax(*args, **kwargs):
 
 @Memo
 def subjectGraphCollector(uni, code):
-	d = {"nodes": [], "links": []}
-	ss, ssHistory = deque(), set()
+	d = { "nodes": [], "links": [] }
+	subjQueue = deque()
 
 	nodes = d['nodes']
 	links = d['links']
 
 	try:
 		subject = Subject.objects.get(code=code)
-		ss.append(subject)
-		ssHistory.add(subject)
+		subjQueue.append(subject)
 	except ObjectDoesNotExist as e:
-		nodes.append({"name": "??"})
+		nodes.append({ "name": "??" })
 		return d
 
-	index, parent = 0, -1
-	temp = { subject.code: 0 }
-	while ss:
-		parent += 1
-		subj = ss.popleft()
+	parent, codeToIndex = -1, { subject.code: 0 }
+	while subjQueue:
+		subj = subjQueue.popleft()
 		nodes.append({
 			"code": subj.code,
 			"name": subj.name,
 			"url": subj.link,
-			"root": index == 0 and True or False
+			"root": parent == -1 and True or False
 		})
+		parent += 1
 		prereqs = SubjectPrereq.objects.filter(subject__code=subj.code)
 
 		for prereq in prereqs:
-			if not prereq.prereq in ssHistory:
-				index += 1
-				temp[prereq.prereq.code] = index
+			seen = True
+			if not prereq.prereq.code in codeToIndex:
+				seen = False
+				codeToIndex[prereq.prereq.code] = len(codeToIndex)
 			links.append({
 				"source": parent,
-				"target": temp[prereq.prereq.code],
+				"target": codeToIndex[prereq.prereq.code],
 				"value": 1
 			})
-			if prereq.prereq in ssHistory:
-				continue
-			ss.append(prereq.prereq)
-			ssHistory.add(prereq.prereq)
+			if not seen:
+				subjQueue.append(prereq.prereq)
 
 	return d
 
 @Memo
 def postrequisiteGraph(uni, code):
 	d = {"nodes": [], "links": []}
-	ss, ssHistory = deque(), set()
+	subjQueue, subjHistory = deque(), set()
 
 	nodes = d['nodes']
 	links = d['links']
 
 	try:
 		subject = Subject.objects.get(code=code)
-		ss.append(subject)
+		subjQueue.append(subject)
 	except ObjectDoesNotExist as e:
 		nodes.append({"name": "??"})
 		return d
 
 	index, parent = 0, -1
-	while ss:
+	while subjQueue:
 		parent += 1
-		subj = ss.popleft()
+		subj = subjQueue.popleft()
 		nodes.append({
 			"code": subj.code,
 			"name": subj.name,
@@ -115,7 +112,7 @@ def postrequisiteGraph(uni, code):
 		prereqs = SubjectPrereq.objects.filter(prereq__code=subj.code)
 
 		for prereq in prereqs:
-			if prereq.subject in ssHistory:
+			if prereq.subject in subjHistory:
 				continue
 			index += 1
 			links.append({
@@ -123,8 +120,8 @@ def postrequisiteGraph(uni, code):
 				"target": parent,
 				"value": 1
 			})
-			ss.append(prereq.subject)
-			ssHistory.add(prereq.subject)
+			subjQueue.append(prereq.subject)
+			subjHistory.add(prereq.subject)
 
 	return d
 
