@@ -4,15 +4,14 @@ class Subject(models.Model):
 	name = models.CharField(max_length=100)
 	code = models.CharField(max_length=20, db_index=True)
 	credit = models.DecimalField(max_digits=5, decimal_places=2)
-	commenceDate = models.TextField()
-	timeCommitment = models.TextField()
+	commence_date = models.TextField()
+	time_commitment = models.TextField()
 	overview = models.TextField()
-	objectives = models.TextField()	
-	# prescribed_textbook = models.CharField(max_length=200, blank=True)
+	objectives = models.TextField()
 	assessment = models.TextField()
-	prereq_text = models.TextField()
 	link = models.URLField()
 	corequisite = models.TextField()
+	prerequisite = models.TextField()
 
 	def __unicode__(self):
 		return self.code
