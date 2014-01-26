@@ -95,20 +95,12 @@ a:hover {
 
 .edgePath {
   fill: none;
-  stroke: green;
+	stroke: #38a;
   stroke-width: 1.5px;
 }
 
-marker#licensing {
-  fill: green;
-}
-
-edge.link.licensing {
-  stroke: green;
-}
-
-edge.link.resolved {
-  stroke-dasharray: 0, 2 1;
+.edgePath:hover {
+  stroke-width: 2.5px;
 }
 
 /************
