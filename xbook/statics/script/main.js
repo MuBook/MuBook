@@ -10,7 +10,7 @@ var highlightPosition = 0;
 
 function loadTree(type, code) {
   code = code || "comp30018";
-  url = "ajax/u-123/" + type + "/" + code;
+  url = "ajax/u-melbourne/" + type + "/" + code;
   visualizeGraph(url);
   docCookies.setItem("subjCode", code);
 }
@@ -39,7 +39,7 @@ app.config(["$routeProvider",
         controller: "GraphCtrl"
       })
       .otherwise({
-        redirectTo: "/prereq/melbourne/comp30018"
+        redirectTo: "/prereq/melbourne/" + (docCookies.getItem('subjCode') || 'comp30018')
       });
   }]);
 
