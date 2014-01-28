@@ -1,4 +1,3 @@
-# Create your views here.
 import os.path
 import json
 import zlib
@@ -8,9 +7,6 @@ from collections import deque
 from django.http import HttpResponse
 from django.core.exceptions import ObjectDoesNotExist
 from xbook.ajax.models import Subject, SubjectPrereq, NonallowedSubject
-
-BASE_PATH = os.path.dirname(os.path.abspath(__file__))
-DATA_PATH = os.path.join(BASE_PATH, 'data')
 
 
 class Memo(object):
@@ -46,77 +42,67 @@ def Ajax(*args, **kwargs):
 	return resp
 
 
-def ajaxJSON(request, json="testdata.json"):
-	try:
-		with open(os.path.join(DATA_PATH, json)) as f:
-			resp = Ajax(f.read(), content_type='application/json')
-			return resp
-	except:
-		print(json + " is requested but does not exist")
-		return HttpResponse('{"name": "??"}')
-
-
 @Memo
 def subjectGraphCollector(uni, code):
-	d = {"nodes": [], "links": []}
-	ss, ssHistory = deque(), set()
+	d = { "nodes": [], "links": [] }
+	subjQueue = deque()
 
 	nodes = d['nodes']
 	links = d['links']
 
 	try:
 		subject = Subject.objects.get(code=code)
-		ss.append(subject)
+		subjQueue.append(subject)
 	except ObjectDoesNotExist as e:
-		nodes.append({"name": "??"})
+		nodes.append({ "name": "??" })
 		return d
 
-	index, parent = 0, -1
-	while ss:
-		parent += 1
-		subj = ss.popleft()
+	parent, codeToIndex = -1, { subject.code: 0 }
+	while subjQueue:
+		subj = subjQueue.popleft()
 		nodes.append({
 			"code": subj.code,
 			"name": subj.name,
 			"url": subj.link,
-			"root": index == 0 and True or False
+			"root": parent == -1 and True or False
 		})
-		
+		parent += 1
 		prereqs = SubjectPrereq.objects.filter(subject__code=subj.code)
 
 		for prereq in prereqs:
-			if prereq.prereq in ssHistory:
-				continue
-			index += 1
+			seen = True
+			if not prereq.prereq.code in codeToIndex:
+				seen = False
+				codeToIndex[prereq.prereq.code] = len(codeToIndex)
 			links.append({
 				"source": parent,
-				"target": index,
+				"target": codeToIndex[prereq.prereq.code],
 				"value": 1
 			})
-			ss.append(prereq.prereq)
-			ssHistory.add(prereq.prereq)
+			if not seen:
+				subjQueue.append(prereq.prereq)
 
 	return d
 
 @Memo
 def postrequisiteGraph(uni, code):
 	d = {"nodes": [], "links": []}
-	ss, ssHistory = deque(), set()
+	subjQueue, subjHistory = deque(), set()
 
 	nodes = d['nodes']
 	links = d['links']
 
 	try:
 		subject = Subject.objects.get(code=code)
-		ss.append(subject)
+		subjQueue.append(subject)
 	except ObjectDoesNotExist as e:
 		nodes.append({"name": "??"})
 		return d
 
 	index, parent = 0, -1
-	while ss:
+	while subjQueue:
 		parent += 1
-		subj = ss.popleft()
+		subj = subjQueue.popleft()
 		nodes.append({
 			"code": subj.code,
 			"name": subj.name,
@@ -126,7 +112,7 @@ def postrequisiteGraph(uni, code):
 		prereqs = SubjectPrereq.objects.filter(prereq__code=subj.code)
 
 		for prereq in prereqs:
-			if prereq.subject in ssHistory:
+			if prereq.subject in subjHistory:
 				continue
 			index += 1
 			links.append({
@@ -134,8 +120,8 @@ def postrequisiteGraph(uni, code):
 				"target": parent,
 				"value": 1
 			})
-			ss.append(prereq.subject)
-			ssHistory.add(prereq.subject)
+			subjQueue.append(prereq.subject)
+			subjHistory.add(prereq.subject)
 
 	return d
 
@@ -147,7 +133,7 @@ def subject(request, uni, code, pretty=False, postreq=False):
 		data = subjectGraphCollector(uni, code.upper())
 
 	info = json.dumps(data, indent=4 if pretty else None)
-	
+
 	return Ajax(
 		ajaxCallback(request, info),
 		content_type='application/json'
