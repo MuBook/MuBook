@@ -53,7 +53,8 @@ var visualizeGraph = (function() {
         .data(graph.nodes);
       var rect = svg.selectAll(".node rect")
         .data(graph.nodes);
-
+      var edge = svg.selectAll(".edgePath")
+        .data(graph.links);
       /* Center graph */
       var yMin = node[0][0].getBoundingClientRect().bottom,
           yMinX = node[0][0].getBoundingClientRect().left,
@@ -89,14 +90,51 @@ var visualizeGraph = (function() {
       var sl = document.querySelector("#selectedLink");
       var ns = document.querySelectorAll(".node");
       var sd = document.querySelectorAll(".subjectDetail");
+      var prevHighlightNode = "";
+
+      resetOpacity();
 
       node.on("click", function(d){
         sn.innerHTML = d.name;
         sl.href = d.url;
         for (var i = ns.length - 1; i >=0; --i) {
           ns[i].classList.remove("selected");
+          ns[i].classList.remove("visible")
         }
         this.classList.add("selected");
+
+        for(var i = 0; i < edge[0].length; ++i) {
+          edge[0][i].style.opacity = 0.2;
+        }
+
+        if(d.code != prevHighlightNode) {
+          prevHighlightNode = d.code;
+          var path = new Array();
+          var nodeQueue = new SetQueue();
+          var rootPosition = 0;
+          for(var i = 0; i < graph.nodes.length; ++i) {
+            if(graph.nodes[i].code === d.code) {
+              rootPosition = i;
+              break;
+            }
+          }
+          nodeQueue.push(rootPosition);
+          var currentRoot, queueHead = 0;
+          while(queueHead != nodeQueue.length()) {
+            currentRoot = nodeQueue.get(queueHead);
+            node[0][currentRoot].classList.add("visible");
+            for(var i = 0; i < graph.links.length; ++i) {
+              if(graph.links[i].source == currentRoot) {
+                edge[0][i].style.opacity = 1;
+                nodeQueue.push(graph.links[i].target);
+              }
+            }
+            queueHead++;
+          }
+        } else {
+          prevHighlightNode = "";
+          resetOpacity();
+        }
       });
 
       node.on("dblclick", function(d) {
@@ -124,8 +162,38 @@ var visualizeGraph = (function() {
         nodes.attr("transform", "translate(" + d3.event.translate + ")scale(" + d3.event.scale + ")");
         edges.attr("transform", "translate(" + d3.event.translate + ")scale(" + d3.event.scale + ")");
       }
+
+      function resetOpacity() {
+        for(var i = 0; i < edge[0].length; ++i) {
+            edge[0][i].style.opacity = 1;
+        }
+        for (var i = ns.length - 1; i >=0; --i) {
+          ns[i].classList.add("visible")
+        }
+      }
     });
   };
 
 })();
 
+/* A queue that has only unique items */
+function SetQueue() {
+  this._container = new Array();
+  
+  this.push = function(item) {
+    for(var i = 0; i < this._container.length; ++i) {
+      if(this._container[i] === item) {
+        return;
+      }
+    }
+    this._container.push(item);
+  }
+
+  this.get = function(index) {
+    return this._container[index];
+  }
+
+  this.length = function() {
+    return this._container.length;
+  }
+}
