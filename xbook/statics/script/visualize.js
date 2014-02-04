@@ -103,28 +103,28 @@ var visualizeGraph = (function() {
         }
         this.classList.add("selected");
 
-        for(var i = 0; i < edge[0].length; ++i) {
+        for (var i = 0; i < edge[0].length; ++i) {
           edge[0][i].style.opacity = 0.2;
         }
 
-        if(d.code != prevHighlightNode) {
+        if (d.code != prevHighlightNode) {
           prevHighlightNode = d.code;
-          var path = new Array();
+          var path = [];
           var nodeQueue = new SetQueue();
           var rootPosition = 0;
-          for(var i = 0; i < graph.nodes.length; ++i) {
-            if(graph.nodes[i].code === d.code) {
+          for (var i = 0; i < graph.nodes.length; ++i) {
+            if (graph.nodes[i].code === d.code) {
               rootPosition = i;
               break;
             }
           }
           nodeQueue.push(rootPosition);
           var currentRoot, queueHead = 0;
-          while(queueHead != nodeQueue.length()) {
+          while (queueHead != nodeQueue.length()) {
             currentRoot = nodeQueue.get(queueHead);
             node[0][currentRoot].classList.add("visible");
-            for(var i = 0; i < graph.links.length; ++i) {
-              if(graph.links[i].source == currentRoot) {
+            for (var i = 0; i < graph.links.length; ++i) {
+              if (graph.links[i].source == currentRoot) {
                 edge[0][i].style.opacity = 1;
                 nodeQueue.push(graph.links[i].target);
               }
@@ -164,7 +164,7 @@ var visualizeGraph = (function() {
       }
 
       function resetOpacity() {
-        for(var i = 0; i < edge[0].length; ++i) {
+        for (var i = 0; i < edge[0].length; ++i) {
             edge[0][i].style.opacity = 1;
         }
         for (var i = ns.length - 1; i >=0; --i) {
@@ -178,22 +178,24 @@ var visualizeGraph = (function() {
 
 /* A queue that has only unique items */
 function SetQueue() {
-  this._container = new Array();
-  
-  this.push = function(item) {
-    for(var i = 0; i < this._container.length; ++i) {
+  this._container = [];
+}
+
+SetQueue.prototype = {
+  push : function(item) {
+    for (var i = 0; i < this._container.length; ++i) {
       if(this._container[i] === item) {
         return;
       }
     }
     this._container.push(item);
-  }
+  },
 
-  this.get = function(index) {
+  get : function(index) {
     return this._container[index];
-  }
+  },
 
-  this.length = function() {
+  length : function() {
     return this._container.length;
   }
 }
