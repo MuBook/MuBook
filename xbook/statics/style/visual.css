@@ -61,6 +61,7 @@ a:hover {
 	stroke: #38f;
 	stroke-width: 1.5px;
 	font: 15px sans-serif;
+	opacity: 0.2;
 	transition: all 0.3s;
 }
 
@@ -85,8 +86,9 @@ a:hover {
 	display: none;
 }
 
-.info text {
+.node text {
 	fill: #000 !important;
+	opacity: 0.2;
 }
 
 .node:hover .info {
@@ -94,13 +96,23 @@ a:hover {
 }
 
 .edgePath {
-  fill: none;
+  	fill: none;
 	stroke: #38a;
-  stroke-width: 1.5px;
+  	stroke-width: 1.5px;
+  	opacity: 0.2;
+  	transition: all 0.3s;
 }
 
 .edgePath:hover {
-  stroke-width: 2.5px;
+  	stroke-width: 2.5px;
+}
+
+.visible rect {
+	opacity: 1;
+}
+
+.visible text {
+	opacity: 1;
 }
 
 /************
