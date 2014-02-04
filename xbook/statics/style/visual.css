@@ -157,6 +157,12 @@ a:hover {
 	bottom: 0;
 }
 
+.subjectDetail {
+	text-align: left;
+	padding-left: 20px;
+	display: none;
+}
+
 /************
 * =Search
 *************/

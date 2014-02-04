@@ -97,6 +97,9 @@ var visualizeGraph = (function() {
       node.on("click", function(d){
         sn.innerHTML = d.name;
         sl.href = d.url;
+        for (var i = 0; i < sd.length; ++i) {
+        sd[i].style.display = "block";
+      }
         for (var i = ns.length - 1; i >=0; --i) {
           ns[i].classList.remove("selected");
           ns[i].classList.remove("visible")
