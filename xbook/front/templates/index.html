@@ -48,6 +48,24 @@
 		</div>
 	</div>
 
+    <div class="feedback" ng-controller="FeedbackCtrl">
+        <a id="feedback_button" ng-click="custom=!custom" ng-init="custom=true">Feedback</a>
+
+        <div class="form" ng-hide="custom">
+            <form ng-submit="sendFeedback()">
+                Name:
+                <input type="text" ng-model="name">
+                Email:
+                <input type="text" ng-model="email">
+                Message:
+                <textarea ng-model="message"></textarea>
+                <input class="btn-primary" type="submit" value="send">
+            </form>
+        </div>
+        <span ng-show="custom"></span>
+
+    </div>
+
 	<script src="http://d3js.org/d3.v3.min.js" charset="utf-8"></script>
 	<script src="http://cpettitt.github.io/project/dagre-d3/latest/dagre-d3.min.js"></script>
 	<script src="static/script/main.js"></script>

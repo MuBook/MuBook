@@ -259,3 +259,22 @@ var docCookies = {
     return aKeys;
   }
 };
+
+app.controller("FeedbackCtrl", function FeedbackCtrl($scope, $http) {
+    $scope.sendFeedback = function() {
+        var params = {
+            name: $scope.name,
+            email: $scope.email,
+            message: $scope.message
+        }
+    	$http({
+        method  : 'GET',
+        url     : 'send_feedback/',
+        params   : params
+        })
+        .success(function(data) {
+            alert("Feedback Sent");
+        });
+    };
+});
+
