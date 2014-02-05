@@ -89,7 +89,7 @@ var visualizeGraph = (function() {
       var sn = document.querySelector("#selectedName");
       var sl = document.querySelector("#selectedLink");
       var ns = document.querySelectorAll(".node");
-      var sd = document.querySelectorAll(".subjectDetail");
+      var sd = document.querySelectorAll(".subjectDetailHeading");
       var prevHighlightNode = "";
 
       resetOpacity();
@@ -138,6 +138,7 @@ var visualizeGraph = (function() {
           prevHighlightNode = "";
           resetOpacity();
         }
+        showSubjectDetail(d);
       });
 
       node.on("dblclick", function(d) {
@@ -173,6 +174,27 @@ var visualizeGraph = (function() {
         for (var i = ns.length - 1; i >=0; --i) {
           ns[i].classList.add("visible")
         }
+      }
+
+      function showSubjectDetail(d) {
+        var creditPoint = document.getElementById("creditPointDetail");
+        var semesterDetail = document.getElementById("semesterDetail");
+        var timeCommitDetail = document.getElementById("timeCommitDetail");
+        var prerequisitesDetail = document.getElementById("prerequisitesDetail");
+        var corequisitesDetail = document.getElementById("corequisitesDetail");
+        var subjectOverviewDetail = document.getElementById("subjectOverviewDetail");
+        var objectivesDetail = document.getElementById("objectivesDetail");
+        var assessmentsDetail = document.getElementById("assessmentsDetail");
+        
+        creditPoint.innerHTML = d.credit ? d.credit : "None";
+        semesterDetail.innerHTML = d.commence_date ? d.commence_date : "None";
+        timeCommitDetail.innerHTML = d.time_commitment ? d.time_commitment : "None";
+        prerequisitesDetail.innerHTML = d.prereq ? d.prereq : "None";
+        corequisitesDetail.innerHTML = d.coreq ? d.coreq : "None";
+        assessmentsDetail.innerHTML = d.assessment ? d.assessment : "None";
+        subjectOverviewDetail.innerHTML = d.overview ? d.overview : "None";
+        objectivesDetail.innerHTML = d.objectives ? d.objectives : "None";
+        assessmentsDetail.innerHTML = d.assessment ? d.assessment : "None";
       }
     });
   };
