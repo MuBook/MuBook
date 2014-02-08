@@ -246,3 +246,44 @@ a:hover {
 	left: 0;
 	right: 0;
 }
+
+.feedback{
+	position:absolute;
+	right:0;
+	top:0;
+}
+
+.feedback a {
+	display:block;
+	height:20px;
+	width:100px;
+	text-align:center;
+	background:red;
+	border:2px solid #fff;
+	outline:1px solid #a1a1a1;
+	padding:5px;
+	float:left;
+	cursor:pointer;
+
+	/*Font*/
+	color:#FFF;
+	font-weight:bold;
+	font-size:18px;
+}
+
+.feedback .form{
+	clear:both;
+	height:300px;
+	width:450px;
+	border:1px solid #000;
+	background:#fff;
+	padding:15px;
+}
+.feedback .form textarea{
+	height:170px;
+	width:400px;
+	padding:5px;
+}
+.feedback .status{
+	font-size:16px;
+}
