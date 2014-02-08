@@ -64,7 +64,15 @@ def subjectGraphCollector(uni, code):
 			"code": subj.code,
 			"name": subj.name,
 			"url": subj.link,
-			"root": parent == -1 and True or False
+			"root": parent == -1 and True or False,
+			"credit": str(subj.credit),
+			"commence_date": subj.commence_date,
+			"time_commitment": subj.time_commitment,
+			"overview": subj.overview,
+			"objectives": subj.objectives,
+			"assessment": subj.assessment,
+			"prereq": subj.prerequisite,
+			"coreq": subj.corequisite
 		})
 		parent += 1
 		prereqs = SubjectPrereq.objects.filter(subject__code=subj.code)
@@ -107,7 +115,15 @@ def postrequisiteGraph(uni, code):
 			"code": subj.code,
 			"name": subj.name,
 			"url": subj.link,
-			"root": index == 0 and True or False
+			"root": index == 0 and True or False,
+			"credit": str(subj.credit),
+			"commence_date": subj.commence_date,
+			"time_commitment": subj.time_commitment,
+			"overview": subj.overview,
+			"objectives": subj.objectives,
+			"assessment": subj.assessment,
+			"prereq": subj.prerequisite,
+			"coreq": subj.corequisite
 		})
 		prereqs = SubjectPrereq.objects.filter(prereq__code=subj.code)
 

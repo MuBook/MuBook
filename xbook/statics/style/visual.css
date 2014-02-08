@@ -150,11 +150,22 @@ a:hover {
 }
 
 #sidePane > footer {
-	position: absolute;
+	position: relative;
 	width: 100%;
 	height: 60px;
 	line-height: 60px;
 	bottom: 0;
+}
+
+.subjectDetailHeading {
+	text-align: left;
+	padding-left: 20px;
+	display: none;
+}
+
+.subjectDetail {
+	text-align: left;
+	padding-left: 30px;
 }
 
 /************
