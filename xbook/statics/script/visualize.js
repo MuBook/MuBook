@@ -5,7 +5,9 @@ var visualizeGraph = (function() {
 
   var WIDTH = window.innerWidth - $sidePane.width(),
       HEIGHT = window.innerHeight,
-      SCALE_RANGE = [0.4, 2];
+      SCALE_RANGE = [0.4, 2],
+      DELETE = 0,
+      RESTORE = 1;
 
   function makeNode(node) {
     node.label = node.code;
@@ -17,6 +19,8 @@ var visualizeGraph = (function() {
       if(error){
         console.log(error);
       }
+
+    var deletedNodeContainer = []
     makeGraph();
     
     function makeGraph() {
@@ -94,11 +98,15 @@ var visualizeGraph = (function() {
 
       resetOpacity();
 
+      /* Restore last deleted node.*/
+
+      /*****************************/
+
       node.on("click", function(d){
         /* Node Deletion */
-        if(event.button === 0 && event.ctrlKey) {
+        if (event.button === 0 && event.ctrlKey) {
           this.classList.add("deleted");
-          deleteCorrespondingEdge(d.code);
+          updateCorrespondingEdge(d.code, DELETE);
           return;
         }
 
@@ -204,21 +212,29 @@ var visualizeGraph = (function() {
         assessmentsDetail.innerHTML = d.assessment ? d.assessment : "None";
       }
 
-      function deleteCorrespondingEdge(subjectCode) {
+      function updateCorrespondingEdge(subjectCode, operation) {
         var position = 0;
-        for(var i = 0; i < graph.nodes.length; ++i) {
-          if(subjectCode === graph.nodes[i].code) {
+        for (var i = 0; i < graph.nodes.length; ++i) {
+          if (subjectCode === graph.nodes[i].code) {
             position = i;
             break;
           }
         }
 
-        for(var i = 0; i < graph.links.length; ++i) {
-          if(position === graph.links[i].source || position === graph.links[i].target) {
-            edge[0][i].style.display = "none";
+        for (var i = 0; i < graph.links.length; ++i) {
+          if (position === graph.links[i].source || position === graph.links[i].target) {
+            edge[0][i].style.display = operation === RESTORE ? "inline" : "none";
           }
         }
+
+        if (operation === DELETE) {
+          deletedNodeContainer.push(subjectCode);
+        } else {
+          var nodePosition = deletedNodeContainer.indexOf(subjectCode);
+          deletedNodeContainer.slice(nodePosition, nodePosition + 1);
+        }
       }
+
     }
 
     });
