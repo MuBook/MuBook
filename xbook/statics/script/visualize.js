@@ -7,26 +7,27 @@ var visualizeGraph = (function() {
       HEIGHT = window.innerHeight,
       SCALE_RANGE = [0.4, 2];
 
-  var renderer = new dagreD3.Renderer();
-
-  var makeNode = function(node) {
+  function makeNode(node) {
     node.label = node.code;
     return node;
   }
-
   return function(url) {
 
     d3.json(url, function(error, graph) {
       if(error){
         console.log(error);
       }
-
+    makeGraph();
+    
+    function makeGraph() {
+      var renderer = new dagreD3.Renderer();
       var g = new dagreD3.Digraph();
       var n = graph.nodes.length;
       var $reqType = angular.element($sidePane).scope().reqType();
+      var nodeData = null;
 
       for(var i = 0; i < n; ++i) {
-        g.addNode(i, makeNode(graph.nodes[i]));
+          g.addNode(i, makeNode(graph.nodes[i]));
       }
 
       for(var i = 0; i < graph.links.length; ++i) {
@@ -94,9 +95,16 @@ var visualizeGraph = (function() {
       resetOpacity();
 
       node.on("click", function(d){
+        /* Node Deletion */
+        if(event.button === 0 && event.ctrlKey) {
+          this.classList.add("deleted");
+          deleteCorrespondingEdge(d.code);
+          return;
+        }
+
         selectedName.innerHTML = d.name;
-        for (var element of detailFields) {
-          element.style.display = "block";
+        for (var i = 0; i < detailFields.length; ++i) {
+          detailFields[i].style.display = "block";
         }
         for (var i = ns.length - 1; i >=0; --i) {
           ns[i].classList.remove("selected");
@@ -170,7 +178,7 @@ var visualizeGraph = (function() {
             edge[0][i].style.opacity = 1;
         }
         for (var i = ns.length - 1; i >=0; --i) {
-          ns[i].classList.add("visible")
+          ns[i].classList.add("visible");
         }
       }
 
@@ -194,6 +202,24 @@ var visualizeGraph = (function() {
         objectivesDetail.innerHTML = d.objectives ? d.objectives : "None";
         assessmentsDetail.innerHTML = d.assessment ? d.assessment : "None";
       }
+
+      function deleteCorrespondingEdge(subjectCode) {
+        var position = 0;
+        for(var i = 0; i < graph.nodes.length; ++i) {
+          if(subjectCode === graph.nodes[i].code) {
+            position = i;
+            break;
+          }
+        }
+
+        for(var i = 0; i < graph.links.length; ++i) {
+          if(position === graph.links[i].source || position === graph.links[i].target) {
+            edge[0][i].style.display = "none";
+          }
+        }
+      }
+    }
+
     });
   };
 
@@ -206,10 +232,8 @@ function SetQueue() {
 
 SetQueue.prototype = {
   push : function(item) {
-    for (var i = 0; i < this._container.length; ++i) {
-      if(this._container[i] === item) {
-        return;
-      }
+    if(this._container.indexOf(item) != -1) {
+      return;
     }
     this._container.push(item);
   },
