@@ -98,13 +98,14 @@ var visualizeGraph = (function() {
         /* Node Deletion */
         if(event.button === 0 && event.ctrlKey) {
           this.classList.add("deleted");
+          deleteCorrespondingEdge(d.code);
           return;
         }
 
         // sl.href = d.url;
         selectedName.innerHTML = d.name;
-        for (var element of detailFields) {
-          element.style.display = "block";
+        for (var i = 0; i < detailFields.length; ++i) {
+          detailFields[i].style.display = "block";
         }
         for (var i = ns.length - 1; i >=0; --i) {
           ns[i].classList.remove("selected");
@@ -178,7 +179,7 @@ var visualizeGraph = (function() {
             edge[0][i].style.opacity = 1;
         }
         for (var i = ns.length - 1; i >=0; --i) {
-          ns[i].classList.add("visible")
+          ns[i].classList.add("visible");
         }
       }
 
@@ -202,7 +203,23 @@ var visualizeGraph = (function() {
         objectivesDetail.innerHTML = d.objectives ? d.objectives : "None";
         assessmentsDetail.innerHTML = d.assessment ? d.assessment : "None";
       }
-}
+
+      function deleteCorrespondingEdge(subjectCode) {
+        var position = 0;
+        for(var i = 0; i < graph.nodes.length; ++i) {
+          if(subjectCode === graph.nodes[i].code) {
+            position = i;
+            break;
+          }
+        }
+
+        for(var i = 0; i < graph.links.length; ++i) {
+          if(position === graph.links[i].source || position === graph.links[i].target) {
+            edge[0][i].style.display = "none";
+          }
+        }
+      }
+    }
 
     });
   };
