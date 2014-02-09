@@ -7,30 +7,32 @@ var visualizeGraph = (function() {
       HEIGHT = window.innerHeight,
       SCALE_RANGE = [0.4, 2];
 
+  var selectedName = document.querySelector("#selectedName");
+  var detailFields = document.querySelectorAll(".subjectDetailHeading");
+
   function makeNode(node) {
     node.label = node.code;
     return node;
   }
+
   return function(url) {
 
     d3.json(url, function(error, graph) {
-      if(error){
+      if (error) {
         console.log(error);
       }
-    makeGraph();
-    
-    function makeGraph() {
+
       var renderer = new dagreD3.Renderer();
       var g = new dagreD3.Digraph();
       var n = graph.nodes.length;
       var $reqType = angular.element($sidePane).scope().reqType();
       var nodeData = null;
 
-      for(var i = 0; i < n; ++i) {
+      for (var i = 0; i < n; ++i) {
           g.addNode(i, makeNode(graph.nodes[i]));
       }
 
-      for(var i = 0; i < graph.links.length; ++i) {
+      for (var i = 0; i < graph.links.length; ++i) {
         g.addEdge(null, graph.links[i].source, graph.links[i].target);
       }
 
@@ -61,12 +63,13 @@ var visualizeGraph = (function() {
           yMinX = node[0][0].getBoundingClientRect().left,
           yMax = node[0][0].getBoundingClientRect().bottom,
           yMaxX = node[0][0].getBoundingClientRect().left;
-      for(var i = 0; i < node[0].length; ++i) {
-        if(node[0][i].getBoundingClientRect().bottom < yMin) {
+
+      for (var i = 0; i < node[0].length; ++i) {
+        if (node[0][i].getBoundingClientRect().bottom < yMin) {
           yMin = node[0][i].getBoundingClientRect().bottom;
           yMinX = node[0][i].getBoundingClientRect().left;
         }
-        if(node[0][i].getBoundingClientRect().bottom > yMax) {
+        if (node[0][i].getBoundingClientRect().bottom > yMax) {
           yMax = node[0][i].getBoundingClientRect().bottom;
           yMaxX = node[0][i].getBoundingClientRect().left;
         }
@@ -87,16 +90,13 @@ var visualizeGraph = (function() {
           .on("zoom", zoomScale)
       );
 
-      var selectedName = document.querySelector("#selectedName");
-      var detailFields = document.querySelectorAll(".subjectDetailHeading");
       var ns = document.querySelectorAll(".node");
       var prevHighlightNode = "";
 
       resetOpacity();
 
-      node.on("click", function(d){
-        /* Node Deletion */
-        if(event.button === 0 && event.ctrlKey) {
+      node.on("click", function(d) {
+        if (d3.event.button === 0 && d3.event.ctrlKey) {
           this.classList.add("deleted");
           deleteCorrespondingEdge(d.code);
           return;
@@ -154,7 +154,7 @@ var visualizeGraph = (function() {
       });
 
       rect
-        .attr("style", function(d){
+        .attr("style", function(d) {
           return d.root ? "stroke: red" : "inherit";
         });
 
@@ -162,7 +162,7 @@ var visualizeGraph = (function() {
         .attr("class", "info");
 
       infoboxes.append("text")
-        .text(function(d){
+        .text(function(d) {
           return d.name;
         })
         .attr("text-anchor", "middle")
@@ -205,24 +205,22 @@ var visualizeGraph = (function() {
 
       function deleteCorrespondingEdge(subjectCode) {
         var position = 0;
-        for(var i = 0; i < graph.nodes.length; ++i) {
-          if(subjectCode === graph.nodes[i].code) {
+        for (var i = 0; i < graph.nodes.length; ++i) {
+          if (subjectCode === graph.nodes[i].code) {
             position = i;
             break;
           }
         }
 
-        for(var i = 0; i < graph.links.length; ++i) {
-          if(position === graph.links[i].source || position === graph.links[i].target) {
+        for (var i = 0; i < graph.links.length; ++i) {
+          if (position === graph.links[i].source || position === graph.links[i].target) {
             edge[0][i].style.display = "none";
           }
         }
       }
-    }
 
     });
   };
-
 })();
 
 /* A queue that has only unique items */
@@ -232,10 +230,9 @@ function SetQueue() {
 
 SetQueue.prototype = {
   push : function(item) {
-    if(this._container.indexOf(item) != -1) {
-      return;
+    if (this._container.indexOf(item) < 0) {
+      this._container.push(item);
     }
-    this._container.push(item);
   },
 
   get : function(index) {
