@@ -102,7 +102,6 @@ var visualizeGraph = (function() {
           return;
         }
 
-        // sl.href = d.url;
         selectedName.innerHTML = d.name;
         for (var i = 0; i < detailFields.length; ++i) {
           detailFields[i].style.display = "block";
