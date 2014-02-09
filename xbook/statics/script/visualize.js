@@ -7,26 +7,27 @@ var visualizeGraph = (function() {
       HEIGHT = window.innerHeight,
       SCALE_RANGE = [0.2, 2];
 
-  var renderer = new dagreD3.Renderer();
-
-  var makeNode = function(node) {
+  function makeNode(node) {
     node.label = node.code;
     return node;
   }
-
   return function(url) {
 
     d3.json(url, function(error, graph) {
       if(error){
         console.log(error);
       }
-
+    makeGraph();
+    
+    function makeGraph() {
+      var renderer = new dagreD3.Renderer();
       var g = new dagreD3.Digraph();
       var n = graph.nodes.length;
       var $reqType = angular.element($sidePane).scope().reqType();
+      var nodeData = null;
 
       for(var i = 0; i < n; ++i) {
-        g.addNode(i, makeNode(graph.nodes[i]));
+          g.addNode(i, makeNode(graph.nodes[i]));
       }
 
       for(var i = 0; i < graph.links.length; ++i) {
@@ -95,11 +96,17 @@ var visualizeGraph = (function() {
       resetOpacity();
 
       node.on("click", function(d){
+        /* Node Deletion */
+        if(event.button === 0 && event.ctrlKey) {
+          this.classList.add("deleted");
+          return;
+        }
+
         sn.innerHTML = d.name;
         sl.href = d.url;
         for (var i = 0; i < sd.length; ++i) {
-        sd[i].style.display = "block";
-      }
+          sd[i].style.display = "block";
+        }
         for (var i = ns.length - 1; i >=0; --i) {
           ns[i].classList.remove("selected");
           ns[i].classList.remove("visible")
@@ -196,6 +203,8 @@ var visualizeGraph = (function() {
         objectivesDetail.innerHTML = d.objectives ? d.objectives : "None";
         assessmentsDetail.innerHTML = d.assessment ? d.assessment : "None";
       }
+}
+
     });
   };
 
@@ -208,10 +217,8 @@ function SetQueue() {
 
 SetQueue.prototype = {
   push : function(item) {
-    for (var i = 0; i < this._container.length; ++i) {
-      if(this._container[i] === item) {
-        return;
-      }
+    if(this._container.indexOf(item) != -1) {
+      return;
     }
     this._container.push(item);
   },

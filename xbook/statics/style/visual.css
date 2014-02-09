@@ -115,6 +115,14 @@ a:hover {
 	opacity: 1;
 }
 
+.deleted rect {
+	display: none;
+}
+
+.deleted text {
+	display: none;
+}
+
 /************
 * =SidePane
 *************/
