@@ -151,7 +151,7 @@ INSTALLED_APPS = (
     'django.contrib.messages',
     'django.contrib.staticfiles',
     # Uncomment the next line to enable the admin:
-    'django.contrib.admin',
+    # 'django.contrib.admin',
     # Uncomment the next line to enable admin documentation:
     # 'django.contrib.admindocs',
     'xbook.ajax',
@@ -186,3 +186,10 @@ LOGGING = {
         },
     }
 }
+
+EMAIL_HOST_USER = 'xbookfeedback@gmail.com'
+EMAIL_HOST_PASSWORD = 'eMn-v8Z-AVP-MRm'
+EMAIL_HOST = 'smtp.gmail.com'
+EMAIL_PORT = 587
+EMAIL_USE_TLS = True
+EMAIL_BACKEND = 'django.core.mail.backends.smtp.EmailBackend'

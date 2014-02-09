@@ -3,66 +3,74 @@
 <head>
 	<meta charset="UTF-8">
 	<title>Demo</title>
+	<link rel="stylesheet" href="//netdna.bootstrapcdn.com/bootstrap/3.1.0/css/bootstrap.min.css">
 	<link rel="stylesheet" href="static/style/visual.css">
-	<script src="http://ajax.googleapis.com/ajax/libs/angularjs/1.2.8/angular.min.js"></script>
-	<script src="http://ajax.googleapis.com/ajax/libs/angularjs/1.2.8/angular-route.min.js"></script>
+	<script src="http://ajax.googleapis.com/ajax/libs/angularjs/1.2.12/angular.min.js"></script>
+	<script src="http://ajax.googleapis.com/ajax/libs/angularjs/1.2.12/angular-route.min.js"></script>
 	<script src="http://ajax.googleapis.com/ajax/libs/jquery/1.10.2/jquery.min.js"></script>
 </head>
 <body ng-app="app">
-	<div id="sidePane" ng-controller="SidePaneCtrl">
+	<section id="sidePane" class="col-lg-3" ng-controller="SidePaneCtrl">
 		<header ng-controller="UICtrl" ng-click="search()" id="heading">
 			<span ng-bind="getCode()" class="title"></span>
 		</header>
+		{% verbatim %}
+		<span class="btn btn-default" ng-cloak ng-click="reqSwitch()">{{reqType()}}</span>
+		{% endverbatim %}
 		<h2 id="selectedName">no subject selected</h2>
-		<section id="sideSection">
 		<h4 class="subjectDetailHeading" id="creditPoint">Credit Points: </h4>
-				<p class = "subjectDetail" id="creditPointDetail"></p>
-			<h4 class="subjectDetailHeading" id="semester">Semester: </h4>
-				<p class = "subjectDetail" id="semesterDetail"></p>
-			<h4 class="subjectDetailHeading" id="timeCommit">Time Commitment: </h4>
-				<p class = "subjectDetail" id="timeCommitDetail"></p>
-			<h4 class="subjectDetailHeading" id="prerequisites">Prerequisites: </h4>
-				<p class = "subjectDetail" id="prerequisitesDetail"></p>
-			<h4 class="subjectDetailHeading" id="corequisites">Corequisites: </h4>
-				<p class = "subjectDetail" id="corequisitesDetail"></p>
-			<h4 class="subjectDetailHeading" id="subjectOverview">Subject Overview: </h4>
-				<p class = "subjectDetail" id="subjectOverviewDetail"></p>
-			<h4 class="subjectDetailHeading" id="objectives">Objectives: </h4>
-				<p class = "subjectDetail" id="objectivesDetail"></p>
-			<h4 class="subjectDetailHeading" id="assessments">Assessment: </h4>
-				<p class = "subjectDetail" id="assessmentsDetail"></p>
-			<a id="selectedLink" href="#" title="Uni Handbook" target="_blank">
-				[Subject Page link]
-			</a>
-		</section>
-		<section id="typeSwitch">
-			<p id="reqType" ng-bind="reqType()"></p>
-			<button type="button" ng-click="reqSwitch()">Change Type</button>
-		</section>
+		<p class = "subjectDetail" id="creditPointDetail"></p>
+		<h4 class="subjectDetailHeading" id="semester">Semester: </h4>
+		<p class = "subjectDetail" id="semesterDetail"></p>
+		<h4 class="subjectDetailHeading" id="timeCommit">Time Commitment: </h4>
+		<p class = "subjectDetail" id="timeCommitDetail"></p>
+		<h4 class="subjectDetailHeading" id="prerequisites">Prerequisites: </h4>
+		<p class = "subjectDetail" id="prerequisitesDetail"></p>
+		<h4 class="subjectDetailHeading" id="corequisites">Corequisites: </h4>
+		<p class = "subjectDetail" id="corequisitesDetail"></p>
+		<h4 class="subjectDetailHeading" id="subjectOverview">Subject Overview: </h4>
+		<p class = "subjectDetail" id="subjectOverviewDetail"></p>
+		<h4 class="subjectDetailHeading" id="objectives">Objectives: </h4>
+		<p class = "subjectDetail" id="objectivesDetail"></p>
+		<h4 class="subjectDetailHeading" id="assessments">Assessment: </h4>
+		<p class = "subjectDetail" id="assessmentsDetail"></p>
+	</section>
 
-		<footer>
-			<a href="https://handbook.unimelb.edu.au/" title="Uni Handbook">
-				[Handbook link]
-			</a>
-		</footer>
-	</div>
+	<section ng-view id="graphContainer" class="col-lg-9"></section>
 
-	<div ng-view id="graphContainer"></div>
-
-	<div id="searchScreen" ng-controller="SearchCtrl" ng-show="isVisiable()" ng-cloak>
+	<section id="searchScreen" ng-controller="SearchCtrl" ng-show="isVisiable()" ng-cloak>
 		<div id="cover" ng-click="esc({keyCode:27})"></div>
 		<div id="searchBox">
-			<input id="searchInput" type="text" ng-model="search" placeholder="Find subject..  or press ESC to quit" ng-keyup="esc($event)" ng-keydown="handle($event)">
+			<input id="searchInput" type="text" ng-model="search" placeholder="Find subject..  or press ESC to quit" ng-keyup="esc($event)" ng-keydown="move($event)">
 			<div id="searchResult">
 				<table>
-					<tr ng-click="replacePath(node.code)" ng-repeat="node in subjects | filter:search | limitTo: 100">
+					{% verbatim %}
+					<tr ng-click="replacePath(node.code)" data-code="{{node.code}}" ng-repeat="node in subjects | filter:search | limitTo: 100">
 						<td>{{node.code}}</td>
 						<td>{{node.name}}</td>
 					</tr>
+					{% endverbatim %}
 				</table>
 			</div>
 		</div>
-	</div>
+	</section>
+
+	<section id="feedback" ng-controller="FeedbackCtrl">
+		<span id="feedback-button" ng-click="toggleForm()">Feedback</span>
+		<form id="feedback-form" ng-hide="hideForm" ng-cloak ng-submit="sendFeedback($event)">
+			{% csrf_token %}
+			<label for="feedback-name">
+				Name: <input id="feedback-name" type="text" ng-model="name" placeholder="optional">
+			</label>
+			<label for="feedback-email">
+				Email: <input id="feedback-email" type="text" ng-model="email" placeholder="optional">
+			</label>
+			<label for="feedback-message">
+				Message: <textarea id="feedback-message" ng-model="message" placeholder="what do you want to tell us?"></textarea>
+			</label>
+			<input id="feedback-submit" type="submit" class="btn btn-primary" value="Send">
+		</form>
+	</section>
 
 	<script src="http://d3js.org/d3.v3.min.js" charset="utf-8"></script>
 	<script src="http://cpettitt.github.io/project/dagre-d3/latest/dagre-d3.min.js"></script>

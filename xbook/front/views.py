@@ -1,35 +1,43 @@
 # Create your views here.
 import os
+import json
 
 from django.http import HttpResponse
-# from django.shortcuts import render
+from django.shortcuts import render
+from django.core.mail import send_mail
+from django.views.decorators.http import require_POST
+from django.views.decorators.cache import cache_page
+from django.views.decorators.csrf import csrf_protect
 
 CURRENT_PATH = os.path.dirname(os.path.abspath(__file__))
 INDEX_PATH = os.path.join(
-	os.path.join(CURRENT_PATH, 'templates'),
-	'index.html'
+    os.path.join(CURRENT_PATH, 'templates'),
+    'index.html'
 )
 
-f = open(INDEX_PATH)
-INDEX_CACHE = f.read()
-f.close()
-del f
-
-
+# Comment out the following line for testing index.html
+@cache_page(60 * 60 * 24)
+@csrf_protect
 def index(request):
-	# use this when doing local testing
-	# with open(INDEX_PATH) as index:
-	# 	return HttpResponse(index.read())
-
-	# use this when pushing to remote
-	return HttpResponse(INDEX_CACHE)
+    return render(request, "index.html")
 
 
 def error404(request, path):
-	message = request.META.get('REMOTE_ADDR') + '/' +\
-		path + " is not a valid path!"
-	return HttpResponse(message)
+    message = request.META.get('REMOTE_ADDR') + '/' + \
+              path + " is not a valid path!"
+    return HttpResponse(message)
 
 
 def ngView(request):
-	return HttpResponse('<div id="graph"></div>')
+    return HttpResponse('<div id="graph"></div>')
+
+
+@require_POST
+def sendFeedback(request):
+    data = json.loads(request.body)
+    name = data.get("name", "someone")
+    email = data.get("email", "Email not given")
+    message = data.get("message", "error")
+    send_mail("Feedback from " + name, email + "\n\n" + message, "xbookfeedback@gmail.com",
+              ["xbookfeedback@gmail.com"], fail_silently=False)
+    return HttpResponse("OK")

@@ -5,7 +5,7 @@ var visualizeGraph = (function() {
 
   var WIDTH = window.innerWidth - $sidePane.width(),
       HEIGHT = window.innerHeight,
-      SCALE_RANGE = [0.2, 2];
+      SCALE_RANGE = [0.4, 2];
 
   function makeNode(node) {
     node.label = node.code;
@@ -87,10 +87,9 @@ var visualizeGraph = (function() {
           .on("zoom", zoomScale)
       );
 
-      var sn = document.querySelector("#selectedName");
-      var sl = document.querySelector("#selectedLink");
+      var selectedName = document.querySelector("#selectedName");
+      var detailFields = document.querySelectorAll(".subjectDetailHeading");
       var ns = document.querySelectorAll(".node");
-      var sd = document.querySelectorAll(".subjectDetailHeading");
       var prevHighlightNode = "";
 
       resetOpacity();
@@ -102,10 +101,10 @@ var visualizeGraph = (function() {
           return;
         }
 
-        sn.innerHTML = d.name;
-        sl.href = d.url;
-        for (var i = 0; i < sd.length; ++i) {
-          sd[i].style.display = "block";
+        // sl.href = d.url;
+        selectedName.innerHTML = d.name;
+        for (var element of detailFields) {
+          element.style.display = "block";
         }
         for (var i = ns.length - 1; i >=0; --i) {
           ns[i].classList.remove("selected");
@@ -192,7 +191,7 @@ var visualizeGraph = (function() {
         var subjectOverviewDetail = document.getElementById("subjectOverviewDetail");
         var objectivesDetail = document.getElementById("objectivesDetail");
         var assessmentsDetail = document.getElementById("assessmentsDetail");
-        
+
         creditPoint.innerHTML = d.credit ? d.credit : "None";
         semesterDetail.innerHTML = d.commence_date ? d.commence_date : "None";
         timeCommitDetail.innerHTML = d.time_commitment ? d.time_commitment : "None";
