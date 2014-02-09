@@ -107,19 +107,11 @@ a:hover {
   	stroke-width: 2.5px;
 }
 
-.visible rect {
+.visible rect, .visible text {
 	opacity: 1;
 }
 
-.visible text {
-	opacity: 1;
-}
-
-.deleted rect {
-	display: none;
-}
-
-.deleted text {
+.deleted rect, .deleted text {
 	display: none;
 }
 
