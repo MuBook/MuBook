@@ -16,7 +16,7 @@ INDEX_PATH = os.path.join(
 )
 
 # Comment out the following line for testing index.html
-# @cache_page(60 * 60 * 24)
+@cache_page(60 * 60 * 24)
 @csrf_protect
 def index(request):
     return render(request, "index.html")

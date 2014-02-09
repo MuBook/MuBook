@@ -58,6 +58,7 @@
 	<section id="feedback" ng-controller="FeedbackCtrl">
 		<span id="feedback-button" ng-click="toggleForm()">Feedback</span>
 		<form id="feedback-form" ng-hide="hideForm" ng-cloak ng-submit="sendFeedback($event)">
+			{% csrf_token %}
 			<label for="feedback-name">
 				Name: <input id="feedback-name" type="text" ng-model="name" placeholder="optional">
 			</label>
