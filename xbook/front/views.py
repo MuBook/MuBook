@@ -36,7 +36,7 @@ def ngView(request):
 def sendFeedback(request):
     data = json.loads(request.body)
     name = data.get("name", "someone")
-    email = data.get("email", "not given")
+    email = data.get("email", "Email not given")
     message = data.get("message", "error")
     send_mail("Feedback from " + name, email + "\n\n" + message, "xbookfeedback@gmail.com",
               ["xbookfeedback@gmail.com"], fail_silently=False)
