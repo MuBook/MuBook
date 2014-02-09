@@ -40,11 +40,11 @@ a:hover {
 *************/
 #graphContainer {
 	position: fixed;
-	left: 240px;
 	right: 0;
 	top: 0;
 	bottom: 0;
 	overflow: auto;
+	padding: 0;
 }
 
 #graph {
@@ -141,8 +141,8 @@ a:hover {
 	position: fixed;
 	top: 0;
 	left: 0;
-	width: 240px;
 	bottom: 0;
+	padding: 0;
 	background-color: #222;
 	color: #eee;
 	text-align: center;
@@ -247,43 +247,33 @@ a:hover {
 	right: 0;
 }
 
-.feedback{
-	position:absolute;
-	right:0;
-	top:0;
+#feedback {
+	position: fixed;
+	right: 0;
+	top: 0;
+	background-color: #fff;
 }
 
-.feedback a {
-	display:block;
-	height:20px;
-	width:100px;
-	text-align:center;
-	background:red;
-	border:2px solid #fff;
-	outline:1px solid #a1a1a1;
-	padding:5px;
-	float:left;
-	cursor:pointer;
-
-	/*Font*/
-	color:#FFF;
-	font-weight:bold;
-	font-size:18px;
+#feedback-button {
+	display: block;
+	width: 100px;
+	text-align: center;
+	background: #38a;
+	padding: 5px;
+	cursor: pointer;
+	color: #fff;
+	font-weight: bold;
+	font-size: 18px;
 }
 
-.feedback .form{
-	clear:both;
-	height:300px;
-	width:450px;
-	border:1px solid #000;
-	background:#fff;
-	padding:15px;
+#feedback-form {
+	height: 300px;
+	width: 450px;
+	border: 1px solid #000;
+	padding: 15px;
 }
-.feedback .form textarea{
-	height:170px;
-	width:400px;
-	padding:5px;
-}
-.feedback .status{
-	font-size:16px;
+
+#feedback-message {
+	height: 170px;
+	width: 400px;
 }

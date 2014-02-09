@@ -5,7 +5,6 @@
  * - Cookie
  * - etc.
  */
-var inp = document.getElementById("searchInput");
 var highlightPosition = 0;
 
 function loadTree(type, code) {
@@ -39,7 +38,7 @@ app.config(["$routeProvider",
         controller: "GraphCtrl"
       })
       .otherwise({
-        redirectTo: "/prereq/melbourne/" + (docCookies.getItem('subjCode') || 'comp30018')
+        redirectTo: "/prereq/melbourne/" + (docCookies.getItem("subjCode") || "comp30018")
       });
   }]);
 
@@ -58,22 +57,24 @@ app.factory("Global", function() {
   };
 });
 
-var $searchResult = $("#searchResult");
+app.factory("$searchResult", function() {
+  return $("#searchResult");
+});
 
-app.controller("SearchCtrl", function SearchCtrl($scope, $timeout, $location, Subjects, Global) {
+app.controller("SearchCtrl", function SearchCtrl($scope, $timeout, $location, Subjects, Global, $searchResult) {
 
-  function centerHighlight() {
-    if($searchResult.scrollTop() > Global.filterIndex * highlight.HIGHLIGHT_HEIGHT ||
+  $scope.centerHighlight = function centerHighlight() {
+    if ($searchResult.scrollTop() > Global.filterIndex * highlight.HIGHLIGHT_HEIGHT ||
       $searchResult.scrollTop() + highlight.NUM_ROWS * highlight.HIGHLIGHT_HEIGHT <
        Global.filterIndex * highlight.HIGHLIGHT_HEIGHT) {
       $searchResult.scrollTop((Global.filterIndex - highlightPosition) * highlight.HIGHLIGHT_HEIGHT)
     }
-  }
+  };
 
   $searchResult.on("wheel", function(e) {
     e.preventDefault();
     var deltaY = e.originalEvent.wheelDeltaY || -e.originalEvent.deltaY;
-    if(deltaY > 0) {
+    if (deltaY > 0) {
       Global.filterList[Global.filterIndex].classList.remove("highlight");
       if (Global.filterIndex > 0) {
         Global.filterIndex -= 1;
@@ -91,7 +92,7 @@ app.controller("SearchCtrl", function SearchCtrl($scope, $timeout, $location, Su
       }
     }
     Global.filterList[Global.filterIndex].classList.add("highlight");
-    if(highlightPosition <= highlight.LOWERBOUND
+    if (highlightPosition <= highlight.LOWERBOUND
       || highlightPosition >= highlight.UPPERBOUND) {
       $searchResult.scrollTop((Global.filterIndex - highlightPosition) * highlight.HIGHLIGHT_HEIGHT);
     }
@@ -114,7 +115,7 @@ app.controller("SearchCtrl", function SearchCtrl($scope, $timeout, $location, Su
     }
   };
 
-  $scope.handle = function handle(e) {
+  $scope.move = function move(e) {
     if (e.keyCode == 38) {
       Global.filterList[Global.filterIndex].classList.remove("highlight");
       if (Global.filterIndex > 0) {
@@ -132,8 +133,7 @@ app.controller("SearchCtrl", function SearchCtrl($scope, $timeout, $location, Su
         }
       }
     } else if (e.keyCode == 13) {
-      var s = Global.filterList[Global.filterIndex].children[0].innerHTML;
-      $scope.replacePath(s);
+      $scope.replacePath(Global.filterList[Global.filterIndex].dataset["code"]);
     } else {
       $timeout(function() {
         Global.filterList = document.querySelectorAll("#searchResult tr");
@@ -151,31 +151,30 @@ app.controller("SearchCtrl", function SearchCtrl($scope, $timeout, $location, Su
       || highlightPosition >= highlight.UPPERBOUND) {
       $searchResult.scrollTop((Global.filterIndex - highlightPosition) * highlight.HIGHLIGHT_HEIGHT);
     }
-    centerHighlight();
+    $scope.centerHighlight();
   };
 
   $scope.subjects = [{"code": "Nahhhhh", "name": "waiting for data"}];
   Subjects.success(function(data) {
     $scope.subjects = data.subjList;
-  }).error(function(a, b, c, d) {
-    console.log(a);
-    console.log(b);
-    console.log(c);
-    console.log(d);
+  }).error(function() {
+    alert("Failed to load subjects list");
   });
 });
 
-app.controller("UICtrl", function UICtrl($scope, $timeout, Global) {
+app.controller("UICtrl", function UICtrl($scope, $timeout, Global, $searchResult) {
   $scope.getCode = function code() {
     return Global.code;
   };
 
   Global.code = docCookies.getItem("subjCode");
 
+  $scope.$input = $("#searchInput");
+
   $scope.search = function search() {
     Global.isSearching = true;
     $timeout(function() {
-      inp.focus();
+      $scope.$input.focus();
       Global.filterList = document.querySelectorAll("#searchResult tr");
       for (var i = Global.filterList.length - 1; i >= 0; --i) {
         Global.filterList[i].classList.remove("highlight");
@@ -187,7 +186,7 @@ app.controller("UICtrl", function UICtrl($scope, $timeout, Global) {
   };
 });
 
-app.controller("GraphCtrl", function GraphCtrl($scope, $routeParams, $location, Global) {
+app.controller("GraphCtrl", function GraphCtrl($scope, $routeParams, $location, Global, $searchResult) {
   var status = { code: $routeParams.subjectCode };
   switch ($routeParams.reqType) {
     case "prereq":
@@ -217,6 +216,54 @@ app.controller("SidePaneCtrl", function SidePaneCtrl($scope, $location, Global) 
 
   $scope.reqType = function reqType() {
     return Global.reqType;
+  };
+
+  $scope.update = function update(code) {
+
+  };
+});
+
+app.controller("FeedbackCtrl", function FeedbackCtrl($scope, $http, $timeout) {
+  $scope.hideForm = true;
+
+  $scope.toggleForm = function() {
+    $scope.hideForm = !$scope.hideForm;
+    $timeout(function() {
+      $("#feedback-name").focus();
+    });
+  };
+
+  $scope.sendFeedback = function(e) {
+    if (!$scope.message) {
+      alert("Feedback cannot be empty!");
+      e.preventDefault();
+      $timeout(function() {
+        $("#feedback-message").focus();
+      });
+      return;
+    }
+
+    var data = {
+      name:    $scope.name,
+      email:   $scope.email,
+      message: $scope.message
+    };
+
+    $submit = $("#feedback-submit");
+    $submit.val("Sending...").attr("disabled", true);
+
+    $http.post(
+      "feedback", data,
+      {
+        headers: {
+          "X-CSRFToken": docCookies.getItem("csrftoken")
+        }
+      }
+    ).success(function() {
+      $submit.val("Send").attr("disabled", false);
+      $scope.toggleForm();
+      alert("Your feedback has been received. Thank you!");
+    });
   };
 });
 
@@ -259,22 +306,3 @@ var docCookies = {
     return aKeys;
   }
 };
-
-app.controller("FeedbackCtrl", function FeedbackCtrl($scope, $http) {
-    $scope.sendFeedback = function() {
-        var params = {
-            name: $scope.name,
-            email: $scope.email,
-            message: $scope.message
-        }
-    	$http({
-        method  : 'GET',
-        url     : 'send_feedback/',
-        params   : params
-        })
-        .success(function(data) {
-            alert("Feedback Sent");
-        });
-    };
-});
-
