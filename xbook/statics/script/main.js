@@ -96,7 +96,7 @@ app.controller("SearchCtrl", function SearchCtrl($scope, $timeout, $location, Su
       || highlightPosition >= highlight.UPPERBOUND) {
       $searchResult.scrollTop((Global.filterIndex - highlightPosition) * highlight.HIGHLIGHT_HEIGHT);
     }
-    centerHighlight();
+    $scope.centerHighlight();
   });
 
   $scope.replacePath = function replacePath(code) {
