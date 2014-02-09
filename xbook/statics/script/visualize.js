@@ -16,7 +16,7 @@ var visualizeGraph = (function() {
   return function(url) {
 
     d3.json(url, function(error, graph) {
-      if(error){
+      if (error){
         console.log(error);
       }
 
@@ -30,11 +30,11 @@ var visualizeGraph = (function() {
       var $reqType = angular.element($sidePane).scope().reqType();
       var nodeData = null;
 
-      for(var i = 0; i < n; ++i) {
+      for (var i = 0; i < n; ++i) {
           g.addNode(i, makeNode(graph.nodes[i]));
       }
 
-      for(var i = 0; i < graph.links.length; ++i) {
+      for (var i = 0; i < graph.links.length; ++i) {
         g.addEdge(null, graph.links[i].source, graph.links[i].target);
       }
 
@@ -65,12 +65,12 @@ var visualizeGraph = (function() {
           yMinX = node[0][0].getBoundingClientRect().left,
           yMax = node[0][0].getBoundingClientRect().bottom,
           yMaxX = node[0][0].getBoundingClientRect().left;
-      for(var i = 0; i < node[0].length; ++i) {
-        if(node[0][i].getBoundingClientRect().bottom < yMin) {
+      for (var i = 0; i < node[0].length; ++i) {
+        if (node[0][i].getBoundingClientRect().bottom < yMin) {
           yMin = node[0][i].getBoundingClientRect().bottom;
           yMinX = node[0][i].getBoundingClientRect().left;
         }
-        if(node[0][i].getBoundingClientRect().bottom > yMax) {
+        if (node[0][i].getBoundingClientRect().bottom > yMax) {
           yMax = node[0][i].getBoundingClientRect().bottom;
           yMaxX = node[0][i].getBoundingClientRect().left;
         }
@@ -98,15 +98,33 @@ var visualizeGraph = (function() {
 
       resetOpacity();
 
-      /* Restore last deleted node.*/
-
+      /* Adding button to restore last deleted nodes */
+      var graphContainer = document.getElementById("graph");
+      var restoreBtn = document.createElement("button");
+      restoreBtn.classList.add("btn");
+      restoreBtn.id = "restoreBtn";
+      restoreBtn.innerHTML = "Restore Node";
+      restoreBtn.style.display = "none";
+      graphContainer.appendChild(restoreBtn);
       /*****************************/
+
+      restoreBtn.onclick = function(e) {
+        if (deletedNodeContainer.length != 0) {
+          var curNode = deletedNodeContainer.pop();
+          restoreNode(curNode, graph, node);
+          updateCorrespondingEdge(curNode, RESTORE, deletedNodeContainer, graph);
+          if (deletedNodeContainer.length == 0) {
+            restoreBtn.style.display = "none";
+          }
+        }
+      }
 
       node.on("click", function(d){
         /* Node Deletion */
         if (event.button === 0 && event.ctrlKey) {
+          document.getElementById("restoreBtn").style.display = "inline";
           this.classList.add("deleted");
-          updateCorrespondingEdge(d.code, DELETE);
+          updateCorrespondingEdge(d.code, DELETE, deletedNodeContainer, graph);
           return;
         }
 
@@ -211,26 +229,47 @@ var visualizeGraph = (function() {
         assessmentsDetail.innerHTML = d.assessment ? d.assessment : "None";
       }
 
-      function updateCorrespondingEdge(subjectCode, operation) {
-        var position = 0;
+      function restoreNode(subjectCode, graph, node) {
         for (var i = 0; i < graph.nodes.length; ++i) {
-          if (subjectCode === graph.nodes[i].code) {
-            position = i;
-            break;
+          if (graph.nodes[i].code === subjectCode) {
+            node[0][i].classList.remove("deleted");
           }
         }
+      }
+
+      function updateCorrespondingEdge(subjectCode, operation, nodeContainer, graph) {
+        var position = nodeIndex(graph, subjectCode);        
 
         for (var i = 0; i < graph.links.length; ++i) {
-          if (position === graph.links[i].source || position === graph.links[i].target) {
-            edge[0][i].style.display = operation === RESTORE ? "inline" : "none";
+          var source = graph.links[i].source,
+              target = graph.links[i].target;
+          if (position === source || position === target) {
+            switch (operation) {
+              case DELETE:
+                edge[0][i].style.display = "none";
+                break;
+              case RESTORE:
+                if (nodeContainer.indexOf(graph.nodes[source].code) === -1 
+                  && nodeContainer.indexOf(graph.nodes[target].code) === -1) {
+                  edge[0][i].style.display = "inline";
+                }
+            }
           }
-        }
+        }        
 
         if (operation === DELETE) {
           deletedNodeContainer.push(subjectCode);
         } else {
           var nodePosition = deletedNodeContainer.indexOf(subjectCode);
           deletedNodeContainer.slice(nodePosition, nodePosition + 1);
+        }
+      }
+
+      function nodeIndex(graph, subjectCode) {
+        for (var i = 0; i < graph.nodes.length; ++i) {
+          if (subjectCode === graph.nodes[i].code) {
+            return i;
+          }
         }
       }
 
@@ -248,7 +287,7 @@ function SetQueue() {
 
 SetQueue.prototype = {
   push : function(item) {
-    if(this._container.indexOf(item) != -1) {
+    if (this._container.indexOf(item) != -1) {
       return;
     }
     this._container.push(item);
