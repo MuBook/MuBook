@@ -41,10 +41,11 @@ a:hover {
 #graphContainer {
 	position: fixed;
 	right: 0;
-	top: 0;
+	top: 42px;
 	bottom: 0;
-	overflow: auto;
+	overflow: hidden;
 	padding: 0;
+	width: 80%;
 }
 
 #graph {
@@ -146,7 +147,7 @@ a:hover {
 
 #sidePane {
 	position: fixed;
-	top: 0;
+	top: 42px;
 	left: 0;
 	bottom: 0;
 	padding: 0;
@@ -154,6 +155,7 @@ a:hover {
 	color: #eee;
 	text-align: center;
 	overflow: auto;
+	width: 20%;
 }
 
 #sidePane > footer {
@@ -173,6 +175,10 @@ a:hover {
 .subjectDetail {
 	text-align: left;
 	padding-left: 30px;
+}
+
+#selectedCode {
+	margin-bottom: 0;
 }
 
 /************

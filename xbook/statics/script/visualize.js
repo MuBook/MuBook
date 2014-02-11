@@ -3,13 +3,15 @@ var visualizeGraph = (function() {
 
   var $sidePane = $("#sidePane");
 
+  var TOP_BAR_HEIGHT = 42;
   var WIDTH = window.innerWidth - $sidePane.width(),
-      HEIGHT = window.innerHeight,
+      HEIGHT = window.innerHeight - TOP_BAR_HEIGHT,
       SCALE_RANGE = [0.4, 2],
       DELETE = 0,
       RESTORE = 1;
 
   var selectedName = document.querySelector("#selectedName");
+  var selectedCode = document.querySelector("#selectedCode");
   var detailFields = document.querySelectorAll(".subjectDetailHeading");
 
   function makeNode(node) {
@@ -49,9 +51,10 @@ var visualizeGraph = (function() {
           g,
           d3.select("#graph")
             .append("svg")
-            .attr("width", WIDTH)
-            .attr("height", HEIGHT)
             .attr("id", "graphSVG")
+            .attr("position", "fixed")
+            .attr("bottom", "0")
+            .attr("right", "0")
         );
 
       var nodes = d3.select(".nodes");
@@ -100,6 +103,10 @@ var visualizeGraph = (function() {
       var prevHighlightNode = "";
 
       resetOpacity();
+      showSubjectDetail(graph.nodes[0], selectedName, selectedCode);
+      for (var i = 0; i < detailFields.length; ++i) {
+          detailFields[i].style.display = "block";
+        }
 
       /* Adding button to restore last deleted nodes */
       var graphContainer = document.getElementById("graph");
@@ -131,10 +138,6 @@ var visualizeGraph = (function() {
           return;
         }
 
-        selectedName.innerHTML = d.name;
-        for (var i = 0; i < detailFields.length; ++i) {
-          detailFields[i].style.display = "block";
-        }
         for (var i = ns.length - 1; i >=0; --i) {
           ns[i].classList.remove("selected");
           ns[i].classList.remove("visible")
@@ -173,7 +176,7 @@ var visualizeGraph = (function() {
           prevHighlightNode = "";
           resetOpacity();
         }
-        showSubjectDetail(d);
+        showSubjectDetail(d, selectedName, selectedCode);
       });
 
       node.on("dblclick", function(d) {
@@ -211,7 +214,7 @@ var visualizeGraph = (function() {
         }
       }
 
-      function showSubjectDetail(d) {
+      function showSubjectDetail(d, selectedName, selectedCode) {
         var creditPoint = document.getElementById("creditPointDetail");
         var semesterDetail = document.getElementById("semesterDetail");
         var timeCommitDetail = document.getElementById("timeCommitDetail");
@@ -221,6 +224,8 @@ var visualizeGraph = (function() {
         var objectivesDetail = document.getElementById("objectivesDetail");
         var assessmentsDetail = document.getElementById("assessmentsDetail");
 
+        selectedName.innerHTML = d.name;
+        selectedCode.innerHTML = d.code;
         creditPoint.innerHTML = d.credit ? d.credit : "None";
         semesterDetail.innerHTML = d.commence_date ? d.commence_date : "None";
         timeCommitDetail.innerHTML = d.time_commitment ? d.time_commitment : "None";
