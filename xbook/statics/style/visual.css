@@ -115,6 +115,13 @@ a:hover {
 	display: none;
 }
 
+#restoreBtn {
+	position: absolute;
+	top: 10px;
+	left: 10px;
+	opacity: 0.8;
+}
+
 /************
 * =SidePane
 *************/

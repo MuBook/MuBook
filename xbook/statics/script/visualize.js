@@ -5,15 +5,12 @@ var visualizeGraph = (function() {
 
   var WIDTH = window.innerWidth - $sidePane.width(),
       HEIGHT = window.innerHeight,
-      SCALE_RANGE = [0.4, 2];
+      SCALE_RANGE = [0.4, 2],
+      DELETE = 0,
+      RESTORE = 1;
 
   var selectedName = document.querySelector("#selectedName");
   var detailFields = document.querySelectorAll(".subjectDetailHeading");
-
-  function makeNode(node) {
-    node.label = node.code;
-    return node;
-  }
 
   return function(url) {
 
@@ -21,6 +18,8 @@ var visualizeGraph = (function() {
       if (error) {
         console.log(error);
       }
+
+      var deletedNodeContainer = []
 
       var renderer = new dagreD3.Renderer();
       var g = new dagreD3.Digraph();
@@ -94,11 +93,25 @@ var visualizeGraph = (function() {
       var prevHighlightNode = "";
 
       resetOpacity();
+      makeRestoreButton();
+
+      restoreBtn.onclick = function(e) {
+        if (deletedNodeContainer.length != 0) {
+          var curNode = deletedNodeContainer.pop();
+          restoreNode(graph, node, curNode);
+          updateCorrespondingEdge(graph, deletedNodeContainer, curNode, RESTORE);
+          if (deletedNodeContainer.length == 0) {
+            restoreBtn.style.display = "none";
+          }
+        }
+      }
 
       node.on("click", function(d) {
+        /* Node Deletion */
         if (d3.event.button === 0 && d3.event.ctrlKey) {
+          document.getElementById("restoreBtn").style.display = "inline";
           this.classList.add("deleted");
-          deleteCorrespondingEdge(d.code);
+          updateCorrespondingEdge(graph, deletedNodeContainer, d.code, DELETE);
           return;
         }
 
@@ -168,6 +181,11 @@ var visualizeGraph = (function() {
         .attr("text-anchor", "middle")
         .attr("transform", "translate(0, 24)");
 
+      function makeNode(node) {
+        node.label = node.code;
+        return node;
+      }
+
       function zoomScale() {
         nodes.attr("transform", "translate(" + d3.event.translate + ")scale(" + d3.event.scale + ")");
         edges.attr("transform", "translate(" + d3.event.translate + ")scale(" + d3.event.scale + ")");
@@ -203,20 +221,58 @@ var visualizeGraph = (function() {
         assessmentsDetail.innerHTML = d.assessment ? d.assessment : "None";
       }
 
-      function deleteCorrespondingEdge(subjectCode) {
-        var position = 0;
+      function restoreNode(graph, node, subjectCode) {
         for (var i = 0; i < graph.nodes.length; ++i) {
-          if (subjectCode === graph.nodes[i].code) {
-            position = i;
-            break;
+          if (graph.nodes[i].code === subjectCode) {
+            node[0][i].classList.remove("deleted");
           }
         }
+      }
+
+      function updateCorrespondingEdge(graph, nodeContainer, subjectCode, operation) {
+        var position = nodeIndex(graph, subjectCode);        
 
         for (var i = 0; i < graph.links.length; ++i) {
-          if (position === graph.links[i].source || position === graph.links[i].target) {
-            edge[0][i].style.display = "none";
+          var source = graph.links[i].source,
+              target = graph.links[i].target;
+          if (position === source || position === target) {
+            switch (operation) {
+              case DELETE:
+                edge[0][i].style.display = "none";
+                break;
+              case RESTORE:
+                if (nodeContainer.indexOf(graph.nodes[source].code) === -1 
+                  && nodeContainer.indexOf(graph.nodes[target].code) === -1) {
+                  edge[0][i].style.display = "inline";
+                }
+              }
+          }
+        }   
+
+        if (operation === DELETE) {
+          deletedNodeContainer.push(subjectCode);
+        } else {
+          var nodePosition = deletedNodeContainer.indexOf(subjectCode);
+          deletedNodeContainer.slice(nodePosition, nodePosition + 1);
+        }
+      }
+
+      function nodeIndex(graph, subjectCode) {
+        for (var i = 0; i < graph.nodes.length; ++i) {
+          if (subjectCode === graph.nodes[i].code) {
+            return i;
           }
         }
+      }
+
+      function makeRestoreButton() {
+        var graphContainer = document.getElementById("graph");
+        var restoreBtn = document.createElement("button");
+        restoreBtn.classList.add("btn");
+        restoreBtn.id = "restoreBtn";
+        restoreBtn.innerHTML = "Restore Node";
+        restoreBtn.style.display = "none";
+        graphContainer.appendChild(restoreBtn);
       }
 
     });
