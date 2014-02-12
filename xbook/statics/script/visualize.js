@@ -12,7 +12,6 @@ var visualizeGraph = (function() {
 
   var selectedName = document.querySelector("#selectedName");
   var selectedCode = document.querySelector("#selectedCode");
-  var detailFields = document.querySelectorAll(".subjectDetailHeading");
 
   return function(url) {
 
@@ -22,12 +21,12 @@ var visualizeGraph = (function() {
       }
 
       var deletedNodeContainer = []
-
       var renderer = new dagreD3.Renderer();
       var g = new dagreD3.Digraph();
       var n = graph.nodes.length;
       var $reqType = angular.element($sidePane).scope().reqType();
       var nodeData = null;
+      makeDetailsButton($sidePane);
 
       for (var i = 0; i < n; ++i) {
           g.addNode(i, makeNode(graph.nodes[i]));
@@ -93,15 +92,13 @@ var visualizeGraph = (function() {
       );
 
       var ns = document.querySelectorAll(".node");
+      var readMore = document.getElementById("readMore");
       var prevHighlightNode = "";
 
       resetOpacity();
       makeRestoreButton();
-      
-      showSubjectDetail(graph.nodes[0], selectedName, selectedCode);
-      for (var i = 0; i < detailFields.length; ++i) {
-          detailFields[i].style.display = "block";
-        }
+
+      showSubjectDetail(graph.nodes[0], readMore, selectedName, selectedCode);
 
       restoreBtn.onclick = function(e) {
         if (deletedNodeContainer.length != 0) {
@@ -157,11 +154,12 @@ var visualizeGraph = (function() {
             }
             queueHead++;
           }
+          readMore.classList.remove("hidden");
+          showSubjectDetail(d, readMore, selectedName, selectedCode);
         } else {
           prevHighlightNode = "";
           resetOpacity();
         }
-        showSubjectDetail(d, selectedName, selectedCode);
       });
 
       node.on("dblclick", function(d) {
@@ -204,27 +202,43 @@ var visualizeGraph = (function() {
         }
       }
 
-      function showSubjectDetail(d, selectedName, selectedCode) {
-        var creditPoint = document.getElementById("creditPointDetail");
-        var semesterDetail = document.getElementById("semesterDetail");
-        var timeCommitDetail = document.getElementById("timeCommitDetail");
-        var prerequisitesDetail = document.getElementById("prerequisitesDetail");
-        var corequisitesDetail = document.getElementById("corequisitesDetail");
-        var subjectOverviewDetail = document.getElementById("subjectOverviewDetail");
-        var objectivesDetail = document.getElementById("objectivesDetail");
-        var assessmentsDetail = document.getElementById("assessmentsDetail");
+      function showSubjectDetail(d, readMore, selectedName, selectedCode) {
+        var detailsContainer = [];
+        
+
+        detailsContainer.push(document.querySelector("#creditPointDetail"));
+        detailsContainer.push(document.querySelector("#semesterDetail"));
+        detailsContainer.push(document.querySelector("#timeCommitDetail"));
+        detailsContainer.push(document.querySelector("#prerequisitesDetail"));
+        detailsContainer.push(document.querySelector("#corequisitesDetail"));
+        detailsContainer.push(document.querySelector("#assessmentsDetail"));
+        detailsContainer.push(document.querySelector("#subjectOverviewDetail"));
+        detailsContainer.push(document.querySelector("#objectivesDetail"));
 
         selectedName.innerHTML = d.name;
         selectedCode.innerHTML = d.code;
-        creditPoint.innerHTML = d.credit ? d.credit : "None";
-        semesterDetail.innerHTML = d.commence_date ? d.commence_date : "None";
-        timeCommitDetail.innerHTML = d.time_commitment ? d.time_commitment : "None";
-        prerequisitesDetail.innerHTML = d.prereq ? d.prereq : "None";
-        corequisitesDetail.innerHTML = d.coreq ? d.coreq : "None";
-        assessmentsDetail.innerHTML = d.assessment ? d.assessment : "None";
-        subjectOverviewDetail.innerHTML = d.overview ? d.overview : "None";
-        objectivesDetail.innerHTML = d.objectives ? d.objectives : "None";
-        assessmentsDetail.innerHTML = d.assessment ? d.assessment : "None";
+        detailsContainer[0].innerHTML = d.credit ? d.credit : "None";
+        detailsContainer[1].innerHTML = d.commence_date ? d.commence_date : "None";
+        detailsContainer[2].innerHTML = d.time_commitment ? d.time_commitment : "None";
+        detailsContainer[3].innerHTML = d.prereq ? d.prereq : "None";
+        detailsContainer[4].innerHTML = d.coreq ? d.coreq : "None";
+        detailsContainer[5].innerHTML = d.assessment ? d.assessment : "None";
+        detailsContainer[6].innerHTML = d.overview ? d.overview.slice(0, 100) + "..." : "None";
+        detailsContainer[7].parentNode.classList.add("hidden");
+
+        for (var i = 0; i < detailsContainer.length - 1; ++i) {
+          detailsContainer[i].parentNode.classList.remove("hidden");
+          if (detailsContainer[i].innerHTML.search("None") > 0) {
+            detailsContainer[i].parentNode.classList.add("hidden");
+          }
+        }
+
+        readMore.onclick = function(e) {
+          detailsContainer[6].innerHTML = d.overview ? d.overview : "None";
+          detailsContainer[7].parentNode.classList.remove("hidden");
+          detailsContainer[7].innerHTML = d.objectives ? d.objectives : "None";
+          readMore.classList.add("hidden");
+        }
       }
 
       function restoreNode(graph, node, subjectCode) {
@@ -279,6 +293,13 @@ var visualizeGraph = (function() {
         restoreBtn.innerHTML = "Restore Node";
         restoreBtn.style.display = "none";
         graphContainer.appendChild(restoreBtn);
+      }
+
+      function makeDetailsButton(sidePane) {
+        var readMore = document.createElement("a");
+        readMore.id = "readMore";
+        readMore.innerHTML = "[show details]";
+        sidePane.append(readMore);
       }
 
     });

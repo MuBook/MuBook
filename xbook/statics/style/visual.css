@@ -155,6 +155,7 @@ a:hover {
 	color: #eee;
 	text-align: center;
 	overflow: auto;
+	overflow-x: hidden;
 	width: 20%;
 }
 
@@ -167,9 +168,14 @@ a:hover {
 }
 
 .subjectDetailHeading {
+	position: relative;
 	text-align: left;
-	padding-left: 20px;
-	display: none;
+	padding: 0 0 5px 0;
+	margin-bottom: 1px;
+	left: 20px;
+	width: 90%;
+	display: block;
+	border-bottom: 2px solid rgb(92, 90, 90); 
 }
 
 .subjectDetail {
@@ -179,6 +185,17 @@ a:hover {
 
 #selectedCode {
 	margin-bottom: 0;
+}
+
+#readMore {
+	position: absolute;
+	right: 5px;
+	margin-top: -5px;
+	padding-bottom: 10px;
+}
+
+#readMore:hover {
+	cursor: pointer;
 }
 
 /************
