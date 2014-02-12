@@ -208,7 +208,7 @@ app.controller("GraphCtrl", function GraphCtrl($scope, $routeParams, $location, 
   };
 });
 
-app.controller("SidePaneCtrl", function SidePaneCtrl($scope, $location, Global) {
+app.controller("SidePaneCtrl", function SidePaneCtrl($scope, $location, Global) {  
   $scope.reqSwitch = function reqSwitch() {
     Global.reqType = (Global.reqType == "postreq") ? "prereq" : "postreq";
     $location.path(Global.reqType + "/melbourne/" + Global.code);
@@ -219,7 +219,7 @@ app.controller("SidePaneCtrl", function SidePaneCtrl($scope, $location, Global) 
   };
 
   $scope.update = function update(code) {
-
+    $("#searchBar").attr("placeholder", code);
   };
 });
 
@@ -235,7 +235,7 @@ app.controller("FeedbackCtrl", function FeedbackCtrl($scope, $http, $timeout) {
 
   $scope.sendFeedback = function(e) {
     if (!$scope.message) {
-      alert("Feedback cannot be empty!");
+      alert("Feedback message cannot be empty!");
       e.preventDefault();
       $timeout(function() {
         $("#feedback-message").focus();

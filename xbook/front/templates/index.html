@@ -5,15 +5,29 @@
 	<title>Demo</title>
 	<link rel="stylesheet" href="//netdna.bootstrapcdn.com/bootstrap/3.1.0/css/bootstrap.min.css">
 	<link rel="stylesheet" href="static/style/visual.css">
+	<link href='http://fonts.googleapis.com/css?family=Poller+One' rel='stylesheet' type='text/css'>
 	<script src="http://ajax.googleapis.com/ajax/libs/angularjs/1.2.12/angular.min.js"></script>
 	<script src="http://ajax.googleapis.com/ajax/libs/angularjs/1.2.12/angular-route.min.js"></script>
 	<script src="http://ajax.googleapis.com/ajax/libs/jquery/1.10.2/jquery.min.js"></script>
 </head>
 <body ng-app="app">
+	<nav class="navbar navbar-default" role="navigation">
+		<div class="container-fluid">
+			<div class="row" id="topBar">
+				<div class="navbar-header col-md-2">
+					<p class="navbar-brand">Project-X</p>
+				</div>
+				<form class="navbar-form" role="search">
+					<input type="text" class="form-control col-md-offset-2" id="searchBar"
+		                 placeholder="Search" ng-controller="UICtrl" ng-click="search()">
+					<button type="submit" class="btn btn-default" id="searchBtn" ng-controller="UICtrl" ng-click="search()">
+						<i class="glyphicon glyphicon-search"></i>
+					</button>
+				</form>
+			</div>
+		</div>
+	</nav>
 	<section id="sidePane" class="col-lg-3" ng-controller="SidePaneCtrl">
-		<header ng-controller="UICtrl" ng-click="search()" id="heading">
-			<span ng-bind="getCode()" class="title"></span>
-		</header>
 		{% verbatim %}
 		<span class="btn btn-default" ng-cloak ng-click="reqSwitch()">{{reqType()}}</span>
 		{% endverbatim %}

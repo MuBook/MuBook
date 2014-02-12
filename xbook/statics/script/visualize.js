@@ -99,6 +99,7 @@ var visualizeGraph = (function() {
       makeRestoreButton();
 
       showSubjectDetail(graph.nodes[0], readMore, selectedName, selectedCode);
+      angular.element($sidePane).scope().update(graph.nodes[0].code);
 
       restoreBtn.onclick = function(e) {
         if (deletedNodeContainer.length != 0) {
@@ -112,7 +113,6 @@ var visualizeGraph = (function() {
       }
 
       node.on("click", function(d) {
-        /* Node Deletion */
         if (d3.event.button === 0 && d3.event.ctrlKey) {
           document.getElementById("restoreBtn").style.display = "inline";
           this.classList.add("deleted");
@@ -204,7 +204,6 @@ var visualizeGraph = (function() {
 
       function showSubjectDetail(d, readMore, selectedName, selectedCode) {
         var detailsContainer = [];
-        
 
         detailsContainer.push(document.querySelector("#creditPointDetail"));
         detailsContainer.push(document.querySelector("#semesterDetail"));

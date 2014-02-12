@@ -41,7 +41,7 @@ a:hover {
 #graphContainer {
 	position: fixed;
 	right: 0;
-	top: 42px;
+	top: 52px;
 	bottom: 0;
 	overflow: hidden;
 	padding: 0;
@@ -124,6 +124,44 @@ a:hover {
 }
 
 /************
+* =TopBar
+*************/
+.navbar {
+	margin: 0;
+	border-width: 0 0 1px 0;
+	border-color: black;
+	border-radius: 0;
+}
+
+#topBar {
+	background-color: silver;
+}
+
+#searchBar {
+	width: 25%;
+}
+
+.navbar-brand:hover {
+	cursor: default;
+}
+
+#searchBtn {
+	left: -45px;
+	position: relative;
+	border: 0;
+}
+
+#searchBtn:hover {
+	cursor: text;
+	background-color: #fff;
+}
+
+.navbar-default .navbar-brand {
+	color: #fff;
+	font-family: 'Poller One', cursive;
+}
+
+/************
 * =SidePane
 *************/
 #heading {
@@ -147,12 +185,12 @@ a:hover {
 
 #sidePane {
 	position: fixed;
-	top: 42px;
+	top: 52px;
 	left: 0;
 	bottom: 0;
 	padding: 0;
-	background-color: #222;
-	color: #eee;
+	background-color: white;
+	color: #6E6E6E;
 	text-align: center;
 	overflow: auto;
 	overflow-x: hidden;
@@ -175,7 +213,7 @@ a:hover {
 	left: 20px;
 	width: 90%;
 	display: block;
-	border-bottom: 2px solid rgb(92, 90, 90); 
+	border-bottom: 1px solid #DBDBDB; 
 }
 
 .subjectDetail {
