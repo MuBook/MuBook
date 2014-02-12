@@ -227,7 +227,8 @@ var visualizeGraph = (function() {
 
         for (var i = 0; i < detailsContainer.length - 1; ++i) {
           detailsContainer[i].parentNode.classList.remove("hidden");
-          if (detailsContainer[i].innerHTML.search("None") > 0) {
+          console.log(detailsContainer[i].innerHTML.search("None"));
+          if (detailsContainer[i].innerHTML.search("None") >= 0) {
             detailsContainer[i].parentNode.classList.add("hidden");
           }
         }
