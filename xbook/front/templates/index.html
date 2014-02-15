@@ -11,23 +11,21 @@
 	<script src="http://ajax.googleapis.com/ajax/libs/jquery/1.10.2/jquery.min.js"></script>
 </head>
 <body ng-app="app">
-	<nav class="navbar navbar-default" role="navigation">
-		<div class="container-fluid">
+	<nav class="navbar navbar-default" role="navigation" ng-controller="UICtrl">
 			<div class="row" id="topBar">
 				<div class="navbar-header col-md-2">
-					<p class="navbar-brand">Project-X</p>
+					<h4 id="brand">Project-X</h4>
 				</div>
-				<form class="navbar-form" role="search">
-					<input type="text" class="form-control col-md-offset-2" id="searchBar"
-		                 placeholder="Search" ng-controller="UICtrl" ng-click="search()">
-					<button type="submit" class="btn btn-default" id="searchBtn" ng-controller="UICtrl" ng-click="search()">
+				<div class="navbar-form">
+					<input type="text" class="form-control col-md-offset-3" id="searchBar"
+		                 placeholder="Search" ng-click="search()">
+					<span type="submit" class="btn btn-default" id="searchBtn" ng-click="search()">
 						<i class="glyphicon glyphicon-search"></i>
-					</button>
-				</form>
+					</span>
+				</div>
 			</div>
-		</div>
 	</nav>
-	<section id="sidePane" class="col-lg-3" ng-controller="SidePaneCtrl">
+	<section id="sidePane" ng-controller="SidePaneCtrl">
 		{% verbatim %}
 		<span class="btn btn-default" ng-cloak ng-click="reqSwitch()">{{reqType()}}</span>
 		{% endverbatim %}
@@ -65,9 +63,10 @@
 			<h4 class="subjectDetailHeading">Objectives: </h4>
 			<p class = "subjectDetail" id="objectivesDetail"></p>
 		</div>
+		<a id="readMore" href="">[show details]</a>
 	</section>
 
-	<section ng-view id="graphContainer" class="col-lg-9"></section>
+	<section ng-view id="graphContainer"></section>
 
 	<section id="searchScreen" ng-controller="SearchCtrl" ng-show="isVisiable()" ng-cloak>
 		<div id="cover" ng-click="esc({keyCode:27})"></div>

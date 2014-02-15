@@ -3,7 +3,7 @@ var visualizeGraph = (function() {
 
   var $sidePane = $("#sidePane");
 
-  var TOP_BAR_HEIGHT = 42;
+  var TOP_BAR_HEIGHT = 52;
   var WIDTH = window.innerWidth - $sidePane.width(),
       HEIGHT = window.innerHeight - TOP_BAR_HEIGHT,
       SCALE_RANGE = [0.4, 2],
@@ -26,7 +26,6 @@ var visualizeGraph = (function() {
       var n = graph.nodes.length;
       var $reqType = angular.element($sidePane).scope().reqType();
       var nodeData = null;
-      makeDetailsButton($sidePane);
 
       for (var i = 0; i < n; ++i) {
           g.addNode(i, makeNode(graph.nodes[i]));
@@ -44,7 +43,6 @@ var visualizeGraph = (function() {
           d3.select("#graph")
             .append("svg")
             .attr("id", "graphSVG")
-            .attr("position", "fixed")
             .attr("bottom", "0")
             .attr("right", "0")
         );
@@ -92,7 +90,7 @@ var visualizeGraph = (function() {
       );
 
       var ns = document.querySelectorAll(".node");
-      var readMore = document.getElementById("readMore");
+      var readMore = document.querySelector("#readMore");
       var prevHighlightNode = "";
 
       resetOpacity();
@@ -114,7 +112,7 @@ var visualizeGraph = (function() {
 
       node.on("click", function(d) {
         if (d3.event.button === 0 && d3.event.ctrlKey) {
-          document.getElementById("restoreBtn").style.display = "inline";
+          document.querySelector("#restoreBtn").style.display = "inline";
           this.classList.add("deleted");
           updateCorrespondingEdge(graph, deletedNodeContainer, d.code, DELETE);
           return;
@@ -203,26 +201,17 @@ var visualizeGraph = (function() {
       }
 
       function showSubjectDetail(d, readMore, selectedName, selectedCode) {
-        var detailsContainer = [];
-
-        detailsContainer.push(document.querySelector("#creditPointDetail"));
-        detailsContainer.push(document.querySelector("#semesterDetail"));
-        detailsContainer.push(document.querySelector("#timeCommitDetail"));
-        detailsContainer.push(document.querySelector("#prerequisitesDetail"));
-        detailsContainer.push(document.querySelector("#corequisitesDetail"));
-        detailsContainer.push(document.querySelector("#assessmentsDetail"));
-        detailsContainer.push(document.querySelector("#subjectOverviewDetail"));
-        detailsContainer.push(document.querySelector("#objectivesDetail"));
+        var detailsContainer = document.querySelectorAll(".subjectDetail");
 
         selectedName.innerHTML = d.name;
         selectedCode.innerHTML = d.code;
-        detailsContainer[0].innerHTML = d.credit ? d.credit : "None";
-        detailsContainer[1].innerHTML = d.commence_date ? d.commence_date : "None";
-        detailsContainer[2].innerHTML = d.time_commitment ? d.time_commitment : "None";
-        detailsContainer[3].innerHTML = d.prereq ? d.prereq : "None";
-        detailsContainer[4].innerHTML = d.coreq ? d.coreq : "None";
-        detailsContainer[5].innerHTML = d.assessment ? d.assessment : "None";
-        detailsContainer[6].innerHTML = d.overview ? d.overview.slice(0, 100) + "..." : "None";
+        detailsContainer[0].innerHTML = d.credit || "None";
+        detailsContainer[1].innerHTML = d.commence_date || "None";
+        detailsContainer[2].innerHTML = d.time_commitment || "None";
+        detailsContainer[3].innerHTML = d.prereq || "None";
+        detailsContainer[4].innerHTML = d.coreq || "None";
+        detailsContainer[5].innerHTML = d.assessment || "None";
+        detailsContainer[6].innerHTML = d.overview.slice(0, 100) + "..." || "None";
         detailsContainer[7].parentNode.classList.add("hidden");
 
         for (var i = 0; i < detailsContainer.length - 1; ++i) {
@@ -233,9 +222,9 @@ var visualizeGraph = (function() {
         }
 
         readMore.onclick = function(e) {
-          detailsContainer[6].innerHTML = d.overview ? d.overview : "None";
+          detailsContainer[6].innerHTML = d.overview || "None";
           detailsContainer[7].parentNode.classList.remove("hidden");
-          detailsContainer[7].innerHTML = d.objectives ? d.objectives : "None";
+          detailsContainer[7].innerHTML = d.objectives || "None";
           readMore.classList.add("hidden");
         }
       }
@@ -249,7 +238,7 @@ var visualizeGraph = (function() {
       }
 
       function updateCorrespondingEdge(graph, nodeContainer, subjectCode, operation) {
-        var position = nodeIndex(graph, subjectCode);        
+        var position = nodeIndex(graph, subjectCode);
 
         for (var i = 0; i < graph.links.length; ++i) {
           var source = graph.links[i].source,
@@ -260,13 +249,13 @@ var visualizeGraph = (function() {
                 edge[0][i].style.display = "none";
                 break;
               case RESTORE:
-                if (nodeContainer.indexOf(graph.nodes[source].code) === -1 
+                if (nodeContainer.indexOf(graph.nodes[source].code) === -1
                   && nodeContainer.indexOf(graph.nodes[target].code) === -1) {
                   edge[0][i].style.display = "inline";
                 }
               }
           }
-        }   
+        }
 
         if (operation === DELETE) {
           deletedNodeContainer.push(subjectCode);
@@ -285,20 +274,13 @@ var visualizeGraph = (function() {
       }
 
       function makeRestoreButton() {
-        var graphContainer = document.getElementById("graph");
+        var graphContainer = document.querySelector("#graph");
         var restoreBtn = document.createElement("button");
         restoreBtn.classList.add("btn");
         restoreBtn.id = "restoreBtn";
         restoreBtn.innerHTML = "Restore Node";
         restoreBtn.style.display = "none";
         graphContainer.appendChild(restoreBtn);
-      }
-
-      function makeDetailsButton(sidePane) {
-        var readMore = document.createElement("a");
-        readMore.id = "readMore";
-        readMore.innerHTML = "[show details]";
-        sidePane.append(readMore);
       }
 
     });

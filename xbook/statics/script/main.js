@@ -208,7 +208,7 @@ app.controller("GraphCtrl", function GraphCtrl($scope, $routeParams, $location, 
   };
 });
 
-app.controller("SidePaneCtrl", function SidePaneCtrl($scope, $location, Global) {  
+app.controller("SidePaneCtrl", function SidePaneCtrl($scope, $location, Global) {
   $scope.reqSwitch = function reqSwitch() {
     Global.reqType = (Global.reqType == "postreq") ? "prereq" : "postreq";
     $location.path(Global.reqType + "/melbourne/" + Global.code);
