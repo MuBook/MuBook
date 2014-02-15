@@ -43,8 +43,8 @@ var visualizeGraph = (function() {
           d3.select("#graph")
             .append("svg")
             .attr("id", "graphSVG")
-            .attr("bottom", "0")
-            .attr("right", "0")
+            .attr("width", WIDTH)
+            .attr("height", HEIGHT)
         );
 
       var nodes = d3.select(".nodes");
