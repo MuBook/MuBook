@@ -219,7 +219,7 @@ app.controller("SidePaneCtrl", function SidePaneCtrl($scope, $location, Global) 
   };
 
   $scope.update = function update(code) {
-
+    $("#searchBar").attr("placeholder", code);
   };
 });
 
@@ -235,7 +235,7 @@ app.controller("FeedbackCtrl", function FeedbackCtrl($scope, $http, $timeout) {
 
   $scope.sendFeedback = function(e) {
     if (!$scope.message) {
-      alert("Feedback cannot be empty!");
+      alert("Feedback message cannot be empty!");
       e.preventDefault();
       $timeout(function() {
         $("#feedback-message").focus();

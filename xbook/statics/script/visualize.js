@@ -3,14 +3,15 @@ var visualizeGraph = (function() {
 
   var $sidePane = $("#sidePane");
 
+  var TOP_BAR_HEIGHT = 52;
   var WIDTH = window.innerWidth - $sidePane.width(),
-      HEIGHT = window.innerHeight,
+      HEIGHT = window.innerHeight - TOP_BAR_HEIGHT,
       SCALE_RANGE = [0.4, 2],
       DELETE = 0,
       RESTORE = 1;
 
   var selectedName = document.querySelector("#selectedName");
-  var detailFields = document.querySelectorAll(".subjectDetailHeading");
+  var selectedCode = document.querySelector("#selectedCode");
 
   return function(url) {
 
@@ -20,7 +21,6 @@ var visualizeGraph = (function() {
       }
 
       var deletedNodeContainer = []
-
       var renderer = new dagreD3.Renderer();
       var g = new dagreD3.Digraph();
       var n = graph.nodes.length;
@@ -42,9 +42,9 @@ var visualizeGraph = (function() {
           g,
           d3.select("#graph")
             .append("svg")
-            .attr("width", WIDTH)
-            .attr("height", HEIGHT)
             .attr("id", "graphSVG")
+            .attr("bottom", "0")
+            .attr("right", "0")
         );
 
       var nodes = d3.select(".nodes");
@@ -90,10 +90,14 @@ var visualizeGraph = (function() {
       );
 
       var ns = document.querySelectorAll(".node");
+      var readMore = document.querySelector("#readMore");
       var prevHighlightNode = "";
 
       resetOpacity();
       makeRestoreButton();
+
+      showSubjectDetail(graph.nodes[0], readMore, selectedName, selectedCode);
+      angular.element($sidePane).scope().update(graph.nodes[0].code);
 
       restoreBtn.onclick = function(e) {
         if (deletedNodeContainer.length != 0) {
@@ -107,18 +111,13 @@ var visualizeGraph = (function() {
       }
 
       node.on("click", function(d) {
-        /* Node Deletion */
         if (d3.event.button === 0 && d3.event.ctrlKey) {
-          document.getElementById("restoreBtn").style.display = "inline";
+          document.querySelector("#restoreBtn").style.display = "inline";
           this.classList.add("deleted");
           updateCorrespondingEdge(graph, deletedNodeContainer, d.code, DELETE);
           return;
         }
 
-        selectedName.innerHTML = d.name;
-        for (var i = 0; i < detailFields.length; ++i) {
-          detailFields[i].style.display = "block";
-        }
         for (var i = ns.length - 1; i >=0; --i) {
           ns[i].classList.remove("selected");
           ns[i].classList.remove("visible")
@@ -153,11 +152,12 @@ var visualizeGraph = (function() {
             }
             queueHead++;
           }
+          readMore.classList.remove("hidden");
+          showSubjectDetail(d, readMore, selectedName, selectedCode);
         } else {
           prevHighlightNode = "";
           resetOpacity();
         }
-        showSubjectDetail(d);
       });
 
       node.on("dblclick", function(d) {
@@ -200,25 +200,33 @@ var visualizeGraph = (function() {
         }
       }
 
-      function showSubjectDetail(d) {
-        var creditPoint = document.getElementById("creditPointDetail");
-        var semesterDetail = document.getElementById("semesterDetail");
-        var timeCommitDetail = document.getElementById("timeCommitDetail");
-        var prerequisitesDetail = document.getElementById("prerequisitesDetail");
-        var corequisitesDetail = document.getElementById("corequisitesDetail");
-        var subjectOverviewDetail = document.getElementById("subjectOverviewDetail");
-        var objectivesDetail = document.getElementById("objectivesDetail");
-        var assessmentsDetail = document.getElementById("assessmentsDetail");
+      function showSubjectDetail(d, readMore, selectedName, selectedCode) {
+        var detailsContainer = document.querySelectorAll(".subjectDetail");
 
-        creditPoint.innerHTML = d.credit ? d.credit : "None";
-        semesterDetail.innerHTML = d.commence_date ? d.commence_date : "None";
-        timeCommitDetail.innerHTML = d.time_commitment ? d.time_commitment : "None";
-        prerequisitesDetail.innerHTML = d.prereq ? d.prereq : "None";
-        corequisitesDetail.innerHTML = d.coreq ? d.coreq : "None";
-        assessmentsDetail.innerHTML = d.assessment ? d.assessment : "None";
-        subjectOverviewDetail.innerHTML = d.overview ? d.overview : "None";
-        objectivesDetail.innerHTML = d.objectives ? d.objectives : "None";
-        assessmentsDetail.innerHTML = d.assessment ? d.assessment : "None";
+        selectedName.innerHTML = d.name;
+        selectedCode.innerHTML = d.code;
+        detailsContainer[0].innerHTML = d.credit || "None";
+        detailsContainer[1].innerHTML = d.commence_date || "None";
+        detailsContainer[2].innerHTML = d.time_commitment || "None";
+        detailsContainer[3].innerHTML = d.prereq || "None";
+        detailsContainer[4].innerHTML = d.coreq || "None";
+        detailsContainer[5].innerHTML = d.assessment || "None";
+        detailsContainer[6].innerHTML = d.overview.slice(0, 100) + "..." || "None";
+        detailsContainer[7].parentNode.classList.add("hidden");
+
+        for (var i = 0; i < detailsContainer.length - 1; ++i) {
+          detailsContainer[i].parentNode.classList.remove("hidden");
+          if (detailsContainer[i].innerHTML.search("None") >= 0) {
+            detailsContainer[i].parentNode.classList.add("hidden");
+          }
+        }
+
+        readMore.onclick = function(e) {
+          detailsContainer[6].innerHTML = d.overview || "None";
+          detailsContainer[7].parentNode.classList.remove("hidden");
+          detailsContainer[7].innerHTML = d.objectives || "None";
+          readMore.classList.add("hidden");
+        }
       }
 
       function restoreNode(graph, node, subjectCode) {
@@ -230,7 +238,7 @@ var visualizeGraph = (function() {
       }
 
       function updateCorrespondingEdge(graph, nodeContainer, subjectCode, operation) {
-        var position = nodeIndex(graph, subjectCode);        
+        var position = nodeIndex(graph, subjectCode);
 
         for (var i = 0; i < graph.links.length; ++i) {
           var source = graph.links[i].source,
@@ -241,13 +249,13 @@ var visualizeGraph = (function() {
                 edge[0][i].style.display = "none";
                 break;
               case RESTORE:
-                if (nodeContainer.indexOf(graph.nodes[source].code) === -1 
+                if (nodeContainer.indexOf(graph.nodes[source].code) === -1
                   && nodeContainer.indexOf(graph.nodes[target].code) === -1) {
                   edge[0][i].style.display = "inline";
                 }
               }
           }
-        }   
+        }
 
         if (operation === DELETE) {
           deletedNodeContainer.push(subjectCode);
@@ -266,7 +274,7 @@ var visualizeGraph = (function() {
       }
 
       function makeRestoreButton() {
-        var graphContainer = document.getElementById("graph");
+        var graphContainer = document.querySelector("#graph");
         var restoreBtn = document.createElement("button");
         restoreBtn.classList.add("btn");
         restoreBtn.id = "restoreBtn";
