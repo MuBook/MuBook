@@ -1,34 +1,21 @@
 <!doctype html>
-<html lang="en">
+<html lang="en" ng-app="mubook">
 <head>
 	<meta charset="UTF-8">
-	<title>Demo</title>
+	<title ng-bind="pageTitle"></title>
 	<link rel="stylesheet" href="//netdna.bootstrapcdn.com/bootstrap/3.1.0/css/bootstrap.min.css">
 	<link rel="stylesheet" href="static/style/visual.css">
-	<link href='http://fonts.googleapis.com/css?family=Poller+One' rel='stylesheet' type='text/css'>
-	<script src="http://ajax.googleapis.com/ajax/libs/angularjs/1.2.12/angular.min.js"></script>
-	<script src="http://ajax.googleapis.com/ajax/libs/angularjs/1.2.12/angular-route.min.js"></script>
-	<script src="http://ajax.googleapis.com/ajax/libs/jquery/1.10.2/jquery.min.js"></script>
+	<link href='//fonts.googleapis.com/css?family=Poller+One' rel='stylesheet' type='text/css'>
+	<script src="//ajax.googleapis.com/ajax/libs/angularjs/1.2.12/angular.min.js"></script>
+	<script src="//ajax.googleapis.com/ajax/libs/angularjs/1.2.12/angular-route.min.js"></script>
+	<script src="//ajax.googleapis.com/ajax/libs/jquery/1.10.2/jquery.min.js"></script>
 </head>
-<body ng-app="app">
-	<nav class="navbar navbar-default" role="navigation" ng-controller="UICtrl">
-			<div class="row" id="topBar">
-				<div class="navbar-header col-md-2">
-					<h4 id="brand">Project-X</h4>
-				</div>
-				<div class="navbar-form">
-					<input type="text" class="form-control col-md-offset-3" id="searchBar"
-		                 placeholder="Search" ng-click="search()">
-					<span type="submit" class="btn btn-default" id="searchBtn" ng-click="search()">
-						<i class="glyphicon glyphicon-search"></i>
-					</span>
-				</div>
-			</div>
-	</nav>
+<body>
+	<header class="row" id="topBar" ng-controller="UICtrl">
+		<h1 id="brand">µBook</h1>
+	</header>
+
 	<section id="sidePane" ng-controller="SidePaneCtrl">
-		{% verbatim %}
-		<span class="btn btn-default" ng-cloak ng-click="reqSwitch()">{{reqType()}}</span>
-		{% endverbatim %}
 		<h2 id="selectedCode">no subject selected</h2>
 		<h2 id="selectedName">no subject selected</h2>
 		<div id="creditPoint">
@@ -63,30 +50,38 @@
 			<h4 class="subjectDetailHeading">Objectives: </h4>
 			<p class = "subjectDetail" id="objectivesDetail"></p>
 		</div>
-		<a id="readMore" href="">[show details]</a>
+		<span id="readMore">[show details]</span>
 	</section>
 
 	<section ng-view id="graphContainer"></section>
 
-	<section id="searchScreen" ng-controller="SearchCtrl" ng-show="isVisiable()" ng-cloak>
-		<div id="cover" ng-click="esc({keyCode:27})"></div>
-		<div id="searchBox">
-			<input id="searchInput" type="text" ng-model="search" placeholder="Find subject..  or press ESC to quit" ng-keyup="esc($event)" ng-keydown="move($event)">
-			<div id="searchResult">
-				<table>
-					{% verbatim %}
-					<tr ng-click="replacePath(node.code)" data-code="{{node.code}}" ng-repeat="node in subjects | filter:search | limitTo: 100">
-						<td>{{node.code}}</td>
-						<td>{{node.name}}</td>
-					</tr>
-					{% endverbatim %}
-				</table>
-			</div>
+	<section id="typeSwitcher" class="btn-group" ng-controller="GraphTypeCtrl">
+		<span class="btn btn-default" ng-class="{active: prereq()}" ng-cloak ng-click="toPre()">Pre</span>
+		<span class="btn btn-default" ng-class="{active: !prereq()}" ng-cloak ng-click="toPost()">Post</span>
+	</section>
+
+	<section id="search" ng-controller="SearchCtrl" ng-cloak>
+		<input type="text" id="searchInput" placeholder="Search" ng-click="search()"
+				ng-model="query" ng-keyup="esc($event)" ng-keydown="move($event)">
+		<button class="btn btn-default" id="searchBtn" ng-click="search()">
+			<i class="glyphicon glyphicon-search"></i>
+		</button>
+		<div id="cover" ng-click="esc({keyCode:27})" ng-show="isVisiable()"></div>
+		<div id="searchResult" ng-show="isVisiable()">
+			<table>
+				{% verbatim %}
+				<tr ng-click="replacePath(node.code)" data-code="{{node.code}}"
+						ng-repeat="node in subjects | filter:query | limitTo: 100">
+					<td ng-bind="node.code"></td>
+					<td ng-bind="node.name"></td>
+				</tr>
+				{% endverbatim %}
+			</table>
 		</div>
 	</section>
 
 	<section id="feedback" ng-controller="FeedbackCtrl">
-		<span id="feedback-button" ng-click="toggleForm()">Feedback</span>
+		<span id="feedback-button" class="pull-right" ng-click="toggleForm()">Feedback?</span>
 		<form id="feedback-form" ng-hide="hideForm" ng-cloak ng-submit="sendFeedback($event)">
 			{% csrf_token %}
 			<label for="feedback-name">
@@ -103,7 +98,7 @@
 	</section>
 
 	<script src="//cdnjs.cloudflare.com/ajax/libs/d3/3.4.1/d3.min.js" charset="utf-8"></script>
-	<script src="http://cpettitt.github.io/project/dagre-d3/latest/dagre-d3.min.js"></script>
+	<script src="//cpettitt.github.io/project/dagre-d3/latest/dagre-d3.min.js"></script>
 	<script src="static/script/main.js"></script>
 	<script src="static/script/visualize.js"></script>
 </body>
