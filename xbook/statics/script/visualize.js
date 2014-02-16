@@ -92,6 +92,7 @@ var visualizeGraph = (function() {
       var ns = document.querySelectorAll(".node");
       var readMore = document.querySelector("#readMore");
       var prevHighlightNode = "";
+      readMore.classList.remove("hidden");
 
       resetOpacity();
       makeRestoreButton();
@@ -209,8 +210,8 @@ var visualizeGraph = (function() {
         detailsContainer[1].innerHTML = d.commence_date || "None";
         detailsContainer[2].innerHTML = d.time_commitment || "None";
         detailsContainer[3].innerHTML = d.prereq || "None";
-        detailsContainer[4].innerHTML = d.coreq || "None";
-        detailsContainer[5].innerHTML = d.assessment || "None";
+        detailsContainer[4].innerHTML = d.assessment || "None";
+        detailsContainer[5].innerHTML = d.coreq || "None";
         detailsContainer[6].innerHTML = d.overview.slice(0, 100) + "..." || "None";
         detailsContainer[7].parentNode.classList.add("hidden");
 
