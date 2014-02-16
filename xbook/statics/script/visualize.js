@@ -1,17 +1,17 @@
 var visualizeGraph = (function() {
   "use strict";
 
-  var $sidePane = $("#sidePane");
+  var $sidePane = $("#sidePane"),
+      $topBar = $("#topBar");
 
-  var TOP_BAR_HEIGHT = 52;
   var WIDTH = window.innerWidth - $sidePane.width(),
-      HEIGHT = window.innerHeight - TOP_BAR_HEIGHT,
+      HEIGHT = window.innerHeight - $topBar.height(),
       SCALE_RANGE = [0.4, 2],
       DELETE = 0,
       RESTORE = 1;
 
-  var selectedName = document.querySelector("#selectedName");
-  var selectedCode = document.querySelector("#selectedCode");
+  var selectedName = document.querySelector("#selectedName"),
+      selectedCode = document.querySelector("#selectedCode");
 
   return function(url) {
 
@@ -24,7 +24,7 @@ var visualizeGraph = (function() {
       var renderer = new dagreD3.Renderer();
       var g = new dagreD3.Digraph();
       var n = graph.nodes.length;
-      var $reqType = angular.element($sidePane).scope().reqType();
+      var isPrereq = angular.element($("#typeSwitcher")).scope().prereq();
       var nodeData = null;
 
       for (var i = 0; i < n; ++i) {
@@ -75,8 +75,8 @@ var visualizeGraph = (function() {
       }
 
       var centerNodeTranslation = [
-        $reqType === "prereq" ? (-yMinX + 240) + WIDTH / 2 : (-yMaxX + 240) + WIDTH / 2,
-        $reqType === "prereq" ? HEIGHT / 4 : 0
+        isPrereq ? (-yMinX + 240) + WIDTH / 2 : (-yMaxX + 240) + WIDTH / 2,
+        isPrereq ? HEIGHT / 4 : 0
       ];
 
       nodes.attr("transform", "translate(" + centerNodeTranslation + ")");
@@ -98,7 +98,6 @@ var visualizeGraph = (function() {
       makeRestoreButton();
 
       showSubjectDetail(graph.nodes[0], readMore, selectedName, selectedCode);
-      angular.element($sidePane).scope().update(graph.nodes[0].code);
 
       restoreBtn.onclick = function(e) {
         if (deletedNodeContainer.length != 0) {
@@ -163,7 +162,7 @@ var visualizeGraph = (function() {
 
       node.on("dblclick", function(d) {
         var $graph = angular.element($("#graphContainer")).scope();
-        $graph.update(d.code);
+        $graph.replacePath(d.code);
         $graph.$apply();
       });
 
@@ -222,12 +221,12 @@ var visualizeGraph = (function() {
           }
         }
 
-        readMore.onclick = function(e) {
+        $(readMore).on("click", function(e) {
           detailsContainer[6].innerHTML = d.overview || "None";
           detailsContainer[7].parentNode.classList.remove("hidden");
           detailsContainer[7].innerHTML = d.objectives || "None";
           readMore.classList.add("hidden");
-        }
+        });
       }
 
       function restoreNode(graph, node, subjectCode) {

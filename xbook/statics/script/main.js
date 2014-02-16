@@ -1,73 +1,95 @@
-/**
- * Index General Control
- * - Init
- * - Event
- * - Cookie
- * - etc.
- */
-var highlightPosition = 0;
+var mubook = angular.module("mubook", ["ngRoute"]);
 
-function loadTree(type, code) {
-  code = code || "comp30018";
-  url = "ajax/u-melbourne/" + type + "/" + code;
-  visualizeGraph(url);
-  docCookies.setItem("subjCode", code);
-}
-
-/**
- * Object storing lower bounds and upper bounds of the highlighted result
- */
-var highlight = {
-  LOWERBOUND : 2,
-  UPPERBOUND : 19,
-  HIGHLIGHT_HEIGHT : 25,
-  NUM_ROWS : 22
-};
-
-/**
- * Subject Searching App
- * - subject picker/filter
- */
-var app = angular.module("app", ["ngRoute"]);
-
-app.config(["$routeProvider",
+mubook.config(["$routeProvider",
   function($routeProvider) {
     $routeProvider
       .when("/:reqType/:university/:subjectCode", {
+        title: " - µBook",
         templateUrl: "/template",
         controller: "GraphCtrl"
       })
       .otherwise({
         redirectTo: "/prereq/melbourne/" + (docCookies.getItem("subjCode") || "comp30018")
       });
-  }]);
+  }
+]);
 
-app.factory("Subjects", function($http) {
-  return $http.get("ajax/u-123/subjectlist");
+mubook.run(["$location", "$rootScope", function($location, $rootScope) {
+  $rootScope.$on("$routeChangeSuccess", function(event, current) {
+    $rootScope.pageTitle = current.params.subjectCode + current.$$route.title;
+  });
+}]);
+
+mubook.run(["$location", "Global", "$rootScope", function($location, Global, $rootScope) {
+  $rootScope.replacePath = function replacePath(code) {
+    Global.isSearching = false;
+    Global.code = code;
+    $location.path(Global.reqType + "/melbourne/" + code);
+  };
+}]);
+
+mubook.factory("Subjects", function($http) {
+  return $http.get("ajax/u-melbourne/subjectlist");
 });
 
-app.factory("Global", function() {
+mubook.factory("Global", function() {
   return {
     code: "comp30018",
     reqType: "prereq",
-    selected: {},
     isSearching: false,
     filterIndex: 0,
-    filterList: null
+    filterList: []
   };
 });
 
-app.factory("$searchResult", function() {
+mubook.factory("$searchResult", function() {
   return $("#searchResult");
 });
 
-app.controller("SearchCtrl", function SearchCtrl($scope, $timeout, $location, Subjects, Global, $searchResult) {
+mubook.constant("HighlightHeight", 25);
 
-  $scope.centerHighlight = function centerHighlight() {
-    if ($searchResult.scrollTop() > Global.filterIndex * highlight.HIGHLIGHT_HEIGHT ||
-      $searchResult.scrollTop() + highlight.NUM_ROWS * highlight.HIGHLIGHT_HEIGHT <
-       Global.filterIndex * highlight.HIGHLIGHT_HEIGHT) {
-      $searchResult.scrollTop((Global.filterIndex - highlightPosition) * highlight.HIGHLIGHT_HEIGHT)
+mubook.controller("SearchCtrl", function SearchCtrl($scope, $timeout, Subjects, Global, $searchResult, HighlightHeight) {
+  $scope.$input = $("#searchInput");
+
+  $scope.search = function search() {
+    Global.isSearching = true;
+    $scope.resetSearchHighlight();
+
+    $timeout(function() {
+      $scope.$input.focus();
+    });
+  };
+
+  $scope.followHighlight = function followHighlight() {
+    $searchResult.scrollTop((Global.filterIndex - 11) * HighlightHeight);
+  };
+
+  $scope.resetSearchHighlight = function resetSearchHighlight() {
+    for (var i = Global.filterList.length - 1; i >= 0; --i) {
+      Global.filterList[i].classList.remove("highlight");
+    }
+
+    Global.filterList = document.querySelectorAll("#searchResult tr");
+
+    Global.filterIndex = 0;
+    Global.filterList[Global.filterIndex].classList.add("highlight");
+
+    $searchResult.scrollTop(0);
+  };
+
+  $scope.highlightUp = function highlightUp() {
+    if (Global.filterIndex > 0) {
+      Global.filterList[Global.filterIndex].classList.remove("highlight");
+      Global.filterIndex -= 1;
+      Global.filterList[Global.filterIndex].classList.add("highlight");
+    }
+  };
+
+  $scope.highlightDown = function highlightDown() {
+    if (Global.filterIndex < Global.filterList.length - 1) {
+      Global.filterList[Global.filterIndex].classList.remove("highlight");
+      Global.filterIndex += 1;
+      Global.filterList[Global.filterIndex].classList.add("highlight");
     }
   };
 
@@ -75,34 +97,28 @@ app.controller("SearchCtrl", function SearchCtrl($scope, $timeout, $location, Su
     e.preventDefault();
     var deltaY = e.originalEvent.wheelDeltaY || -e.originalEvent.deltaY;
     if (deltaY > 0) {
-      Global.filterList[Global.filterIndex].classList.remove("highlight");
-      if (Global.filterIndex > 0) {
-        Global.filterIndex -= 1;
-        if(highlightPosition > highlight.LOWERBOUND) {
-          highlightPosition -= 1;
-        }
-      }
+      $scope.highlightUp();
     } else {
-      Global.filterList[Global.filterIndex].classList.remove("highlight");
-      if (Global.filterIndex < Global.filterList.length - 1) {
-        Global.filterIndex += 1;
-        if (highlightPosition < highlight.UPPERBOUND) {
-          highlightPosition += 1;
-        }
-      }
+      $scope.highlightDown();
     }
-    Global.filterList[Global.filterIndex].classList.add("highlight");
-    if (highlightPosition <= highlight.LOWERBOUND
-      || highlightPosition >= highlight.UPPERBOUND) {
-      $searchResult.scrollTop((Global.filterIndex - highlightPosition) * highlight.HIGHLIGHT_HEIGHT);
-    }
-    $scope.centerHighlight();
+    $scope.followHighlight();
   });
 
-  $scope.replacePath = function replacePath(code) {
-    Global.isSearching = false;
-    Global.code = code;
-    $location.path(Global.reqType + "/melbourne/" + code);
+  $scope.move = function move(e) {
+    if (e.keyCode == 38) {
+      $scope.highlightUp()
+    } else if (e.keyCode == 40) {
+      $scope.highlightDown();
+    } else if (e.keyCode == 13) {
+      $scope.replacePath(Global.filterList[Global.filterIndex].dataset["code"]);
+    } else {
+      $timeout(function() {
+        $scope.resetSearchHighlight();
+        $scope.followHighlight();
+      });
+      return;
+    }
+    $scope.followHighlight();
   };
 
   $scope.isVisiable = function isVisiable() {
@@ -115,45 +131,6 @@ app.controller("SearchCtrl", function SearchCtrl($scope, $timeout, $location, Su
     }
   };
 
-  $scope.move = function move(e) {
-    if (e.keyCode == 38) {
-      Global.filterList[Global.filterIndex].classList.remove("highlight");
-      if (Global.filterIndex > 0) {
-        Global.filterIndex -= 1;
-        if(highlightPosition > highlight.LOWERBOUND) {
-          highlightPosition -= 1;
-        }
-      }
-    } else if (e.keyCode == 40) {
-      Global.filterList[Global.filterIndex].classList.remove("highlight");
-      if (Global.filterIndex < Global.filterList.length - 1) {
-        Global.filterIndex += 1;
-        if (highlightPosition < highlight.UPPERBOUND) {
-          highlightPosition += 1;
-        }
-      }
-    } else if (e.keyCode == 13) {
-      $scope.replacePath(Global.filterList[Global.filterIndex].dataset["code"]);
-    } else {
-      $timeout(function() {
-        Global.filterList = document.querySelectorAll("#searchResult tr");
-        for (var i = Global.filterList.length - 1; i >= 0; --i) {
-          Global.filterList[i].classList.remove("highlight");
-        }
-        Global.filterIndex = 0;
-        Global.filterList[Global.filterIndex].classList.add("highlight");
-        $searchResult.scrollTop(0);
-      });
-      return;
-    }
-    Global.filterList[Global.filterIndex].classList.add("highlight");
-    if(highlightPosition <= highlight.LOWERBOUND
-      || highlightPosition >= highlight.UPPERBOUND) {
-      $searchResult.scrollTop((Global.filterIndex - highlightPosition) * highlight.HIGHLIGHT_HEIGHT);
-    }
-    $scope.centerHighlight();
-  };
-
   $scope.subjects = [{"code": "Nahhhhh", "name": "waiting for data"}];
   Subjects.success(function(data) {
     $scope.subjects = data.subjList;
@@ -162,32 +139,13 @@ app.controller("SearchCtrl", function SearchCtrl($scope, $timeout, $location, Su
   });
 });
 
-app.controller("UICtrl", function UICtrl($scope, $timeout, Global, $searchResult) {
-  $scope.getCode = function code() {
-    return Global.code;
-  };
-
+mubook.controller("UICtrl", function UICtrl($scope, Global) {
   Global.code = docCookies.getItem("subjCode");
-
-  $scope.$input = $("#searchInput");
-
-  $scope.search = function search() {
-    Global.isSearching = true;
-    $timeout(function() {
-      $scope.$input.focus();
-      Global.filterList = document.querySelectorAll("#searchResult tr");
-      for (var i = Global.filterList.length - 1; i >= 0; --i) {
-        Global.filterList[i].classList.remove("highlight");
-      }
-      Global.filterIndex = 0;
-      Global.filterList[Global.filterIndex].classList.add("highlight");
-      $searchResult.scrollTop(0);
-    });
-  };
 });
 
-app.controller("GraphCtrl", function GraphCtrl($scope, $routeParams, $location, Global, $searchResult) {
+mubook.controller("GraphCtrl", function GraphCtrl($scope, $routeParams, $location, Global) {
   var status = { code: $routeParams.subjectCode };
+
   switch ($routeParams.reqType) {
     case "prereq":
       status.reqType = "prereq";
@@ -198,32 +156,34 @@ app.controller("GraphCtrl", function GraphCtrl($scope, $routeParams, $location, 
     default:
       $location.path("/prereq/melbourne/comp30018");
   }
+
   Global.code = status.code;
   Global.reqType = status.reqType;
-  loadTree(status.reqType, $routeParams.subjectCode);
 
-  $scope.update = function update(code) {
-    Global.code = code;
-    $location.path(Global.reqType + "/melbourne/" + code);
-  };
+  loadTree(status.reqType, $routeParams.subjectCode);
 });
 
-app.controller("SidePaneCtrl", function SidePaneCtrl($scope, $location, Global) {
-  $scope.reqSwitch = function reqSwitch() {
-    Global.reqType = (Global.reqType == "postreq") ? "prereq" : "postreq";
+mubook.controller("SidePaneCtrl", function SidePaneCtrl($scope) {
+
+});
+
+mubook.controller("GraphTypeCtrl", function GraphTypeCtrl($scope, $location, Global) {
+  $scope.toPre = function toPre() {
+    Global.reqType = "prereq";
     $location.path(Global.reqType + "/melbourne/" + Global.code);
   };
 
-  $scope.reqType = function reqType() {
-    return Global.reqType;
+  $scope.toPost = function toPost() {
+    Global.reqType = "postreq";
+    $location.path(Global.reqType + "/melbourne/" + Global.code);
   };
 
-  $scope.update = function update(code) {
-    $("#searchBar").attr("placeholder", code);
+  $scope.prereq = function prereq() {
+    return Global.reqType == "prereq";
   };
 });
 
-app.controller("FeedbackCtrl", function FeedbackCtrl($scope, $http, $timeout) {
+mubook.controller("FeedbackCtrl", function FeedbackCtrl($scope, $http, $timeout) {
   $scope.hideForm = true;
 
   $scope.toggleForm = function() {
@@ -267,8 +227,13 @@ app.controller("FeedbackCtrl", function FeedbackCtrl($scope, $http, $timeout) {
   };
 });
 
-// docCookies
-// credit:https://developer.mozilla.org/en-US/docs/Web/API/document.cookie
+function loadTree(type, code) {
+  url = "ajax/u-melbourne/" + type + "/" + code;
+  visualizeGraph(url);
+  docCookies.setItem("subjCode", code);
+}
+
+// credit: https://developer.mozilla.org/en-US/docs/Web/API/document.cookie
 var docCookies = {
   getItem: function(sKey) {
     return decodeURIComponent(document.cookie.replace(new RegExp("(?:(?:^|.*;)\\s*" + encodeURIComponent(sKey).replace(/[\-\.\+\*]/g, "\\$&") + "\\s*\\=\\s*([^;]*).*$)|^.*$"), "$1")) || null;

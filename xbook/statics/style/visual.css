@@ -9,10 +9,11 @@ html, body {
 
 body {
 	position: relative;
+	min-width: 800px;
 }
 
 h1, h2, h3, h4, h5 {
-	margin: 0 0 20px 0;
+	margin: 0;
 }
 
 a {
@@ -43,10 +44,11 @@ a:hover {
 	position: fixed;
 	left: 350px;
 	right: 0;
-	top: 52px;
+	top: 50px;
 	bottom: 0;
 	overflow: hidden;
 	padding: 0;
+	border-left: 1px solid #aaa;
 }
 
 #graph {
@@ -127,72 +129,27 @@ a:hover {
 /************
 * =TopBar
 *************/
-.navbar {
-	margin: 0;
-	border-width: 0 0 1px;
-	border-color: black;
-	border-radius: 0;
-}
-
 #topBar {
-	background-color: orange;
-}
-
-#searchBar {
-	width: 25%;
-}
-
-.navbar-brand:hover {
-	cursor: default;
-}
-
-#searchBtn {
-	left: -45px;
+	background-color: #38f;
 	position: relative;
-	border: 0;
-}
-
-#searchBtn:hover {
-	cursor: text;
-	background-color: #fff;
+	height: 50px;
 }
 
 #brand {
 	color: #fff;
 	font-family: 'Poller One', cursive;
-	padding: 15px 0  0 25px;
-	margin: 0;
-}
-
-#brand:hover {
-	cursor: default;
+	line-height: 50px;
+	font-size: 24px;
+	width: 160px;
+	text-align: center;
 }
 
 /************
 * =SidePane
 *************/
-#heading {
-	cursor: pointer;
-	width: 100%;
-	height: 60px;
-	line-height: 60px;
-	text-align: center;
-	font-family: sans-serif;
-	text-transform: uppercase;
-	font-size: 2em;
-}
-
-.title {
-	color: #345;
-	background-color: rgb(200, 220, 220);
-	padding: 3px 10px;
-	border-right: 2px solid #aaa;
-	border-bottom: 2px solid #aaa;
-}
-
 #sidePane {
 	position: fixed;
-	top: 52px;
+	top: 50px;
 	left: 0;
 	bottom: 0;
 	padding: 0;
@@ -202,6 +159,10 @@ a:hover {
 	overflow: auto;
 	overflow-x: hidden;
 	width: 350px;
+}
+
+#selectedCode, #selectedName {
+	margin: 10px 0;
 }
 
 #sidePane > footer {
@@ -227,62 +188,54 @@ a:hover {
 	padding-left: 30px;
 }
 
-#selectedCode {
-	margin-bottom: 0;
-}
-
 #readMore {
+	cursor: pointer;
 	position: absolute;
-	right: 5px;
-	margin-top: -5px;
+	right: 10px;
 	padding-bottom: 10px;
 }
 
 /************
 * =Search
 *************/
-#searchScreen {
-	width: 100%;
-	height: 100%;
+#search {
+	width: 400px;
+	height: 50px;
 	position: fixed;
 	top: 0;
 	left: 0;
-	background-color: rgba(120, 120, 120, 0.3);
-	z-index: 1000;
+	right: 0;
+	margin: auto;
 }
 
-#searchBox {
-	position: absolute;
-	top: 0;
-	bottom: 0;
-	left: 0;
-	right: 0;
-	width: 800px;
-	height: 600px;
-	margin: auto;
-	background-color: #38f;
-	box-shadow: 0 0 15px 5px #000;
+#searchInput, #searchBtn {
+	height: 30px;
+	margin-top: 10px;
+	vertical-align: bottom;
+	float: left;
 }
 
 #searchInput {
-	width: 100%;
-	height: 50px;
-	line-height: 50px;
-	font-size: 1.5em;
-	text-align: center;
-	margin: 0;
+	width: 370px;
+}
+
+#searchBtn {
+	width: 30px;
 	padding: 0;
-	border: none;
+	border-radius: 0;
 }
 
 #searchResult {
-	position: absolute;
-	height: 550px;
+	background-color: #079;
+	position: fixed;
+	width: 800px;
+	height: 600px;
 	top: 50px;
-	bottom: 0;
-	width: 100%;
-	color: #000;
+	right: 0;
+	left: 0;
+	color: #fff;
 	overflow-y: auto;
+	margin: auto;
 }
 
 #searchResult table {
@@ -308,42 +261,59 @@ a:hover {
 }
 
 #cover {
-	position: absolute;
-	width: 100%;
-	height: 100%;
+	position: fixed;
 	top: 0;
 	bottom: 0;
 	left: 0;
 	right: 0;
+	cursor: pointer;
 }
 
+/***********
+* =Feedback
+************/
 #feedback {
-	position: fixed;
+	position: absolute;
 	right: 0;
 	top: 0;
-	background-color: #fff;
+	height: 50px;
 }
 
 #feedback-button {
-	display: block;
-	width: 100px;
-	text-align: center;
-	background: #38a;
-	padding: 5px;
-	cursor: pointer;
+	background: #38f;
 	color: #fff;
+	cursor: pointer;
+	display: block;
+	font-family: 'Poller One', cursive;
+	font-size: 12px;
 	font-weight: bold;
-	font-size: 18px;
+	line-height: 50px;
+	text-align: center;
+	width: 160px;
 }
 
 #feedback-form {
+	background-color: #fff;
+	position: fixed;
+	top: 50px;
+	right: 0;
 	height: 300px;
 	width: 450px;
-	border: 1px solid #000;
+	border-left: 1px solid #38f;
+	border-bottom: 1px solid #38f;
 	padding: 15px;
 }
 
 #feedback-message {
 	height: 170px;
 	width: 400px;
+}
+
+/***********
+* =TypeSwitcher
+************/
+#typeSwitcher {
+	position: fixed;
+	right: 20px;
+	bottom: 20px;
 }
