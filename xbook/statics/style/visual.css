@@ -226,14 +226,14 @@ a:hover {
 }
 
 #searchResult {
-	background-color: #8cf;
+	background-color: #079;
 	position: fixed;
 	width: 800px;
 	height: 600px;
 	top: 50px;
 	right: 0;
 	left: 0;
-	color: #000;
+	color: #fff;
 	overflow-y: auto;
 	margin: auto;
 }
