@@ -129,33 +129,7 @@ var visualizeGraph = (function() {
         }
 
         if (d.code != prevHighlightNode) {
-          prevHighlightNode = d.code;
-          var path = [];
-          var nodeQueue = new SetQueue();
-          var rootPosition = 0;
-          for (var i = 0; i < graph.nodes.length; ++i) {
-            if (graph.nodes[i].code === d.code) {
-              rootPosition = i;
-              break;
-            }
-          }
-          nodeQueue.push(rootPosition);
-          var currentRoot, queueHead = 0;
-          while (queueHead != nodeQueue.length()) {
-            currentRoot = nodeQueue.get(queueHead);
-            if (deletedNodeContainer.indexOf(graph.nodes[currentRoot].code) > -1) {
-              queueHead++;
-              continue;
-            }
-            node[0][currentRoot].classList.add("visible");
-            for (var i = 0; i < graph.links.length; ++i) {
-              if (graph.links[i].source == currentRoot) {
-                edge[0][i].style.opacity = 1;
-                nodeQueue.push(graph.links[i].target);
-              }
-            }
-            queueHead++;
-          }
+          deleteNode(graph, d, d.code);
           readMore.classList.remove("hidden");
           showSubjectDetail(d, readMore, selectedName, selectedCode);
         } else {
@@ -286,6 +260,35 @@ var visualizeGraph = (function() {
         restoreBtn.innerHTML = "Restore Node";
         restoreBtn.style.display = "none";
         graphContainer.appendChild(restoreBtn);
+      }
+
+      function deleteNode(graph, d, subjectCode) {
+        prevHighlightNode = subjectCode;
+        var nodeQueue = new SetQueue();
+        var rootPosition = 0;
+        for (var i = 0; i < graph.nodes.length; ++i) {
+          if (graph.nodes[i].code === subjectCode) {
+            rootPosition = i;
+            break;
+          }
+        }
+        nodeQueue.push(rootPosition);
+        var currentRoot, queueHead = 0;
+        while (queueHead != nodeQueue.length()) {
+          currentRoot = nodeQueue.get(queueHead);
+          if (deletedNodeContainer.indexOf(graph.nodes[currentRoot].code) > -1) {
+            queueHead++;
+            continue;
+          }
+          node[0][currentRoot].classList.add("visible");
+          for (var i = 0; i < graph.links.length; ++i) {
+            if (graph.links[i].source == currentRoot) {
+              edge[0][i].style.opacity = 1;
+              nodeQueue.push(graph.links[i].target);
+            }
+          }
+          queueHead++;
+        }
       }
 
     });
