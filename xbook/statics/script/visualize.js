@@ -143,6 +143,10 @@ var visualizeGraph = (function() {
           var currentRoot, queueHead = 0;
           while (queueHead != nodeQueue.length()) {
             currentRoot = nodeQueue.get(queueHead);
+            if (deletedNodeContainer.indexOf(graph.nodes[currentRoot].code) > -1) {
+              queueHead++;
+              continue;
+            }
             node[0][currentRoot].classList.add("visible");
             for (var i = 0; i < graph.links.length; ++i) {
               if (graph.links[i].source == currentRoot) {
@@ -271,6 +275,7 @@ var visualizeGraph = (function() {
             return i;
           }
         }
+        return -1;
       }
 
       function makeRestoreButton() {
