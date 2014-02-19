@@ -1,36 +1,12 @@
 import os.path
 import json
-import zlib
 
 from collections import deque
 
 from django.http import HttpResponse
 from django.core.exceptions import ObjectDoesNotExist
+from django.views.decorators.cache import cache_page
 from xbook.ajax.models import Subject, SubjectPrereq, NonallowedSubject
-
-
-class Memo(object):
-
-	def __init__(self, f):
-		self.call = f
-		self.memo = {}
-
-	def __call__(self, *args):
-		if args in self.memo:
-			return self.memo[args]
-		rt = self.memo[args] = self.call(*args)
-		return rt
-
-
-class MemoString(Memo):
-
-	def __call__(self, *args):
-		if args in self.memo:
-			return zlib.decompress(self.memo[args])
-			# return self.memo[args]
-		rt = self.call(*args)
-		self.memo[args] = zlib.compress(rt)
-		return rt
 
 
 def Ajax(*args, **kwargs):
@@ -42,29 +18,37 @@ def Ajax(*args, **kwargs):
 	return resp
 
 
-@Memo
-def subjectGraphCollector(uni, code):
-	d = { "nodes": [], "links": [] }
+def subjectGraphCollector(uni, code, prereq=True):
+	graph = { "nodes": [], "links": [] }
 	subjQueue = deque()
-
-	nodes = d['nodes']
-	links = d['links']
 
 	try:
 		subject = Subject.objects.get(code=code)
 		subjQueue.append(subject)
 	except ObjectDoesNotExist as e:
 		nodes.append({ "name": "??" })
-		return d
+		return graph
 
-	parent, codeToIndex = -1, { subject.code: 0 }
+	queryKey = prereq and "subject__code" or "prereq__code"
+	queryParam = {}
+	subjectRelation = prereq and \
+		(lambda source, target: { "source": source, "target": target }) or \
+		(lambda target, source: { "source": source, "target": target })
+	relationGetter = prereq and \
+		(lambda relation: relation.prereq) or \
+		(lambda relation: relation.subject)
+
+	nodes = graph['nodes']
+	links = graph['links']
+
+	parentIndex, codeToIndex = -1, { subject.code: 0 }
 	while subjQueue:
 		subj = subjQueue.popleft()
 		nodes.append({
 			"code": subj.code,
 			"name": subj.name,
 			"url": subj.link,
-			"root": parent == -1 and True or False,
+			"root": parentIndex == -1 and True or False,
 			"credit": str(subj.credit),
 			"commence_date": subj.commence_date,
 			"time_commitment": subj.time_commitment,
@@ -74,81 +58,28 @@ def subjectGraphCollector(uni, code):
 			"prereq": subj.prerequisite,
 			"coreq": subj.corequisite
 		})
-		parent += 1
-		prereqs = SubjectPrereq.objects.filter(subject__code=subj.code)
+		parentIndex += 1
+		queryParam[queryKey] = subj.code
+		relations = SubjectPrereq.objects.filter(**queryParam)
 
-		for prereq in prereqs:
+		for relation in relations:
 			seen = True
-			if not prereq.prereq.code in codeToIndex:
+			related = relationGetter(relation)
+			if not related.code in codeToIndex:
 				seen = False
-				codeToIndex[prereq.prereq.code] = len(codeToIndex)
-			links.append({
-				"source": parent,
-				"target": codeToIndex[prereq.prereq.code],
-				"value": 1
-			})
+				codeToIndex[related.code] = len(codeToIndex)
+			links.append(subjectRelation(parentIndex, codeToIndex[related.code]))
 			if not seen:
-				subjQueue.append(prereq.prereq)
+				subjQueue.append(related)
 
-	return d
-
-@Memo
-def postrequisiteGraph(uni, code):
-	d = {"nodes": [], "links": []}
-	subjQueue, subjHistory = deque(), set()
-
-	nodes = d['nodes']
-	links = d['links']
-
-	try:
-		subject = Subject.objects.get(code=code)
-		subjQueue.append(subject)
-	except ObjectDoesNotExist as e:
-		nodes.append({"name": "??"})
-		return d
-
-	index, parent = 0, -1
-	while subjQueue:
-		parent += 1
-		subj = subjQueue.popleft()
-		nodes.append({
-			"code": subj.code,
-			"name": subj.name,
-			"url": subj.link,
-			"root": index == 0 and True or False,
-			"credit": str(subj.credit),
-			"commence_date": subj.commence_date,
-			"time_commitment": subj.time_commitment,
-			"overview": subj.overview,
-			"objectives": subj.objectives,
-			"assessment": subj.assessment,
-			"prereq": subj.prerequisite,
-			"coreq": subj.corequisite
-		})
-		prereqs = SubjectPrereq.objects.filter(prereq__code=subj.code)
-
-		for prereq in prereqs:
-			if prereq.subject in subjHistory:
-				continue
-			index += 1
-			links.append({
-				"source": index,
-				"target": parent,
-				"value": 1
-			})
-			subjQueue.append(prereq.subject)
-			subjHistory.add(prereq.subject)
-
-	return d
+	return graph
 
 
-def subject(request, uni, code, pretty=False, postreq=False):
-	if postreq:
-		data = postrequisiteGraph(uni, code.upper())
-	else:
-		data = subjectGraphCollector(uni, code.upper())
+@cache_page(60 * 60 * 24)
+def subject(request, uni, code, pretty=False, prereq=True):
+	graph = subjectGraphCollector(uni, code.upper(), prereq)
 
-	info = json.dumps(data, indent=4 if pretty else None)
+	info = json.dumps(graph, indent=4 if pretty else None)
 
 	return Ajax(
 		ajaxCallback(request, info),
@@ -156,7 +87,6 @@ def subject(request, uni, code, pretty=False, postreq=False):
 	)
 
 
-@MemoString
 def subjectListCollector(uni, pretty=False):
 	d = {'subjList': []}
 	l = d['subjList']
@@ -168,6 +98,7 @@ def subjectListCollector(uni, pretty=False):
 	return json.dumps(d, indent=4 if pretty else None)
 
 
+@cache_page(60 * 60 * 24)
 def subjectList(request, uni, pretty=False):
 	return Ajax(
 		ajaxCallback(request, subjectListCollector(uni, pretty)),
