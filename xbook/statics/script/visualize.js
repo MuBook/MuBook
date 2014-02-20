@@ -93,6 +93,7 @@ var visualizeGraph = (function() {
           document.querySelector("#restoreBtn").style.display = "inline";
           this.classList.add("deleted");
           updateCorrespondingEdge(graph, deletedNodeContainer, d.code, DELETE);
+          resetOpacity();
           return;
         }
 
