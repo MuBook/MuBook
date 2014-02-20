@@ -34,7 +34,7 @@ mubook.factory("Subjects", function($http) {
 
 mubook.factory("Global", function() {
   return {
-    code: "comp30018",
+    code: "COMP30018",
     reqType: "prereq",
     isSearching: false,
     filterIndex: 0,
@@ -154,7 +154,7 @@ mubook.controller("GraphCtrl", function GraphCtrl($scope, $routeParams, $locatio
       status.reqType = "postreq";
       break;
     default:
-      $location.path("/prereq/melbourne/comp30018");
+      $location.path("/prereq/melbourne/COMP30018");
   }
 
   Global.code = status.code;
