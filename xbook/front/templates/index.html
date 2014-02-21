@@ -57,8 +57,8 @@
 	<section ng-view id="graphContainer"></section>
 
 	<section id="typeSwitcher" class="btn-group" ng-controller="GraphTypeCtrl">
-		<span class="btn btn-default" ng-class="{active: prereq()}" ng-cloak ng-click="toPre()">Show Prerequisites</span>
-		<span class="btn btn-default" ng-class="{active: !prereq()}" ng-cloak ng-click="toPost()">Show Postrequisites</span>
+		<span class="btn btn-default" ng-class="{active: prereq()}" ng-cloak ng-click="toPre()">Prerequisites</span>
+		<span class="btn btn-default" ng-class="{active: !prereq()}" ng-cloak ng-click="toPost()">Postrequisites</span>
 	</section>
 
 	<section id="search" ng-controller="SearchCtrl" ng-cloak>
