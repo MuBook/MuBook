@@ -329,3 +329,43 @@ a:hover {
 	right: 20px;
 	bottom: 20px;
 }
+
+/***********
+* =PrerequisitesDetailTable
+************/
+#prerequisitesDetail .SetDescription {
+    clear: both;
+    padding-top: 0.0em;
+}
+
+#prerequisitesDetail .SubjectTable {
+    clear: both;
+    float: left;
+    padding-bottom: 1em;
+}
+
+#prerequisitesDetail .SubjectTitle {
+    width: 40%;
+    float: left;
+}
+
+#prerequisitesDetail .SubjectSemester {
+    width:45%;
+    float: left;
+}
+
+#prerequisitesDetail .SubjectPoints {
+    width: 15%;
+    float: left;
+}
+
+#prerequisitesDetail div.header {
+    background-color: lightgrey;
+    font-weight: bold;
+}
+
+#prerequisitesDetail div.row {
+    clear: both;
+    float: left;
+    width: 100%;
+}
