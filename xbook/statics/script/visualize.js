@@ -57,30 +57,8 @@ var visualizeGraph = (function() {
         .data(graph.nodes);
       var edge = svg.selectAll(".edgePath")
         .data(graph.links);
-      /* Center graph */
-      var yMin = node[0][0].getBoundingClientRect().bottom,
-          yMinX = node[0][0].getBoundingClientRect().left,
-          yMax = node[0][0].getBoundingClientRect().bottom,
-          yMaxX = node[0][0].getBoundingClientRect().left;
 
-      for (var i = 0; i < node[0].length; ++i) {
-        if (node[0][i].getBoundingClientRect().bottom < yMin) {
-          yMin = node[0][i].getBoundingClientRect().bottom;
-          yMinX = node[0][i].getBoundingClientRect().left;
-        }
-        if (node[0][i].getBoundingClientRect().bottom > yMax) {
-          yMax = node[0][i].getBoundingClientRect().bottom;
-          yMaxX = node[0][i].getBoundingClientRect().left;
-        }
-      }
-
-      var centerNodeTranslation = [
-        isPrereq ? (-yMinX + 240) + WIDTH / 2 : (-yMaxX + 240) + WIDTH / 2,
-        isPrereq ? HEIGHT / 4 : 0
-      ];
-
-      nodes.attr("transform", "translate(" + centerNodeTranslation + ")");
-      edges.attr("transform", "translate(" + centerNodeTranslation + ")");
+      var centerNodeTranslation = CenterGraphOn(node);
 
       svg.call(
         d3.behavior.zoom()
@@ -115,6 +93,7 @@ var visualizeGraph = (function() {
           document.querySelector("#restoreBtn").style.display = "inline";
           this.classList.add("deleted");
           updateCorrespondingEdge(graph, deletedNodeContainer, d.code, DELETE);
+          resetOpacity();
           return;
         }
 
@@ -129,33 +108,7 @@ var visualizeGraph = (function() {
         }
 
         if (d.code != prevHighlightNode) {
-          prevHighlightNode = d.code;
-          var path = [];
-          var nodeQueue = new SetQueue();
-          var rootPosition = 0;
-          for (var i = 0; i < graph.nodes.length; ++i) {
-            if (graph.nodes[i].code === d.code) {
-              rootPosition = i;
-              break;
-            }
-          }
-          nodeQueue.push(rootPosition);
-          var currentRoot, queueHead = 0;
-          while (queueHead != nodeQueue.length()) {
-            currentRoot = nodeQueue.get(queueHead);
-            if (deletedNodeContainer.indexOf(graph.nodes[currentRoot].code) > -1) {
-              queueHead++;
-              continue;
-            }
-            node[0][currentRoot].classList.add("visible");
-            for (var i = 0; i < graph.links.length; ++i) {
-              if (graph.links[i].source == currentRoot) {
-                edge[0][i].style.opacity = 1;
-                nodeQueue.push(graph.links[i].target);
-              }
-            }
-            queueHead++;
-          }
+          deleteNode(graph, d, d.code);
           readMore.classList.remove("hidden");
           showSubjectDetail(d, readMore, selectedName, selectedCode);
         } else {
@@ -286,6 +239,43 @@ var visualizeGraph = (function() {
         restoreBtn.innerHTML = "Restore Node";
         restoreBtn.style.display = "none";
         graphContainer.appendChild(restoreBtn);
+      }
+
+      function deleteNode(graph, d, subjectCode) {
+        prevHighlightNode = subjectCode;
+        var nodeQueue = new SetQueue();
+        var rootPosition = 0;
+        for (var i = 0; i < graph.nodes.length; ++i) {
+          if (graph.nodes[i].code === subjectCode) {
+            rootPosition = i;
+            break;
+          }
+        }
+        nodeQueue.push(rootPosition);
+        var currentRoot, queueHead = 0;
+        while (queueHead != nodeQueue.length()) {
+          currentRoot = nodeQueue.get(queueHead++);
+          if (deletedNodeContainer.indexOf(graph.nodes[currentRoot].code) === -1) {
+            node[0][currentRoot].classList.add("visible");
+            for (var i = 0; i < graph.links.length; ++i) {
+              if (graph.links[i].source == currentRoot) {
+                edge[0][i].style.opacity = 1;
+                nodeQueue.push(graph.links[i].target);
+              }
+            }
+          }
+        }
+      }
+
+      function CenterGraphOn(node) {
+        var x = node[0][0].getBoundingClientRect().left,
+            y = node[0][0].getBoundingClientRect().bottom;
+        var centerNodeTranslation = [isPrereq ? (-x + 240) + WIDTH / 2
+                                    : (-x + 240) + WIDTH / 2,
+                                    isPrereq ? HEIGHT / 4 : -y + HEIGHT / 2];
+        nodes.attr("transform", "translate(" + centerNodeTranslation + ")");
+        edges.attr("transform", "translate(" + centerNodeTranslation + ")");
+        return centerNodeTranslation;
       }
 
     });
