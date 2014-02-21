@@ -5,7 +5,8 @@
 	<title ng-bind="pageTitle"></title>
 	<link rel="stylesheet" href="//netdna.bootstrapcdn.com/bootstrap/3.1.0/css/bootstrap.min.css">
 	<link rel="stylesheet" href="static/style/visual.css">
-	<link href='//fonts.googleapis.com/css?family=Poller+One' rel='stylesheet' type='text/css'>
+	<link href='http://fonts.googleapis.com/css?family=Russo+One' rel='stylesheet' type='text/css'>
+	<link href='http://fonts.googleapis.com/css?family=Open+Sans:700' rel='stylesheet' type='text/css'>
 	<script src="//ajax.googleapis.com/ajax/libs/angularjs/1.2.12/angular.min.js"></script>
 	<script src="//ajax.googleapis.com/ajax/libs/angularjs/1.2.12/angular-route.min.js"></script>
 	<script src="//ajax.googleapis.com/ajax/libs/jquery/1.10.2/jquery.min.js"></script>
@@ -56,8 +57,8 @@
 	<section ng-view id="graphContainer"></section>
 
 	<section id="typeSwitcher" class="btn-group" ng-controller="GraphTypeCtrl">
-		<span class="btn btn-default" ng-class="{active: prereq()}" ng-cloak ng-click="toPre()">Pre</span>
-		<span class="btn btn-default" ng-class="{active: !prereq()}" ng-cloak ng-click="toPost()">Post</span>
+		<span class="btn btn-default" ng-class="{active: prereq()}" ng-cloak ng-click="toPre()">Show Prerequisites</span>
+		<span class="btn btn-default" ng-class="{active: !prereq()}" ng-cloak ng-click="toPost()">Show Postrequisites</span>
 	</section>
 
 	<section id="search" ng-controller="SearchCtrl" ng-cloak>
@@ -81,7 +82,7 @@
 	</section>
 
 	<section id="feedback" ng-controller="FeedbackCtrl">
-		<span id="feedback-button" class="pull-right" ng-click="toggleForm()">Feedback?</span>
+		<span id="feedback-button" class="pull-right" ng-click="toggleForm()">Contact Us</span>
 		<form id="feedback-form" ng-hide="hideForm" ng-cloak ng-submit="sendFeedback($event)">
 			{% csrf_token %}
 			<label for="feedback-name">

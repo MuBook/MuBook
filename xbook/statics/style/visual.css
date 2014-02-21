@@ -137,7 +137,7 @@ a:hover {
 
 #brand {
 	color: #fff;
-	font-family: 'Poller One', cursive;
+	font-family: 'Russo One', sans-serif;
 	line-height: 50px;
 	font-size: 24px;
 	width: 160px;
@@ -300,9 +300,7 @@ a:hover {
 	color: #fff;
 	cursor: pointer;
 	display: block;
-	font-family: 'Poller One', cursive;
-	font-size: 12px;
-	font-weight: bold;
+	font: 20px 'Open Sans', sans-serif;
 	line-height: 50px;
 	text-align: center;
 	width: 160px;
