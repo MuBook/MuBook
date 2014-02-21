@@ -188,6 +188,10 @@ a:hover {
 	padding-left: 30px;
 }
 
+#assessmentsDetail ul{
+	padding: 10px;
+}
+
 #readMore {
 	cursor: pointer;
 	position: absolute;
@@ -309,7 +313,7 @@ a:hover {
 	position: fixed;
 	top: 50px;
 	right: 0;
-	height: 300px;
+	height: 320px;
 	width: 450px;
 	border-left: 1px solid #38f;
 	border-bottom: 1px solid #38f;
