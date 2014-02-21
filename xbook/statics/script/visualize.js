@@ -2,7 +2,8 @@ var visualizeGraph = (function() {
   "use strict";
 
   var $sidePane = $("#sidePane"),
-      $topBar = $("#topBar");
+      $topBar = $("#topBar"),
+      $searchInput = $("#searchInput");
 
   var WIDTH = window.innerWidth - $sidePane.width(),
       HEIGHT = window.innerHeight - $topBar.height(),
@@ -76,6 +77,7 @@ var visualizeGraph = (function() {
       makeRestoreButton();
 
       showSubjectDetail(graph.nodes[0], readMore, selectedName, selectedCode);
+      $searchInput.val(graph.nodes[0].code);
 
       restoreBtn.onclick = function(e) {
         if (deletedNodeContainer.length != 0) {

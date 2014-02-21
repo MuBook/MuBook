@@ -54,7 +54,7 @@ mubook.controller("SearchCtrl", function SearchCtrl($scope, $timeout, Subjects, 
   $scope.search = function search() {
     Global.isSearching = true;
     $scope.resetSearchHighlight();
-
+    $scope.$input.select();
     $timeout(function() {
       $scope.$input.focus();
     });
