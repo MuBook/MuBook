@@ -77,7 +77,7 @@ var visualizeGraph = (function() {
       makeRestoreButton();
 
       showSubjectDetail(graph.nodes[0], readMore, selectedName, selectedCode);
-      $searchInput.val(graph.nodes[0].code);
+      $searchInput.val(graph.nodes[0].code + " - " + graph.nodes[0].name);
 
       restoreBtn.onclick = function(e) {
         if (deletedNodeContainer.length != 0) {
