@@ -328,6 +328,7 @@ a:focus {
 }
 
 .form-group input[type=text] {
+	color: #000;
 	width: 220px;
 }
 
@@ -338,7 +339,9 @@ a:focus {
 #feedback-message {
 	height: 170px;
 	width: 400px;
+	color: #000;
 	resize: none;
+	font-weight: normal;
 }
 
 .share-button {
