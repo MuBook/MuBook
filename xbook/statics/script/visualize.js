@@ -138,7 +138,7 @@ var visualizeGraph = (function() {
           return d.name;
         })
         .attr("text-anchor", "middle")
-        .attr("transform", "translate(0, 24)");
+        .attr("transform", "translate(0, 34)");
 
       function makeNode(node) {
         node.label = node.code;
