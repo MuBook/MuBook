@@ -127,18 +127,18 @@ var visualizeGraph = (function() {
 
       rect
         .attr("style", function(d) {
-          return d.root ? "stroke: black" : "stroke: #d3d6db";
-        })
-        .attr("rx", 0)
-        .attr("ry", 0);
+          return d.root ? "stroke: red" : "inherit";
+        });
 
-      var infoboxes = node.append("text")
+      var infoboxes = node.append("g")
+        .attr("class", "info");
+
+      infoboxes.append("text")
         .text(function(d) {
           return d.name;
         })
-        .attr("class", "info")
         .attr("text-anchor", "middle")
-        .attr("transform", "translate(0, 34)");
+        .attr("transform", "translate(0, 24)");
 
       function makeNode(node) {
         node.label = node.code;
