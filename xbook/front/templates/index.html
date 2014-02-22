@@ -2,12 +2,16 @@
 <html lang="en" ng-app="mubook">
 <head>
 	<meta charset="UTF-8">
-	<meta name="description" content="%C2%B5Book is the unofficial Melbourne University subject handbook. Subject selection should be simple%2C and that's why %C2%B5Book exists.">
-	<title ng-bind="pageTitle"></title>
+	<meta name="description" content="µBook is the unofficial Melbourne University subject handbook. Subject selection should be simple, and that's why µBook exists.">
+	<meta property="og:description" content="µBook is the unofficial Melbourne University subject handbook. Subject selection should be simple, and that's why µBook exists.">
+	<meta property="og:title" content="µBook" />
+	<meta property="og:url" content="http://www.mubook.me/" />
+	<!-- <meta property="og:image" content="" /> -->
+	<title ng-bind="pageTitle">µBook</title>
+	<link href='http://fonts.googleapis.com/css?family=Russo+One&subset=latin,latin-ext,cyrillic' rel='stylesheet' type='text/css'>
+	<link href='http://fonts.googleapis.com/css?family=Open+Sans:700' rel='stylesheet' type='text/css'>
 	<link rel="stylesheet" href="//netdna.bootstrapcdn.com/bootstrap/3.1.0/css/bootstrap.min.css">
 	<link rel="stylesheet" href="static/style/visual.css">
-	<link href='http://fonts.googleapis.com/css?family=Russo+One' rel='stylesheet' type='text/css'>
-	<link href='http://fonts.googleapis.com/css?family=Open+Sans:700' rel='stylesheet' type='text/css'>
 	<script src="//ajax.googleapis.com/ajax/libs/angularjs/1.2.12/angular.min.js"></script>
 	<script src="//ajax.googleapis.com/ajax/libs/angularjs/1.2.12/angular-route.min.js"></script>
 	<script src="//ajax.googleapis.com/ajax/libs/jquery/1.10.2/jquery.min.js"></script>
@@ -18,38 +22,40 @@
 	</header>
 
 	<section id="sidePane" ng-controller="SidePaneCtrl">
-		<h2 id="selectedCode">no subject selected</h2>
-		<h2 id="selectedName">no subject selected</h2>
+		<div id="selectedSubject">
+			<h2 id="selectedName">No Subject Selected</h2>
+			<h4 id="selectedCode">Use the search to find a subject</h4>
+		</div>
 		<div id="creditPoint">
-			<h4 class="subjectDetailHeading">Credit Points: </h4>
-			<p class = "subjectDetail" id="creditPointDetail"></p>
+			<h4 class="subjectDetailHeading">Credit Points</h4>
+			<p class="subjectDetail" id="creditPointDetail"></p>
 		</div>
 		<div id="semester">
-			<h4 class="subjectDetailHeading">Semester: </h4>
+			<h4 class="subjectDetailHeading">Semester</h4>
 			<p class="subjectDetail" id="semesterDetail"></p>
 		</div>
 		<div id="timeCommit">
-			<h4 class="subjectDetailHeading">Time Commitment: </h4>
+			<h4 class="subjectDetailHeading">Time Commitment</h4>
 			<p class="subjectDetail" id="timeCommitDetail"></p>
 		</div>
 		<div id="prerequisites">
-			<h4 class="subjectDetailHeading">Prerequisites: </h4>
+			<h4 class="subjectDetailHeading">Prerequisites</h4>
 			<p class="subjectDetail" id="prerequisitesDetail"></p>
 		</div>
 		<div id="assessments">
-			<h4 class="subjectDetailHeading">Assessment: </h4>
+			<h4 class="subjectDetailHeading">Assessment</h4>
 			<p class="subjectDetail" id="assessmentsDetail"></p>
 		</div>
 		<div id="corequisites">
-			<h4 class="subjectDetailHeading">Corequisites: </h4>
+			<h4 class="subjectDetailHeading">Corequisites</h4>
 			<p class="subjectDetail" id="corequisitesDetail"></p>
 		</div>
 		<div id="subjectOverview">
-			<h4 class="subjectDetailHeading">Subject Overview: </h4>
+			<h4 class="subjectDetailHeading">Subject Overview</h4>
 			<p class="subjectDetail" id="subjectOverviewDetail"></p>
 		</div>
 		<div id="objectives">
-			<h4 class="subjectDetailHeading">Objectives: </h4>
+			<h4 class="subjectDetailHeading">Objectives</h4>
 			<p class="subjectDetail" id="objectivesDetail"></p>
 		</div>
 		<span id="readMore">[show details]</span>
