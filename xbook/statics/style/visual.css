@@ -24,6 +24,12 @@ a {
 
 a:hover {
 	color: #38f;
+	text-decoration: none;
+}
+
+a:focus {
+	outline: none;
+	text-decoration: none;
 }
 
 /************
@@ -307,20 +313,59 @@ a:hover {
 }
 
 #feedback-form {
-	background-color: #fff;
+	background-color: rgba(80, 80, 80, 0.8);
 	position: fixed;
 	top: 50px;
 	right: 0;
 	height: 320px;
 	width: 450px;
-	border-left: 1px solid #38f;
-	border-bottom: 1px solid #38f;
 	padding: 15px;
+	color: #fff;
+}
+
+.form-group label {
+	width: 80px;
+}
+
+.form-group input[type=text] {
+	width: 220px;
+}
+
+.form-group {
+	margin: 0;
 }
 
 #feedback-message {
 	height: 170px;
 	width: 400px;
+	resize: none;
+}
+
+.share-button {
+	display: block;
+	padding: 0 20px;
+	height: 50px;
+	line-height: 50px;
+	color: #fff;
+	font-size: 1.8rem;
+	font-family: 'Russo One', sans-serif;
+}
+
+.share-button:hover {
+	color: #fff;
+	text-shadow: 0 0 7px #000;
+}
+
+#share-facebook {
+	background-color: #77f;
+}
+
+#share-twitter {
+	background-color: #7cf;
+}
+
+#share-google {
+	background-color: #f55;
 }
 
 /***********
