@@ -53,7 +53,7 @@ a:focus {
 	border: 1px solid #d3d6db;
 	background-color: white;
 	position: fixed;
-	left: 350px;
+	left: 400px;
 	right: 0;
 	top: 50px;
 	bottom: 0;
@@ -85,7 +85,6 @@ a:focus {
 
 .node text {
 	fill: white;
-	opacity: 0.2;
 }
 
 .node:hover text {
@@ -194,7 +193,10 @@ a:focus {
 	text-align: center;
 	overflow: auto;
 	overflow-x: hidden;
-	width: 350px;
+	width: 400px;
+}
+
+#selectedSubject {
 }
 
 #selectedCode, #selectedName {
@@ -209,11 +211,16 @@ a:focus {
 	bottom: 0;
 }
 
-.selectedHeading {
+#sidePane > div:after {
+  content: " ";
+  visibility: hidden;
+  display: block;
+  height: 0;
+  clear: both;
 }
 
 .subjectDetailHeading {
-	background-color: #2980b9;
+	background-color: #38f;
 	color: white;
 	position: relative;
 	padding: 5px 15px;
@@ -228,7 +235,7 @@ a:focus {
 }
 
 #assessmentsDetail ul{
-	padding: 10px;
+	padding: 15px;
 }
 
 #selectedName {
@@ -452,6 +459,7 @@ a:focus {
 }
 
 #prerequisitesDetail div.row {
+	margin-left: 0px;
     clear: both;
     float: left;
     width: 100%;
