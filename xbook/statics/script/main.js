@@ -204,25 +204,31 @@ mubook.controller("FeedbackCtrl", function FeedbackCtrl($scope, $http, $timeout)
     }
 
     var data = {
-      name:    $scope.name,
-      email:   $scope.email,
-      message: $scope.message
+      record: {
+        name:    $scope.name,
+        email:   $scope.email,
+        message: $scope.message
+      }
     };
 
     $submit = $("#feedback-submit");
     $submit.val("Sending...").attr("disabled", true);
 
-    $http.post(
-      "feedback", data,
-      {
-        headers: {
-          "X-CSRFToken": docCookies.getItem("csrftoken")
-        }
-      }
-    ).success(function() {
+    $.ajax({
+      type: 'POST',
+      url: 'http://monitor.mubook.me/api/records',
+      crossDomain: true,
+      data: data
+    })
+    .done(function() {
+      alert("Your feedback has been received. Thank you!");
+    })
+    .fail(function() {
+      alert("Something went wrong, would you like to try again? Sorry...");
+    })
+    .always(function() {
       $submit.val("Send").attr("disabled", false);
       $scope.toggleForm();
-      alert("Your feedback has been received. Thank you!");
     });
   };
 });
