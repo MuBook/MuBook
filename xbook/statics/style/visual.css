@@ -76,8 +76,7 @@ a:focus {
 }
 
 .node:hover rect {
-	fill: #079;
-	stroke: #079 !important;
+	fill: #38f;
 }
 
 .node:hover text {
