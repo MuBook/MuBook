@@ -9,7 +9,7 @@ mubook.config(["$routeProvider",
         controller: "GraphCtrl"
       })
       .otherwise({
-        redirectTo: "/prereq/melbourne/" + (docCookies.getItem("subjCode") || "comp30018")
+        redirectTo: "/prereq/melbourne/" + (docCookies.getItem("subjCode") || "COMP30018")
       });
   }
 ]);
