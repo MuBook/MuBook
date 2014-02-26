@@ -63,7 +63,7 @@ mubook.factory("PopupControl", function() {
       popupList[popupName] = !popupList[popupName];
     },
     toggleCustom: function(popupName, toggleCallback) {
-      toggleCallback(popupName, popupList);
+      toggleCallback(popupList, popupName);
     },
     setPopupState: function(popupName, state) {
       state = typeof state !== "boolean" ? false : state;
