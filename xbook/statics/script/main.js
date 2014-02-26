@@ -37,6 +37,7 @@ mubook.factory("Global", function() {
     code: "COMP30018",
     reqType: "prereq",
     isSearching: false,
+    isFeedbacking: false,
     filterIndex: 0,
     filterList: []
   };
@@ -50,11 +51,10 @@ mubook.constant("HighlightHeight", 25);
 
 mubook.controller("SearchCtrl", function SearchCtrl($scope, $timeout, Subjects, Global, $searchResult, HighlightHeight) {
   $scope.$input = $("#searchInput");
-  $scope.$feedback = angular.element($("#feedback"));
 
   $scope.search = function search() {
     Global.isSearching = true;
-    $scope.$feedback.scope().hideForm = true;
+    Global.isFeedbacking = false;
     $scope.resetSearchHighlight();
     $scope.$input.select();
     $timeout(function() {
@@ -123,7 +123,7 @@ mubook.controller("SearchCtrl", function SearchCtrl($scope, $timeout, Subjects, 
     $scope.followHighlight();
   };
 
-  $scope.isVisiable = function isVisiable() {
+  $scope.isVisible = function isVisible() {
     return Global.isSearching;
   };
 
@@ -186,14 +186,16 @@ mubook.controller("GraphTypeCtrl", function GraphTypeCtrl($scope, $location, Glo
 });
 
 mubook.controller("FeedbackCtrl", function FeedbackCtrl($scope, $http, $timeout, Global) {
-  $scope.hideForm = true;
-
   $scope.toggleForm = function() {
-    $scope.hideForm = !$scope.hideForm;
+    Global.isFeedbacking = !Global.isFeedbacking;
     Global.isSearching = false;
     $timeout(function() {
       $("#feedback-name").focus();
     });
+  };
+
+  $scope.isVisible = function isVisible() {
+    return Global.isFeedbacking;
   };
 
   $scope.sendFeedback = function(e) {

@@ -74,8 +74,8 @@
 		<button class="btn btn-default" id="searchBtn" ng-click="search()">
 			<i class="glyphicon glyphicon-search"></i>
 		</button>
-		<div id="cover" ng-click="esc({keyCode:27})" ng-show="isVisiable()"></div>
-		<div id="searchResult" ng-show="isVisiable()">
+		<div id="cover" ng-click="esc({keyCode:27})" ng-show="isVisible()"></div>
+		<div id="searchResult" ng-show="isVisible()">
 			<table>
 				{% verbatim %}
 				<tr ng-click="replacePath(node.code)" data-code="{{node.code}}"
@@ -96,7 +96,7 @@
 				href="https://www.facebook.com/sharer/sharer.php?s=100&p[title]=%C2%B5Book&p[summary]=%C2%B5Book+is+the+unofficial+Melbourne+University+subject+handbook.+Subject+selection+should+be+simple%2C+and+that's+why+%C2%B5Book+exists.&p[url]=http%3A%2F%2Fmubook.me">f</a>
 		<a id="share-twitter" class="share-button pull-right" target="_blank"
 				href="http://twitter.com/intent/tweet?url=http://mubook.me&text=%C2%B5Book+is+the+unofficial+UniMelb+subject+handbook.+Subject+selection+should+be+simple%2C+and+that's+why+%C2%B5Book+exists">t</a>
-		<form id="feedback-form" ng-hide="hideForm" ng-cloak ng-submit="sendFeedback($event)">
+		<form id="feedback-form" ng-show="isVisible()" ng-cloak ng-submit="sendFeedback($event)">
 			{% csrf_token %}
 			<div class="form-group">
 				<label for="feedback-name">Name: </label>
