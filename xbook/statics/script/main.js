@@ -36,10 +36,20 @@ mubook.factory("Global", function() {
   return {
     code: "COMP30018",
     reqType: "prereq",
-    isSearching: false,
-    isFeedbacking: false,
+    popupList: {
+                search: false,
+                feedback: false
+    },
     filterIndex: 0,
-    filterList: []
+    filterList: [],
+    togglePopup: function(item) {
+      for (var key in this.popupList) {
+        if (key !== item) {
+          this.popupList[key] = false;
+        }
+      }
+      this.popupList[item] = !this.popupList[item];
+    }
   };
 });
 
@@ -53,8 +63,7 @@ mubook.controller("SearchCtrl", function SearchCtrl($scope, $timeout, Subjects, 
   $scope.$input = $("#searchInput");
 
   $scope.search = function search() {
-    Global.isSearching = true;
-    Global.isFeedbacking = false;
+    Global.togglePopup("search")
     $scope.resetSearchHighlight();
     $scope.$input.select();
     $timeout(function() {
@@ -124,12 +133,12 @@ mubook.controller("SearchCtrl", function SearchCtrl($scope, $timeout, Subjects, 
   };
 
   $scope.isVisible = function isVisible() {
-    return Global.isSearching;
+    return Global.popupList.search;
   };
 
   $scope.esc = function esc(e) {
     if (e.keyCode == 27) {
-      Global.isSearching = false;
+      Global.popupList.search = false;
     }
   };
 
@@ -187,15 +196,14 @@ mubook.controller("GraphTypeCtrl", function GraphTypeCtrl($scope, $location, Glo
 
 mubook.controller("FeedbackCtrl", function FeedbackCtrl($scope, $http, $timeout, Global) {
   $scope.toggleForm = function() {
-    Global.isFeedbacking = !Global.isFeedbacking;
-    Global.isSearching = false;
+    Global.togglePopup("feedback");
     $timeout(function() {
       $("#feedback-name").focus();
     });
   };
 
   $scope.isVisible = function isVisible() {
-    return Global.isFeedbacking;
+    return Global.popupList.feedback;
   };
 
   $scope.sendFeedback = function(e) {
