@@ -50,9 +50,11 @@ mubook.constant("HighlightHeight", 25);
 
 mubook.controller("SearchCtrl", function SearchCtrl($scope, $timeout, Subjects, Global, $searchResult, HighlightHeight) {
   $scope.$input = $("#searchInput");
+  $scope.$feedback = angular.element($("#feedback"));
 
   $scope.search = function search() {
     Global.isSearching = true;
+    $scope.$feedback.scope().hideForm = true;
     $scope.resetSearchHighlight();
     $scope.$input.select();
     $timeout(function() {
@@ -183,11 +185,12 @@ mubook.controller("GraphTypeCtrl", function GraphTypeCtrl($scope, $location, Glo
   };
 });
 
-mubook.controller("FeedbackCtrl", function FeedbackCtrl($scope, $http, $timeout) {
+mubook.controller("FeedbackCtrl", function FeedbackCtrl($scope, $http, $timeout, Global) {
   $scope.hideForm = true;
 
   $scope.toggleForm = function() {
     $scope.hideForm = !$scope.hideForm;
+    Global.isSearching = false;
     $timeout(function() {
       $("#feedback-name").focus();
     });
