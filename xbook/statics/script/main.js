@@ -69,8 +69,8 @@ mubook.factory("PopupControl", function() {
       state = typeof state !== "boolean" ? false : state;
       popupList[popupName] = state;
     }
-  }
-})
+  };
+});
 
 mubook.factory("$searchResult", function() {
   return $("#searchResult");
