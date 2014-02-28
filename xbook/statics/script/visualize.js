@@ -34,8 +34,7 @@ var visualizeGraph = (function() {
       }
 
       function makeNode(node) {
-        var ret_node = {label: node.code};
-        return ret_node;
+        return { label: node.code };
       }
 
       for (var i = 0; i < graph.links.length; ++i) {
@@ -132,14 +131,6 @@ var visualizeGraph = (function() {
         .attr("style", function(d) {
           return d.root ? "stroke: red" : "inherit";
         });
-
-
-      var bad_text = d3
-        .selectAll(".node text")
-        .attr("class", "button-text")
-        .attr("text-anchor", "center");
-      console.log("bad_text");
-      console.log(bad_text);
 
       var infoboxes = node.append("text")
         .attr("class", "info")
