@@ -101,7 +101,7 @@ var visualizeGraph = (function() {
 
         for (var i = ns.length - 1; i >=0; --i) {
           ns[i].classList.remove("selected");
-          ns[i].classList.remove("visible")
+          ns[i].classList.remove("visible");
         }
         this.classList.add("selected");
 
@@ -283,6 +283,44 @@ var visualizeGraph = (function() {
     });
   };
 })();
+
+function visualizeGraphHelper() {
+  var nodeData = [{id: 0, root: false},
+                  {id: 1, root: true},
+                  {id: 2, root: false}];
+  var renderer = new dagreD3.Renderer();
+  var g = new dagreD3.Digraph();
+  g.addNode(nodeData[0].id, {label: "Prerequisite of A"});
+  g.addNode(nodeData[1].id, {label: "Subject A"});
+  g.addNode(nodeData[2].id, {label: "Postrequisite of A"});
+  g.addEdge(null, 1, 0);
+  g.addEdge(null, 2, 1);
+  var layout = dagreD3.layout();
+      renderer
+        .layout(layout)
+        .run(
+          g,
+          d3.select("#helper")
+            .append("svg")
+            .attr("id", "graphHelperSVG")
+            .attr("width", 150)
+            .attr("height", 200)
+        );
+  var svg = d3.select("#graphHelperSVG");
+  var nodes = svg.selectAll(".node")
+                 .data(nodeData),
+      rect =  svg.selectAll(".node rect")
+                 .data(nodeData);
+  rect.attr("style", function(d) {
+      return d.root ? "stroke: red" : "inherit";
+  });
+  nodes.on("click", function(d) {
+    for (var i = 0; i < nodes[0].length; ++i) {
+      nodes[0][i].classList.remove("selected");
+    }
+    this.classList.add("selected");
+  });
+}
 
 /* A queue that has only unique items */
 function SetQueue() {

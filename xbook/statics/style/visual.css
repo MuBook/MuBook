@@ -412,3 +412,17 @@ a:focus {
   background-color: #eee;
   font-weight: bold;
 }
+
+/***********
+* =Helper
+************/
+#helper {
+	left: 350px;
+	top: 50px;
+	position: fixed;
+	padding: 5px 5px;
+}
+
+#graphHelperSVG .edgePath {
+	opacity: 1;
+}

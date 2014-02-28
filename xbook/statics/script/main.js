@@ -44,7 +44,8 @@ mubook.factory("Global", function() {
 mubook.factory("PopupControl", function() {
   var popupList = {
     search: false,
-    feedback: false
+    feedback: false,
+    helper: false
   }
 
   return {
@@ -195,6 +196,18 @@ mubook.controller("GraphCtrl", function GraphCtrl($scope, $routeParams, $locatio
 
 mubook.controller("SidePaneCtrl", function SidePaneCtrl($scope) {
 
+});
+
+mubook.controller("HelpControl", function HelpControl($scope, PopupControl) {
+  visualizeGraphHelper();
+
+  $scope.toggle = function() {
+
+  }
+
+  $scope.isVisible = function() {
+    return PopupControl.isOpen("helper");
+  }
 });
 
 mubook.controller("GraphTypeCtrl", function GraphTypeCtrl($scope, $location, Global) {
