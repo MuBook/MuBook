@@ -75,14 +75,12 @@ var visualizeGraph = (function() {
       );
 
       var ns = document.querySelectorAll(".node");
-      var readMore = document.querySelector("#readMore");
       var prevHighlightNode = "";
-      readMore.classList.remove("hidden");
 
       resetOpacity();
       makeRestoreButton();
 
-      showSubjectDetail(graph.nodes[0], readMore, selectedName, selectedCode);
+      showSubjectDetail(graph.nodes[0], selectedName, selectedCode);
       $searchInput.val(graph.nodes[0].code + " - " + graph.nodes[0].name);
 
       restoreBtn.onclick = function(e) {
@@ -117,8 +115,7 @@ var visualizeGraph = (function() {
 
         if (d.code != prevHighlightNode) {
           deleteNode(graph, d, d.code);
-          readMore.classList.remove("hidden");
-          showSubjectDetail(d, readMore, selectedName, selectedCode);
+          showSubjectDetail(d, selectedName, selectedCode);
         } else {
           prevHighlightNode = "";
           resetOpacity();
@@ -166,7 +163,7 @@ var visualizeGraph = (function() {
         }
       }
 
-      function showSubjectDetail(d, readMore, selectedName, selectedCode) {
+      function showSubjectDetail(d, selectedName, selectedCode) {
         var detailsContainer = document.querySelectorAll(".subjectDetail");
 
         selectedName.innerHTML = d.name;
@@ -177,8 +174,8 @@ var visualizeGraph = (function() {
         detailsContainer[3].innerHTML = d.prereq || "None";
         detailsContainer[4].innerHTML = d.assessment || "None";
         detailsContainer[5].innerHTML = d.coreq || "None";
-        detailsContainer[6].innerHTML = d.overview.slice(0, 100) + "..." || "None";
-        detailsContainer[7].parentNode.classList.add("hidden");
+        detailsContainer[6].innerHTML = d.overview || "None";
+        detailsContainer[7].innerHTML = d.objectives || "None";
 
         for (var i = 0; i < detailsContainer.length - 1; ++i) {
           detailsContainer[i].parentNode.classList.remove("hidden");
@@ -186,13 +183,6 @@ var visualizeGraph = (function() {
             detailsContainer[i].parentNode.classList.add("hidden");
           }
         }
-
-        $(readMore).on("click", function(e) {
-          detailsContainer[6].innerHTML = d.overview || "None";
-          detailsContainer[7].parentNode.classList.remove("hidden");
-          detailsContainer[7].innerHTML = d.objectives || "None";
-          readMore.classList.add("hidden");
-        });
       }
 
       function restoreNode(graph, node, subjectCode) {
