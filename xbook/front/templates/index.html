@@ -9,12 +9,25 @@
 	<!-- <meta property="og:image" content="" /> -->
 	<title ng-bind="pageTitle">µBook</title>
 	<link href='http://fonts.googleapis.com/css?family=Russo+One&subset=latin,latin-ext,cyrillic' rel='stylesheet' type='text/css'>
-	<link href='http://fonts.googleapis.com/css?family=Open+Sans:700' rel='stylesheet' type='text/css'>
+	<link href='http://fonts.googleapis.com/css?family=Open+Sans' rel='stylesheet' type='text/css'>
 	<link rel="stylesheet" href="//netdna.bootstrapcdn.com/bootstrap/3.1.0/css/bootstrap.min.css">
 	<link rel="stylesheet" href="static/style/visual.css">
 	<script src="//ajax.googleapis.com/ajax/libs/angularjs/1.2.12/angular.min.js"></script>
 	<script src="//ajax.googleapis.com/ajax/libs/angularjs/1.2.12/angular-route.min.js"></script>
 	<script src="//ajax.googleapis.com/ajax/libs/jquery/1.10.2/jquery.min.js"></script>
+	<script type="text/javascript">
+	  var _gaq = _gaq || [];
+	  var pluginUrl = '//www.google-analytics.co.uk/plugins/ga/inpage_linkid.js';
+		_gaq.push(['_require', 'inpage_linkid', pluginUrl]);
+		_gaq.push(['_setAccount', 'UA-48481908-1']);
+		_gaq.push(['_setDomainName', 'mubook.me']);
+		_gaq.push(['_trackPageview']);
+		(function() {
+			var ga = document.createElement('script'); ga.type = 'text/javascript'; ga.async = true;
+			ga.src = ('https:' == document.location.protocol ? 'https://ssl' : 'http://www') + '.google-analytics.com/ga.js';
+			var s = document.getElementsByTagName('script')[0]; s.parentNode.insertBefore(ga, s);
+		})();
+	</script>
 </head>
 <body>
 	<header class="row" id="topBar" ng-controller="UICtrl">
@@ -74,8 +87,8 @@
 		<button class="btn btn-default" id="searchBtn" ng-click="search()">
 			<i class="glyphicon glyphicon-search"></i>
 		</button>
-		<div id="cover" ng-click="esc({keyCode:27})" ng-show="isVisiable()"></div>
-		<div id="searchResult" ng-show="isVisiable()">
+		<div id="cover" ng-click="esc({keyCode:27})" ng-show="isVisible()"></div>
+		<div id="searchResult" ng-show="isVisible()">
 			<table>
 				{% verbatim %}
 				<tr ng-click="replacePath(node.code)" data-code="{{node.code}}"
@@ -88,7 +101,7 @@
 		</div>
 	</section>
 
-	<section id="feedback" ng-controller="FeedbackCtrl">
+	<section id="header-right" ng-controller="FeedbackCtrl">
 		<span id="feedback-button" class="pull-right" ng-click="toggleForm()">Contact</span>
 		<a id="share-google" class="share-button pull-right" target="_blank"
 				href="https://plus.google.com/share?url=http://mubook.me">g</a>
@@ -96,20 +109,34 @@
 				href="https://www.facebook.com/sharer/sharer.php?s=100&p[title]=%C2%B5Book&p[summary]=%C2%B5Book+is+the+unofficial+Melbourne+University+subject+handbook.+Subject+selection+should+be+simple%2C+and+that's+why+%C2%B5Book+exists.&p[url]=http%3A%2F%2Fmubook.me">f</a>
 		<a id="share-twitter" class="share-button pull-right" target="_blank"
 				href="http://twitter.com/intent/tweet?url=http://mubook.me&text=%C2%B5Book+is+the+unofficial+UniMelb+subject+handbook.+Subject+selection+should+be+simple%2C+and+that's+why+%C2%B5Book+exists">t</a>
-		<form id="feedback-form" ng-hide="hideForm" ng-cloak ng-submit="sendFeedback($event)">
+		<form id="feedback-form" class="form-horizontal" role="form" ng-hide="hideForm" ng-cloak ng-submit="sendFeedback($event)">
 			{% csrf_token %}
 			<div class="form-group">
-				<label for="feedback-name">Name: </label>
-				<input id="feedback-name" type="text" ng-model="name" placeholder="optional">
+				<label for="feedback-name" class="col-sm-2 control-label">Name</label>
+				<div class="col-sm-10">
+					<input type="text" class="form-control" id="feedback-name" ng-model="name" placeholder="Optional">
+				</div>
 			</div>
+
 			<div class="form-group">
-				<label for="feedback-email">Email: </label>
-				<input id="feedback-email" type="text" ng-model="email" placeholder="optional">
+				<label for="feedback-email" class="col-sm-2 control-label">Email</label>
+				<div class="col-sm-10">
+					<input type="email" class="form-control" id="feedback-email" ng-model="email" placeholder="Enter Email">
+				</div>
 			</div>
-			<label for="feedback-message">
-				Message: <textarea id="feedback-message" ng-model="message" placeholder="what do you want to tell us?"></textarea>
-			</label>
-			<input id="feedback-submit" type="submit" class="btn btn-primary" value="Send">
+
+			<div class="form-group">
+				<label for="feedback-message" class="col-sm-2 control-label">Message</label>
+				<div class="col-sm-10">
+					<textarea class="form-control" rows="3" id="feedback-message" ng-model="message" placeholder="Ideas? Bugs? Interested to help?"></textarea>
+				</div>
+			</div>
+
+			<div class="form-group">
+				<div class="col-sm-offset-2 col-sm-10">
+					<button type="submit" class="btn btn-default" id="feedback-submit">Send</button>
+				</div>
+			</div>
 		</form>
 	</section>
 
