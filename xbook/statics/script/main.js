@@ -77,79 +77,16 @@ mubook.factory("$searchResult", function() {
   return $("#searchResult");
 });
 
-mubook.constant("HighlightHeight", 25);
-
-mubook.controller("SearchCtrl", function SearchCtrl($scope, $timeout, Subjects, Global, PopupControl, $searchResult, HighlightHeight) {
+mubook.controller("SearchCtrl", function SearchCtrl($scope, $timeout, Subjects, Global, PopupControl, $searchResult) {
   $scope.$input = $("#searchInput");
 
   $scope.search = function search() {
+    Global.isSearching = true;
     PopupControl.toggle("search");
-    $scope.resetSearchHighlight();
     $scope.$input.select();
     $timeout(function() {
       $scope.$input.focus();
     });
-  };
-
-  $scope.followHighlight = function followHighlight() {
-    $searchResult.scrollTop((Global.filterIndex - 11) * HighlightHeight);
-  };
-
-  $scope.resetSearchHighlight = function resetSearchHighlight() {
-    for (var i = Global.filterList.length - 1; i >= 0; --i) {
-      Global.filterList[i].classList.remove("highlight");
-    }
-
-    Global.filterList = document.querySelectorAll("#searchResult tr");
-
-    Global.filterIndex = 0;
-    Global.filterList[Global.filterIndex].classList.add("highlight");
-
-    $searchResult.scrollTop(0);
-  };
-
-  $scope.highlightUp = function highlightUp() {
-    if (Global.filterIndex > 0) {
-      Global.filterList[Global.filterIndex].classList.remove("highlight");
-      Global.filterIndex -= 1;
-      Global.filterList[Global.filterIndex].classList.add("highlight");
-    }
-  };
-
-  $scope.highlightDown = function highlightDown() {
-    if (Global.filterIndex < Global.filterList.length - 1) {
-      Global.filterList[Global.filterIndex].classList.remove("highlight");
-      Global.filterIndex += 1;
-      Global.filterList[Global.filterIndex].classList.add("highlight");
-    }
-  };
-
-  $searchResult.on("wheel", function(e) {
-    e.preventDefault();
-    var deltaY = e.originalEvent.wheelDeltaY || -e.originalEvent.deltaY;
-    if (deltaY > 0) {
-      $scope.highlightUp();
-    } else {
-      $scope.highlightDown();
-    }
-    $scope.followHighlight();
-  });
-
-  $scope.move = function move(e) {
-    if (e.keyCode == 38) {
-      $scope.highlightUp()
-    } else if (e.keyCode == 40) {
-      $scope.highlightDown();
-    } else if (e.keyCode == 13) {
-      $scope.replacePath(Global.filterList[Global.filterIndex].dataset["code"]);
-    } else {
-      $timeout(function() {
-        $scope.resetSearchHighlight();
-        $scope.followHighlight();
-      });
-      return;
-    }
-    $scope.followHighlight();
   };
 
   $scope.isVisible = function isVisible() {

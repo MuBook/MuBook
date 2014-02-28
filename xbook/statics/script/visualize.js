@@ -17,6 +17,7 @@ var visualizeGraph = (function() {
   return function(url) {
 
     d3.json(url, function(error, graph) {
+
       if (error) {
         console.log(error);
       }
@@ -30,6 +31,11 @@ var visualizeGraph = (function() {
 
       for (var i = 0; i < n; ++i) {
           g.addNode(i, makeNode(graph.nodes[i]));
+      }
+
+      function makeNode(node) {
+        var ret_node = {label: node.code};
+        return ret_node;
       }
 
       for (var i = 0; i < graph.links.length; ++i) {
@@ -130,20 +136,21 @@ var visualizeGraph = (function() {
           return d.root ? "stroke: red" : "inherit";
         });
 
-      var infoboxes = node.append("g")
-        .attr("class", "info");
 
-      infoboxes.append("text")
+      var bad_text = d3
+        .selectAll(".node text")
+        .attr("class", "button-text")
+        .attr("text-anchor", "center");
+      console.log("bad_text");
+      console.log(bad_text);
+
+      var infoboxes = node.append("text")
+        .attr("class", "info")
         .text(function(d) {
           return d.name;
         })
         .attr("text-anchor", "middle")
         .attr("transform", "translate(0, 34)");
-
-      function makeNode(node) {
-        node.label = node.code;
-        return node;
-      }
 
       function zoomScale() {
         nodes.attr("transform", "translate(" + d3.event.translate + ")scale(" + d3.event.scale + ")");
