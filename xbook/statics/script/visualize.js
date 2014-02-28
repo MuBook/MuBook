@@ -79,7 +79,7 @@ var visualizeGraph = (function() {
       resetOpacity();
       makeRestoreButton();
 
-      showSubjectDetail(graph.nodes[0], selectedName, selectedCode);
+      showSubjectDetails(graph.nodes[0], selectedName, selectedCode);
       $searchInput.val(graph.nodes[0].code + " - " + graph.nodes[0].name);
 
       restoreBtn.onclick = function(e) {
@@ -114,7 +114,7 @@ var visualizeGraph = (function() {
 
         if (d.code != prevHighlightNode) {
           deleteNode(graph, d, d.code);
-          showSubjectDetail(d, selectedName, selectedCode);
+          showSubjectDetails(d, selectedName, selectedCode);
         } else {
           prevHighlightNode = "";
           resetOpacity();
@@ -154,7 +154,7 @@ var visualizeGraph = (function() {
         }
       }
 
-      function showSubjectDetail(d, selectedName, selectedCode) {
+      function showSubjectDetails(d, selectedName, selectedCode) {
         var detailsContainer = document.querySelectorAll(".subjectDetail");
 
         selectedName.innerHTML = d.name;
