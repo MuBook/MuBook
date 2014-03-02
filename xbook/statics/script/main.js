@@ -42,32 +42,31 @@ mubook.factory("Global", function() {
 });
 
 mubook.factory("PopupControl", function() {
-  var popupList = {
-    search: false,
-    feedback: false
-  };
+  var popups = {};
 
   return {
+    register: function(key) {
+    },
     isOpen: function(popupName) {
-      return popupList[popupName];
+      return popups[popupName];
     },
     toggle: function(popupName, closeAll) {
       closeAll = typeof closeAll !== 'boolean' ? true : closeAll;
       if (closeAll) {
-        for (var key in popupList) {
+        for (var key in popups) {
           if (key !== popupName) {
-            popupList[key] = false;
+            popups[key] = false;
           }
         }
       }
-      popupList[popupName] = !popupList[popupName];
+      popups[popupName] = !popups[popupName];
     },
     toggleCustom: function(popupName, toggleCallback) {
-      toggleCallback(popupList, popupName);
+      toggleCallback(popups, popupName);
     },
     setPopupState: function(popupName, state) {
       state = typeof state !== "boolean" ? false : state;
-      popupList[popupName] = state;
+      popups[popupName] = state;
     }
   };
 });
