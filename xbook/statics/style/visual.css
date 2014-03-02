@@ -436,12 +436,39 @@ a:focus {
 * =Helper
 ************/
 #helper {
-	left: 350px;
+	right: 0;
 	top: 50px;
 	position: fixed;
 	padding: 5px 5px;
 }
 
+#helperGraph {
+	width: 154px;
+	height: 193px;
+	background-color: rgba(0, 0, 0, 0.1);
+}
+
+#graphHelperSVG {
+	margin: 10px 10px;
+}
+
 #graphHelperSVG .edgePath {
 	opacity: 1;
+}
+
+#graphHelperSVG .edge, #graphHelperSVG rect {
+	opacity: 1;
+}
+
+#graphHelperSVG text {
+	fill: #222;
+}
+
+#helperGraphCloseBtn {
+	right: 159px;
+	top: 5px;
+	border-radius: 0;
+	border: 0;
+	position: absolute;
+	background-color: rgba(0, 0, 0, 0.1);
 }

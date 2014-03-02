@@ -307,11 +307,11 @@ function visualizeGraphHelper() {
         .layout(layout)
         .run(
           g,
-          d3.select("#helper")
+          d3.select("#helperGraph")
             .append("svg")
             .attr("id", "graphHelperSVG")
-            .attr("width", 150)
-            .attr("height", 200)
+            .attr("width", 154)
+            .attr("height", 193)
         );
   var svg = d3.select("#graphHelperSVG");
   var nodes = svg.selectAll(".node")

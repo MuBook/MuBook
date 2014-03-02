@@ -137,9 +137,8 @@ mubook.controller("SidePaneCtrl", function SidePaneCtrl($scope) {
 
 mubook.controller("HelpControl", function HelpControl($scope, PopupControl) {
   visualizeGraphHelper();
-
   $scope.toggle = function() {
-
+    PopupControl.toggle("helper");
   }
 
   $scope.isVisible = function() {
