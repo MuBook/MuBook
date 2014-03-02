@@ -45,7 +45,7 @@ mubook.factory("PopupControl", function() {
   var popupList = {
     search: false,
     feedback: false
-  }
+  };
 
   return {
     isOpen: function(popupName) {
