@@ -36,9 +36,39 @@ mubook.factory("Global", function() {
   return {
     code: "COMP30018",
     reqType: "prereq",
-    isSearching: false,
     filterIndex: 0,
     filterList: []
+  };
+});
+
+mubook.factory("PopupControl", function() {
+  var popupList = {
+    search: false,
+    feedback: false
+  }
+
+  return {
+    isOpen: function(popupName) {
+      return popupList[popupName];
+    },
+    toggle: function(popupName, closeAll) {
+      closeAll = typeof closeAll !== 'boolean' ? true : closeAll;
+      if (closeAll) {
+        for (var key in popupList) {
+          if (key !== popupName) {
+            popupList[key] = false;
+          }
+        }
+      }
+      popupList[popupName] = !popupList[popupName];
+    },
+    toggleCustom: function(popupName, toggleCallback) {
+      toggleCallback(popupList, popupName);
+    },
+    setPopupState: function(popupName, state) {
+      state = typeof state !== "boolean" ? false : state;
+      popupList[popupName] = state;
+    }
   };
 });
 
@@ -46,11 +76,11 @@ mubook.factory("$searchResult", function() {
   return $("#searchResult");
 });
 
-mubook.controller("SearchCtrl", function SearchCtrl($scope, $timeout, Subjects, Global, $searchResult) {
+mubook.controller("SearchCtrl", function SearchCtrl($scope, $timeout, Subjects, Global, PopupControl, $searchResult) {
   $scope.$input = $("#searchInput");
 
   $scope.search = function search() {
-    Global.isSearching = true;
+    PopupControl.toggle("search");
     $scope.$input.select();
     $timeout(function() {
       $scope.$input.focus();
@@ -58,12 +88,12 @@ mubook.controller("SearchCtrl", function SearchCtrl($scope, $timeout, Subjects, 
   };
 
   $scope.isVisible = function isVisible() {
-    return Global.isSearching;
+    return PopupControl.isOpen("search");
   };
 
   $scope.esc = function esc(e) {
     if (e.keyCode == 27) {
-      Global.isSearching = false;
+      PopupControl.setPopupState("search", false);
     }
   };
 
@@ -119,14 +149,16 @@ mubook.controller("GraphTypeCtrl", function GraphTypeCtrl($scope, $location, Glo
   };
 });
 
-mubook.controller("FeedbackCtrl", function FeedbackCtrl($scope, $http, $timeout) {
-  $scope.hideForm = true;
-
+mubook.controller("FeedbackCtrl", function FeedbackCtrl($scope, $http, $timeout, Global, PopupControl) {
   $scope.toggleForm = function() {
-    $scope.hideForm = !$scope.hideForm;
+    PopupControl.toggle("feedback");
     $timeout(function() {
       $("#feedback-name").focus();
     });
+  };
+
+  $scope.isVisible = function isVisible() {
+    return PopupControl.isOpen("feedback");
   };
 
   $scope.sendFeedback = function(e) {
