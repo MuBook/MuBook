@@ -46,7 +46,7 @@ mubook.factory("PopupControl", function() {
     search: false,
     feedback: false,
     helper: false
-  }
+  };
 
   return {
     isOpen: function(popupName) {
@@ -70,8 +70,8 @@ mubook.factory("PopupControl", function() {
       state = typeof state !== "boolean" ? false : state;
       popupList[popupName] = state;
     }
-  }
-})
+  };
+});
 
 mubook.factory("$searchResult", function() {
   return $("#searchResult");
@@ -81,7 +81,6 @@ mubook.controller("SearchCtrl", function SearchCtrl($scope, $timeout, Subjects, 
   $scope.$input = $("#searchInput");
 
   $scope.search = function search() {
-    Global.isSearching = true;
     PopupControl.toggle("search");
     $scope.$input.select();
     $timeout(function() {

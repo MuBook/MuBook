@@ -1,6 +1,7 @@
 <!doctype html>
 <html lang="en" ng-app="mubook">
 <head>
+	<meta name="google-site-verification" content="aiA43J3Zi8d1kmV1nTOAdnfJ7LvbLQJEhxuqHYLnXAE" />
 	<meta charset="UTF-8">
 	<meta name="description" content="µBook is the unofficial Melbourne University subject handbook. Subject selection should be simple, and that's why µBook exists.">
 	<meta property="og:description" content="µBook is the unofficial Melbourne University subject handbook. Subject selection should be simple, and that's why µBook exists.">
@@ -10,6 +11,7 @@
 	<title ng-bind="pageTitle">µBook</title>
 	<link href='http://fonts.googleapis.com/css?family=Russo+One&subset=latin,latin-ext,cyrillic' rel='stylesheet' type='text/css'>
 	<link href='http://fonts.googleapis.com/css?family=Open+Sans' rel='stylesheet' type='text/css'>
+	<link href='http://fonts.googleapis.com/css?family=Ubuntu:700' rel='stylesheet' type='text/css'>
 	<link rel="stylesheet" href="//netdna.bootstrapcdn.com/bootstrap/3.1.0/css/bootstrap.min.css">
 	<link rel="stylesheet" href="static/style/visual.css">
 	<script src="//ajax.googleapis.com/ajax/libs/angularjs/1.2.12/angular.min.js"></script>
@@ -17,7 +19,7 @@
 	<script src="//ajax.googleapis.com/ajax/libs/jquery/1.10.2/jquery.min.js"></script>
 	<script type="text/javascript">
 	  var _gaq = _gaq || [];
-	  var pluginUrl = '//www.google-analytics.co.uk/plugins/ga/inpage_linkid.js';
+	  var pluginUrl = (('https:' == document.location.protocol) ? 'https://ssl.' : 'http://www.') + 'google-analytics.com/plugins/ga/inpage_linkid.js';
 		_gaq.push(['_require', 'inpage_linkid', pluginUrl]);
 		_gaq.push(['_setAccount', 'UA-48481908-1']);
 		_gaq.push(['_setDomainName', 'mubook.me']);
@@ -71,7 +73,6 @@
 			<h4 class="subjectDetailHeading">Objectives</h4>
 			<p class="subjectDetail" id="objectivesDetail"></p>
 		</div>
-		<span id="readMore">[show details]</span>
 	</section>
 
 	<section ng-view id="graphContainer"></section>
@@ -136,7 +137,7 @@
 			<div class="form-group">
 				<label for="feedback-message" class="col-sm-2 control-label">Message</label>
 				<div class="col-sm-10">
-					<textarea class="form-control" rows="3" id="feedback-message" ng-model="message" placeholder="Ideas? Bugs? Interested to help?"></textarea>
+					<textarea class="form-control" id="feedback-message" ng-model="message" placeholder="Ideas? Bugs? Interested to help?"></textarea>
 				</div>
 			</div>
 
