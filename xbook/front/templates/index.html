@@ -83,12 +83,11 @@
 	</section>
 
 	<section id="search" ng-controller="SearchCtrl" ng-cloak>
-		<input type="text" id="searchInput" placeholder="Search" ng-click="search()"
+		<input type="text" id="searchInput" placeholder="Search" ng-click="toggleSearch()"
 				ng-model="query" ng-keyup="esc($event)" ng-keydown="move($event)">
-		<button class="btn btn-default" id="searchBtn" ng-click="search()">
+		<button class="btn btn-default" id="searchBtn" ng-click="toggleSearch()">
 			<i class="glyphicon glyphicon-search"></i>
 		</button>
-		<div id="cover" ng-click="esc({keyCode:27})" ng-show="isVisible()"></div>
 		<div id="searchResult" ng-show="isVisible()">
 			<table>
 				{% verbatim %}
