@@ -16,16 +16,24 @@ mubook.config(["$routeProvider",
 
 mubook.run(["$location", "$rootScope", function($location, $rootScope) {
   $rootScope.$on("$routeChangeSuccess", function(event, current) {
-    $rootScope.pageTitle = current.params.subjectCode + current.$$route.title;
+    if (!current.params.subjectCode) { return; }
+    $rootScope.pageTitle = current.params.subjectCode.toUpperCase() + current.$$route.title;
   });
 }]);
 
 mubook.run(["$location", "Global", "$rootScope", function($location, Global, $rootScope) {
   $rootScope.replacePath = function replacePath(code) {
-    Global.isSearching = false;
     Global.code = code;
     $location.path(Global.reqType + "/melbourne/" + code);
   };
+}]);
+
+mubook.run(["$window", "PopupControl", function($window, PopupControl) {
+  $($window).on("keyup", function(event) {
+    if (event.keyCode === 27) {
+      PopupControl.closeOpened();
+    }
+  });
 }]);
 
 mubook.factory("Subjects", function($http) {
@@ -35,70 +43,119 @@ mubook.factory("Subjects", function($http) {
 mubook.factory("Global", function() {
   return {
     code: "COMP30018",
-    reqType: "prereq",
-    filterIndex: 0,
-    filterList: []
+    reqType: "prereq"
   };
 });
 
-mubook.factory("PopupControl", function() {
-  var popupList = {
-    search: false,
-    feedback: false,
-    helper: false
-  };
+mubook.factory("PopupControl", ["$timeout", function($timeout) {
+  var popups = {},
+      visiblePopups = {};
 
-  return {
-    isOpen: function(popupName) {
-      return popupList[popupName];
-    },
-    toggle: function(popupName, closeAll) {
-      closeAll = typeof closeAll !== 'boolean' ? true : closeAll;
-      if (closeAll) {
-        for (var key in popupList) {
-          if (key !== popupName) {
-            popupList[key] = false;
+  function Popup(id) {
+    this.visible = false;
+    this.standalone = false;
+    this.group = "default";
+    this.scope = null;
+  }
+
+  Popup.prototype.onOpen = function() {};
+  Popup.prototype.onClose = function() {};
+  Popup.prototype.onToggle = function() {};
+  Popup.prototype.open = function() { this.visible = true; };
+  Popup.prototype.close = function() { this.visible = false; };
+
+  function closeHelper(group) {
+    var popup;
+    var thePopup = popup = visiblePopups[group];
+    popup.close();
+    $timeout(function() {
+      thePopup.scope.$apply();
+    });
+    popup = undefined;
+  }
+
+  var controller = {
+    register: function(key, config) {
+      if (popups[key] !== undefined) { console.warn(key + " already exists"); }
+      if (!config.scope) { console.warn("Required parameter is missing: scope"); }
+
+      var popup = popups[key] = new Popup(key);
+
+      for (var key in config) {
+        popup[key] = config[key];
+      }
+
+      return function() {
+        var onClose = popup.visible;
+
+        if (onClose) {
+          popup.close();
+          popup.onClose();
+        } else {
+          this.closeOpened(popup.group);
+
+          popup.open();
+          popup.onOpen();
+
+          if (!popup.standalone) {
+            visiblePopups[popup.group] = popup;
           }
         }
+
+        popup.onToggle();
+
+      }.bind(controller);
+    },
+
+    visibilityOf: function(key) {
+      return function() {
+        return popups[key].visible;
+      };
+    },
+
+    closeOpened: function(group) {
+      if (group === undefined) {
+        for (var group in visiblePopups) {
+          if (!visiblePopups[group]) { continue; }
+          closeHelper(group);
+        }
+      } else if (visiblePopups[group]) {
+        closeHelper(group);
       }
-      popupList[popupName] = !popupList[popupName];
-    },
-    toggleCustom: function(popupName, toggleCallback) {
-      toggleCallback(popupList, popupName);
-    },
-    setPopupState: function(popupName, state) {
-      state = typeof state !== "boolean" ? false : state;
-      popupList[popupName] = state;
     }
   };
-});
+
+  return controller;
+}]);
 
 mubook.factory("$searchResult", function() {
   return $("#searchResult");
 });
 
-mubook.controller("SearchCtrl", function SearchCtrl($scope, $timeout, Subjects, Global, PopupControl, $searchResult) {
+mubook.controller("SearchCtrl", function SearchCtrl($scope, $timeout, $rootScope, Subjects, Global, PopupControl, $searchResult) {
   $scope.$input = $("#searchInput");
 
-  $scope.search = function search() {
-    PopupControl.toggle("search");
-    $scope.$input.select();
-    $timeout(function() {
-      $scope.$input.focus();
-    });
-  };
-
-  $scope.isVisible = function isVisible() {
-    return PopupControl.isOpen("search");
-  };
-
-  $scope.esc = function esc(e) {
-    if (e.keyCode == 27) {
-      PopupControl.setPopupState("search", false);
+  $scope.toggleSearch = PopupControl.register("search",
+    {
+      scope: $scope,
+      onOpen: function() {
+        $scope.$input.select();
+        $timeout(function() {
+          $scope.$input.focus();
+        });
+      }
     }
+  );
+
+  $scope.replacePath = function(code) {
+    $rootScope.replacePath(code);
+    $scope.toggleSearch();
   };
 
-  $scope.subjects = [{"code": "Nahhhhh", "name": "waiting for data"}];
+  $scope.isVisible = PopupControl.visibilityOf("search");
+
+  $scope.subjects = [{"code": "Placeholder", "name": "waiting for data"}];
+
   Subjects.success(function(data) {
     $scope.subjects = data.subjList;
   }).error(function() {
@@ -162,16 +219,18 @@ mubook.controller("GraphTypeCtrl", function GraphTypeCtrl($scope, $location, Glo
 });
 
 mubook.controller("FeedbackCtrl", function FeedbackCtrl($scope, $http, $timeout, Global, PopupControl) {
-  $scope.toggleForm = function() {
-    PopupControl.toggle("feedback");
-    $timeout(function() {
-      $("#feedback-name").focus();
-    });
-  };
+  $scope.toggleForm = PopupControl.register("feedback",
+    {
+      scope: $scope,
+      onOpen: function() {
+        $timeout(function() {
+          $("#feedback-name").focus();
+        });
+      }
+    }
+  );
 
-  $scope.isVisible = function isVisible() {
-    return PopupControl.isOpen("feedback");
-  };
+  $scope.isVisible = PopupControl.visibilityOf("feedback");
 
   $scope.sendFeedback = function(e) {
     if (!$scope.message) {
