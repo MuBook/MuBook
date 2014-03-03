@@ -16,7 +16,8 @@ mubook.config(["$routeProvider",
 
 mubook.run(["$location", "$rootScope", function($location, $rootScope) {
   $rootScope.$on("$routeChangeSuccess", function(event, current) {
-    $rootScope.pageTitle = current.params.subjectCode + current.$$route.title;
+    if (!current.params.subjectCode) { return; }
+    $rootScope.pageTitle = current.params.subjectCode.toUpperCase() + current.$$route.title;
   });
 }]);
 
@@ -46,14 +47,15 @@ mubook.factory("Global", function() {
   };
 });
 
-mubook.factory("PopupControl", function($window) {
+mubook.factory("PopupControl", ["$timeout", function($timeout) {
   var popups = {},
-      visiblePopup = null;
+      visiblePopups = {};
 
   function Popup(id) {
-    this.id = id;
     this.visible = false;
     this.standalone = false;
+    this.group = "default";
+    this.scope = null;
   }
 
   Popup.prototype.onOpen = function() {};
@@ -62,11 +64,20 @@ mubook.factory("PopupControl", function($window) {
   Popup.prototype.open = function() { this.visible = true; };
   Popup.prototype.close = function() { this.visible = false; };
 
+  function closeHelper(group) {
+    var popup;
+    var thePopup = popup = visiblePopups[group];
+    popup.close();
+    $timeout(function() {
+      thePopup.scope.$apply();
+    });
+    popup = undefined;
+  }
+
   var controller = {
     register: function(key, config) {
-      if (popups[key] !== undefined) {
-        console.warn(key + " already exists");
-      }
+      if (popups[key] !== undefined) { console.warn(key + " already exists"); }
+      if (!config.scope) { console.warn("Required parameter is missing: scope"); }
 
       var popup = popups[key] = new Popup(key);
 
@@ -81,13 +92,13 @@ mubook.factory("PopupControl", function($window) {
           popup.close();
           popup.onClose();
         } else {
-          this.closeOpened();
+          this.closeOpened(popup.group);
 
           popup.open();
           popup.onOpen();
 
           if (!popup.standalone) {
-            visiblePopup = popup;
+            visiblePopups[popup.group] = popup;
           }
         }
 
@@ -102,16 +113,20 @@ mubook.factory("PopupControl", function($window) {
       };
     },
 
-    closeOpened: function() {
-      if (visiblePopup) {
-        visiblePopup.close();
-        visiblePopup = null;
+    closeOpened: function(group) {
+      if (group === undefined) {
+        for (var group in visiblePopups) {
+          if (!visiblePopups[group]) { continue; }
+          closeHelper(group);
+        }
+      } else if (visiblePopups[group]) {
+        closeHelper(group);
       }
     }
   };
 
   return controller;
-});
+}]);
 
 mubook.factory("$searchResult", function() {
   return $("#searchResult");
@@ -122,6 +137,7 @@ mubook.controller("SearchCtrl", function SearchCtrl($scope, $timeout, $rootScope
 
   $scope.toggleSearch = PopupControl.register("search",
     {
+      scope: $scope,
       onOpen: function() {
         $scope.$input.select();
         $timeout(function() {
@@ -194,6 +210,7 @@ mubook.controller("GraphTypeCtrl", function GraphTypeCtrl($scope, $location, Glo
 mubook.controller("FeedbackCtrl", function FeedbackCtrl($scope, $http, $timeout, Global, PopupControl) {
   $scope.toggleForm = PopupControl.register("feedback",
     {
+      scope: $scope,
       onOpen: function() {
         $timeout(function() {
           $("#feedback-name").focus();
