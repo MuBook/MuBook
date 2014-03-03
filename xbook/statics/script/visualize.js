@@ -288,13 +288,13 @@ function visualizeGraphHelper() {
         .layout(layout)
         .run(
           g,
-          d3.select("#helperGraph")
+          d3.select("#legendGraph")
             .append("svg")
-            .attr("id", "graphHelperSVG")
+            .attr("id", "graphLegendSVG")
             .attr("width", 154)
             .attr("height", 193)
         );
-  var svg = d3.select("#graphHelperSVG");
+  var svg = d3.select("#graphLegendSVG");
   var nodes = svg.selectAll(".node")
                  .data(nodeData),
       rect =  svg.selectAll(".node rect")

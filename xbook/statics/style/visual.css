@@ -430,36 +430,36 @@ a:focus {
 /***********
 * =Helper
 ************/
-#helper {
+#legend {
 	right: 0;
 	top: 50px;
 	position: fixed;
 	padding: 5px 5px;
 }
 
-#helperGraph {
+#legendGraph {
 	width: 154px;
 	height: 193px;
 	background-color: rgba(0, 0, 0, 0.1);
 }
 
-#graphHelperSVG {
+#graphLegendSVG {
 	margin: 10px 10px;
 }
 
-#graphHelperSVG .edgePath {
+#graphLegendSVG .edgePath {
 	opacity: 1;
 }
 
-#graphHelperSVG .edge, #graphHelperSVG rect {
+#graphLegendSVG .edge, #graphLegendSVG rect {
 	opacity: 1;
 }
 
-#graphHelperSVG text {
+#graphLegendSVG text {
 	fill: #222;
 }
 
-#helperGraphCloseBtn {
+#legendGraphCloseBtn {
 	right: 159px;
 	top: 5px;
 	border-radius: 0;

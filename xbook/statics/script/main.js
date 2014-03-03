@@ -191,15 +191,16 @@ mubook.controller("SidePaneCtrl", function SidePaneCtrl($scope) {
 
 });
 
-mubook.controller("HelpControl", function HelpControl($scope, PopupControl) {
+mubook.controller("LegendControl", function LegendControl($scope, PopupControl) {
   visualizeGraphHelper();
-  $scope.toggle = function() {
-    PopupControl.toggle("helper");
-  }
+  $scope.toggle = PopupControl.register("legend",
+    {
+      scope: $scope,
+      standalone: true
+    }
+  );
 
-  $scope.isVisible = function() {
-    return PopupControl.isOpen("helper");
-  }
+  $scope.isVisible = PopupControl.visibilityOf("legend");
 });
 
 mubook.controller("GraphTypeCtrl", function GraphTypeCtrl($scope, $location, Global) {

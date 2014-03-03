@@ -76,10 +76,10 @@
 	</section>
 
 	<section ng-view id="graphContainer"></section>
-	<section id="helper" ng-controller="HelpControl">
-		<button id="helpBtn" class="btn btn-info" ng-click="toggle()" ng-show="!isVisible()">Help</button>
-		<section id="helperGraph" ng-show="isVisible()">
-			<button id="helperGraphCloseBtn" class="btn btn-default" ng-click="toggle()">
+	<section id="legend" ng-controller="LegendControl">
+		<button id="legendBtn" class="btn btn-info" ng-click="toggle()" ng-show="!isVisible()">Legend</button>
+		<section id="legendGraph" ng-show="isVisible()">
+			<button id="legendGraphCloseBtn" class="btn btn-default" ng-click="toggle()">
 				<i class="glyphicon glyphicon-remove"></i>
 			</button>
 		</section>
