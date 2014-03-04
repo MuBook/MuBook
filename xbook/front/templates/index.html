@@ -102,43 +102,74 @@
 	</section>
 
 	<section id="header-right" ng-controller="FeedbackCtrl">
-		<span id="feedback-button" class="pull-right" ng-click="toggleForm()">Contact</span>
-		<a id="share-google" class="share-button pull-right" target="_blank"
-				href="https://plus.google.com/share?url=http://mubook.me">g</a>
-		<a id="share-facebook" class="share-button pull-right" target="_blank"
-				href="https://www.facebook.com/sharer/sharer.php?s=100&p[title]=%C2%B5Book&p[summary]=%C2%B5Book+is+the+unofficial+Melbourne+University+subject+handbook.+Subject+selection+should+be+simple%2C+and+that's+why+%C2%B5Book+exists.&p[url]=http%3A%2F%2Fmubook.me">f</a>
-		<a id="share-twitter" class="share-button pull-right" target="_blank"
-				href="http://twitter.com/intent/tweet?url=http://mubook.me&text=%C2%B5Book+is+the+unofficial+UniMelb+subject+handbook.+Subject+selection+should+be+simple%2C+and+that's+why+%C2%B5Book+exists">t</a>
-		<form id="feedback-form" class="form-horizontal" role="form" ng-show="isVisible()" ng-cloak ng-submit="sendFeedback($event)">
-			{% csrf_token %}
-			<div class="form-group">
-				<label for="feedback-name" class="col-sm-2 control-label">Name</label>
-				<div class="col-sm-10">
-					<input type="text" class="form-control" id="feedback-name" ng-model="name" placeholder="Optional">
-				</div>
-			</div>
+        <ul class="pageNav">
+            <li class="pull-right">
+                <div id="feedback-button" class="pull-right" ng-click="toggleForm()">
+                    Contact
+                </div>
+                <form id="feedback-form" class="form-horizontal" role="form" ng-show="isVisible()" ng-cloak ng-submit="sendFeedback($event)">
+                    {% csrf_token %}
+                    <div class="form-group">
+                        <label for="feedback-name" class="col-sm-2 control-label">Name</label>
+                        <div class="col-sm-10">
+                            <input type="text" class="form-control" id="feedback-name" ng-model="name" placeholder="Optional">
+                        </div>
+                    </div>
 
-			<div class="form-group">
-				<label for="feedback-email" class="col-sm-2 control-label">Email</label>
-				<div class="col-sm-10">
-					<input type="email" class="form-control" id="feedback-email" ng-model="email" placeholder="Enter Email">
-				</div>
-			</div>
+                    <div class="form-group">
+                        <label for="feedback-email" class="col-sm-2 control-label">Email</label>
+                        <div class="col-sm-10">
+                            <input type="email" class="form-control" id="feedback-email" ng-model="email" placeholder="Enter Email">
+                        </div>
+                    </div>
 
-			<div class="form-group">
-				<label for="feedback-message" class="col-sm-2 control-label">Message</label>
-				<div class="col-sm-10">
-					<textarea class="form-control" id="feedback-message" ng-model="message" placeholder="Ideas? Bugs? Interested to help?"></textarea>
-				</div>
-			</div>
+                    <div class="form-group">
+                        <label for="feedback-message" class="col-sm-2 control-label">Message</label>
+                        <div class="col-sm-10">
+                            <textarea class="form-control" id="feedback-message" ng-model="message" placeholder="Ideas? Bugs? Interested to help?"></textarea>
+                        </div>
+                    </div>
 
-			<div class="form-group">
-				<div class="col-sm-offset-2 col-sm-10">
-					<button type="submit" class="btn btn-default" id="feedback-submit">Send</button>
-				</div>
-			</div>
-		</form>
-	</section>
+                    <div class="form-group">
+                        <div class="col-sm-offset-2 col-sm-10">
+                            <button type="submit" class="btn btn-default" id="feedback-submit">Send</button>
+                        </div>
+                    </div>
+                </form>
+            </li>
+            <li class="pull-right">
+                <a id="share-google" class="share-button pull-right" target="_blank"
+                   href="https://plus.google.com/share?url=http://mubook.me">g</a>
+            </li>
+            <li class="pull-right">
+                <a id="share-facebook" class="share-button pull-right" target="_blank"
+                   href="https://www.facebook.com/sharer/sharer.php?s=100&p[title]=%C2%B5Book&p[summary]=%C2%B5Book+is+the+unofficial+Melbourne+University+subject+handbook.+Subject+selection+should+be+simple%2C+and+that's+why+%C2%B5Book+exists.&p[url]=http%3A%2F%2Fmubook.me">f</a>
+            </li>
+            <li class="pull-right">
+                <a id="share-twitter" class="share-button pull-right" target="_blank"
+                   href="http://twitter.com/intent/tweet?url=http://mubook.me&text=%C2%B5Book+is+the+unofficial+UniMelb+subject+handbook.+Subject+selection+should+be+simple%2C+and+that's+why+%C2%B5Book+exists">t</a>
+            </li>
+            {% if user.is_authenticated %}
+            <li class="pull-right">
+                <a href="{% url 'account_logout' %}">Log out</a>
+            </li>
+            <li class="pull-right">
+                <a href="/accounts/profile/">My Account</a>
+            </li>
+            {% else %}
+            <li class="pull-right">
+                <a href="{% url 'account_signup' %}">Sign Up</a>
+            </li>
+            <li class="pull-right">
+                <a href="{% url 'account_login' %}">Log in</a>
+            </li>
+            <li class="pull-right">
+                {% load socialaccount %}
+                <a href="{% provider_login_url 'facebook' method='oauth2' %}">Facebook Connect</a>
+            </li>
+            {% endif %}
+        </ul>
+    </section>
 
 	<script src="//cdnjs.cloudflare.com/ajax/libs/d3/3.4.1/d3.min.js" charset="utf-8"></script>
 	<script src="//cpettitt.github.io/project/dagre-d3/latest/dagre-d3.min.js"></script>

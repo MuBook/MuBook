@@ -231,6 +231,11 @@ a:focus {
 	margin: 10px 0;
 }
 
+ul.pageNav
+{
+    list-style-type: none;
+}
+
 /************
 * =Search
 *************/
