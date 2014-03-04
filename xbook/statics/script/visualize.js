@@ -104,7 +104,7 @@ var visualizeGraph = (function() {
 
         for (var i = ns.length - 1; i >=0; --i) {
           ns[i].classList.remove("selected");
-          ns[i].classList.remove("visible")
+          ns[i].classList.remove("visible");
         }
         this.classList.add("selected");
 
@@ -271,6 +271,91 @@ var visualizeGraph = (function() {
     });
   };
 })();
+
+function visualizeGraphHelper() {
+  /*
+  overriding d3 default rendering functions to avoid a bug occured when
+  hiding legend.
+  */
+  var legendDrawEdgePaths = function(g, root) {
+    var svgEdgePaths = root
+      .selectAll('g.edgePath')
+      .classed('enter', false)
+      .data(g.edges(), function(e) { return e; });
+
+    svgEdgePaths
+      .enter()
+        .append('g')
+          .attr('class', 'edgePath enter')
+          .append('path')
+            .style('opacity', 0)
+            .attr('marker-end', 'url(#legendArrowhead)');
+
+    this._transition(svgEdgePaths.exit())
+        .style('opacity', 0)
+        .remove();
+
+    return svgEdgePaths;
+  };
+
+  function legendPostRender(graph, root) {
+  if (graph.isDirected() && root.select('#legendArrowhead').empty()) {
+    root
+      .append('svg:defs')
+        .append('svg:marker')
+          .attr('id', 'legendArrowhead')
+          .attr('viewBox', '0 0 10 10')
+          .attr('refX', 8)
+          .attr('refY', 5)
+          .attr('markerUnits', 'strokewidth')
+          .attr('markerWidth', 8)
+          .attr('markerHeight', 5)
+          .attr('orient', 'auto')
+          .attr('style', 'fill: #333')
+          .append('svg:path')
+            .attr('d', 'M 0 0 L 10 5 L 0 10 z');
+  }
+}
+
+  var nodeData = [{id: 0, root: false},
+                  {id: 1, root: true},
+                  {id: 2, root: false}];
+  var renderer = new dagreD3.Renderer();
+  renderer.drawEdgePaths(legendDrawEdgePaths);
+  renderer.postRender(legendPostRender);
+  var g = new dagreD3.Digraph();
+  g.addNode(nodeData[0].id, {label: "Prerequisite of A"});
+  g.addNode(nodeData[1].id, {label: "Subject A"});
+  g.addNode(nodeData[2].id, {label: "Postrequisite of A"});
+  g.addEdge(null, 1, 0);
+  g.addEdge(null, 2, 1);
+
+  var layout = dagreD3.layout();
+  renderer
+    .layout(layout)
+    .run(
+      g,
+      d3.select("#legendGraph")
+        .append("svg")
+        .attr("id", "graphLegendSVG")
+        .attr("width", 154)
+        .attr("height", 193)
+    );
+  var svg = d3.select("#graphLegendSVG");
+  var nodes = svg.selectAll(".node")
+                 .data(nodeData),
+      rect =  svg.selectAll(".node rect")
+                 .data(nodeData);
+  rect.attr("style", function(d) {
+      return d.root ? "stroke: red" : "inherit";
+  });
+  nodes.on("click", function(d) {
+    for (var i = 0; i < nodes[0].length; ++i) {
+      nodes[0][i].classList.remove("selected");
+    }
+    this.classList.add("selected");
+  });
+}
 
 /* A queue that has only unique items */
 function SetQueue() {

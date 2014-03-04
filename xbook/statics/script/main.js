@@ -191,6 +191,18 @@ mubook.controller("SidePaneCtrl", function SidePaneCtrl($scope) {
 
 });
 
+mubook.controller("LegendCtrl", function LegendCtrl($scope, PopupControl) {
+  visualizeGraphHelper();
+  $scope.toggle = PopupControl.register("legend",
+    {
+      scope: $scope,
+      standalone: true
+    }
+  );
+
+  $scope.isVisible = PopupControl.visibilityOf("legend");
+});
+
 mubook.controller("GraphTypeCtrl", function GraphTypeCtrl($scope, $location, Global) {
   $scope.toPre = function toPre() {
     Global.reqType = "prereq";

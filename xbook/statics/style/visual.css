@@ -114,7 +114,8 @@ a:focus {
 	fill: white;
 }
 
-#arrowhead {
+#arrowhead,
+#legendArrowhead {
 	fill: #888 !important;
 }
 
@@ -425,4 +426,46 @@ a:focus {
 .header {
   background-color: #eee;
   font-weight: bold;
+}
+
+/***********
+* =Graph Legend
+************/
+#legend {
+	right: 0;
+	top: 50px;
+	position: fixed;
+	padding: 5px 5px;
+}
+
+#legendGraph {
+	width: 154px;
+	height: 193px;
+	background-color: rgba(0, 0, 0, 0.1);
+}
+
+#graphLegendSVG {
+	margin: 10px 10px;
+}
+
+#graphLegendSVG .edgePath {
+	opacity: 1;
+}
+
+#graphLegendSVG .edge,
+#graphLegendSVG rect {
+	opacity: 1;
+}
+
+#graphLegendSVG text {
+	fill: #222;
+}
+
+#legendGraphCloseBtn {
+	right: 159px;
+	top: 5px;
+	border-radius: 0;
+	border: 0;
+	position: absolute;
+	background-color: rgba(0, 0, 0, 0.1);
 }
