@@ -114,7 +114,8 @@ a:focus {
 	fill: white;
 }
 
-#arrowhead {
+#arrowhead,
+#legendArrowhead {
 	fill: #888 !important;
 }
 
