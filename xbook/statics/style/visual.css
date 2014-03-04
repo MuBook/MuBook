@@ -428,7 +428,7 @@ a:focus {
 }
 
 /***********
-* =Helper
+* =Graph Legend
 ************/
 #legend {
 	right: 0;
@@ -451,7 +451,8 @@ a:focus {
 	opacity: 1;
 }
 
-#graphLegendSVG .edge, #graphLegendSVG rect {
+#graphLegendSVG .edge,
+#graphLegendSVG rect {
 	opacity: 1;
 }
 

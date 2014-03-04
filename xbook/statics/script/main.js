@@ -191,7 +191,7 @@ mubook.controller("SidePaneCtrl", function SidePaneCtrl($scope) {
 
 });
 
-mubook.controller("LegendControl", function LegendControl($scope, PopupControl) {
+mubook.controller("LegendCtrl", function LegendCtrl($scope, PopupControl) {
   visualizeGraphHelper();
   $scope.toggle = PopupControl.register("legend",
     {

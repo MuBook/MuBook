@@ -76,9 +76,9 @@
 	</section>
 
 	<section ng-view id="graphContainer"></section>
-	<section id="legend" ng-controller="LegendControl">
-		<button id="legendBtn" class="btn btn-info" ng-click="toggle()" ng-show="!isVisible()">Legend</button>
-		<section id="legendGraph" ng-show="isVisible()">
+	<section id="legend" ng-controller="LegendCtrl">
+		<button id="legendBtn" class="btn btn-info" ng-click="toggle()" ng-hide="isVisible()">Legend</button>
+		<section id="legendGraph" ng-hide="!isVisible()">
 			<button id="legendGraphCloseBtn" class="btn btn-default" ng-click="toggle()">
 				<i class="glyphicon glyphicon-remove"></i>
 			</button>
