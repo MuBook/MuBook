@@ -132,6 +132,11 @@ var visualizeGraph = (function() {
           return d.root ? "stroke: red" : "inherit";
         });
 
+      var buttonText = d3
+        .selectAll(".node text")
+        .attr("class", "button-text")
+        .attr("text-anchor", "center");
+
       var infoboxes = node.append("text")
         .attr("class", "info")
         .text(function(d) {
