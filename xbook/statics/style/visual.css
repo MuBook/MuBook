@@ -432,20 +432,17 @@ a:focus {
 * =Graph Legend
 ************/
 #legend {
-	right: 0;
-	top: 50px;
+	right: 10px;
+	top: 60px;
 	position: fixed;
-	padding: 5px 5px;
-}
-
-#legendGraph {
-	width: 154px;
-	height: 193px;
+	margin: 5px 5px;
 	background-color: rgba(0, 0, 0, 0.1);
+	transition: all 1s;
 }
 
 #graphLegendSVG {
 	margin: 10px 10px;
+	position: absolute;
 }
 
 #graphLegendSVG .edgePath {
@@ -461,11 +458,23 @@ a:focus {
 	fill: #222;
 }
 
-#legendGraphCloseBtn {
-	right: 159px;
-	top: 5px;
+#legendToggle {
+	float: right;
 	border-radius: 0;
 	border: 0;
-	position: absolute;
-	background-color: rgba(0, 0, 0, 0.1);
+	padding: 10px 5px;
+}
+
+#legendToggle:hover {
+	cursor: pointer;
+}
+
+.default {
+  	width: 25px;
+	height: 40px;
+}
+
+.altered {
+  	width: 168px;
+	height: 193px;
 }

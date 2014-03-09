@@ -343,7 +343,7 @@ function visualizeGraphHelper() {
       d3.select("#legendGraph")
         .append("svg")
         .attr("id", "graphLegendSVG")
-        .attr("width", 154)
+        .attr("width", 134)
         .attr("height", 193)
     );
   var svg = d3.select("#graphLegendSVG");

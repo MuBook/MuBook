@@ -193,10 +193,29 @@ mubook.controller("SidePaneCtrl", function SidePaneCtrl($scope) {
 
 mubook.controller("LegendCtrl", function LegendCtrl($scope, PopupControl) {
   visualizeGraphHelper();
+  $scope.$openIcon = $("#legendOpenIcon");
+  $scope.$closeIcon = $("#legendCloseIcon");
+  $scope.$legend = $("#legend");
+  $scope.$legendGraph = $("#legendGraph");
+  $scope.$closeIcon.hide();
+  $scope.$legendGraph.hide();
   $scope.toggle = PopupControl.register("legend",
     {
       scope: $scope,
-      standalone: true
+      standalone: true,
+      onOpen: function() {
+        $scope.$openIcon.hide(0);
+        $scope.$closeIcon.delay(1000).fadeIn(300).show(0);
+        $scope.$legendGraph.delay(500).show(500);
+      },
+      onClose: function() {
+        $scope.$closeIcon.hide(0);
+        $scope.$openIcon.delay(1000).fadeIn(300).show(0);
+        $scope.$legendGraph.fadeOut(300).hide(0);
+      },
+      onToggle: function() {
+        $scope.$legend.toggleClass("default altered");
+      }
     }
   );
 

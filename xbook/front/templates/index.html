@@ -76,13 +76,13 @@
 	</section>
 
 	<section ng-view id="graphContainer"></section>
-	<section id="legend" ng-controller="LegendCtrl">
-		<button id="legendBtn" class="btn btn-info" ng-click="toggle()" ng-hide="isVisible()">Legend</button>
-		<section id="legendGraph" ng-show="isVisible()">
-			<button id="legendGraphCloseBtn" class="btn btn-default" ng-click="toggle()">
-				<i class="glyphicon glyphicon-remove"></i>
-			</button>
-		</section>
+
+	<section id="legend" class="default" ng-controller="LegendCtrl">
+		<div id="legendToggle" ng-click="toggle()">
+			<i id="legendCloseIcon" class="glyphicon glyphicon-remove"></i>
+			<i id="legendOpenIcon" class="glyphicon glyphicon-info-sign"></i>
+		</div>
+		<section id="legendGraph"></section>
 	</section>
 
 	<section id="typeSwitcher" class="btn-group" ng-controller="GraphTypeCtrl">
