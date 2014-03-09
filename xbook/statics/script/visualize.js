@@ -73,7 +73,7 @@ var visualizeGraph = (function() {
           .on("zoom", zoomScale)
       );
 
-      var ns = document.querySelectorAll(".node");
+      var ns = document.querySelectorAll("#graphSVG .node");
       var prevHighlightNode = "";
 
       resetOpacity();
@@ -106,7 +106,6 @@ var visualizeGraph = (function() {
           ns[i].classList.remove("selected");
           ns[i].classList.remove("visible");
         }
-        this.classList.add("selected");
 
         for (var i = 0; i < edge[0].length; ++i) {
           edge[0][i].style.opacity = 0.2;
@@ -115,7 +114,9 @@ var visualizeGraph = (function() {
         if (d.code != prevHighlightNode) {
           deleteNode(graph, d, d.code);
           showSubjectDetails(d, selectedName, selectedCode);
+          this.classList.add("selected");
         } else {
+          this.classList.remove("selected");
           prevHighlightNode = "";
           resetOpacity();
         }
@@ -324,7 +325,8 @@ function visualizeGraphHelper() {
 
   var nodeData = [{id: 0, root: false},
                   {id: 1, root: true},
-                  {id: 2, root: false}];
+                  {id: 2, root: false}],
+                  prevHighlightNode = "";
   var renderer = new dagreD3.Renderer();
   renderer.drawEdgePaths(legendDrawEdgePaths);
   renderer.postRender(legendPostRender);
@@ -358,7 +360,12 @@ function visualizeGraphHelper() {
     for (var i = 0; i < nodes[0].length; ++i) {
       nodes[0][i].classList.remove("selected");
     }
-    this.classList.add("selected");
+    if (prevHighlightNode !== d.id) {
+      this.classList.add("selected");
+      prevHighlightNode = d.id;
+    } else {
+      this.classList.remove("selected");
+    }
   });
 }
 
