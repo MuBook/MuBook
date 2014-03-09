@@ -210,10 +210,12 @@ AUTHENTICATION_BACKENDS = (
 SITE_ID = 1
 LOGIN_REDIRECT_URL = '/'
 
-SOCIALACCOUNT_PROVIDERS = \
-    {'facebook':
-       {'SCOPE': ['email', 'publish_stream'],
-        'AUTH_PARAMS': {'auth_type': 'reauthenticate'},
-        'METHOD': 'oauth2',
-        'LOCALE_FUNC': lambda request: 'en_US',
-        'VERIFIED_EMAIL': False}}
+SOCIALACCOUNT_PROVIDERS = {
+    'facebook': {
+        'SCOPE':          [ 'email', 'publish_stream' ],
+        'AUTH_PARAMS':    { 'auth_type': 'reauthenticate' },
+        'METHOD':         'oauth2',
+        'LOCALE_FUNC':    lambda request: 'en_US',
+        'VERIFIED_EMAIL': False
+    }
+}
