@@ -8,7 +8,6 @@ admin.autodiscover()
 urlpatterns = patterns('',
     url(r'^accounts/logout/$', logout, {'next_page': '/'}),
     url(r'^accounts/', include('allauth.urls')),
-    url(r'^accounts/profile/', 'user_profile'),
 )
 
 urlpatterns += patterns('xbook.front.views',
@@ -17,6 +16,8 @@ urlpatterns += patterns('xbook.front.views',
     # url(r'^xbook/', include('xbook.foo.urls')),
     url(r'^$', 'index'),
     url(r'^ajax/', include('xbook.ajax.urls')),
+
+    url(r'^accounts/profile/', 'user_profile'),
 
     # Uncomment the next line to enable the admin:
     url(r'^admin/?', include(admin.site.urls)),
