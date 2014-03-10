@@ -9,6 +9,7 @@ from django.views.decorators.cache import cache_page
 from django.views.decorators.csrf import csrf_protect
 from django.shortcuts import render_to_response
 from django.template import RequestContext
+from allauth.account.decorators import verified_email_required
 
 CURRENT_PATH = os.path.dirname(os.path.abspath(__file__))
 INDEX_PATH = os.path.join(
@@ -44,5 +45,11 @@ def sendFeedback(request):
     return HttpResponse("OK")
 
 def user_profile(request):
+    return render_to_response("user_profile.html",
+                              RequestContext(request))
+
+def add_subject(request, code):
+    profile = request.user.profile
+    profile.add_subject(code)
     return render_to_response("user_profile.html",
                               RequestContext(request))

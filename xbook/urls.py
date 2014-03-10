@@ -17,7 +17,8 @@ urlpatterns += patterns('xbook.front.views',
     url(r'^$', 'index'),
     url(r'^ajax/', include('xbook.ajax.urls')),
 
-    url(r'^accounts/profile/', 'user_profile'),
+    url(r'^accounts/profile/$', 'user_profile'),
+    url(r'^accounts/profile/selected_subjects/add/(?P<code>.*?)/$', 'add_subject'),
 
     # Uncomment the next line to enable the admin:
     url(r'^admin/?', include(admin.site.urls)),

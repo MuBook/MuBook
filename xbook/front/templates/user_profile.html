@@ -6,11 +6,24 @@
 </head>
 <body class="{% if request.user.is_authenticated %}logged-in{% else %}logged-out{% endif %}">
 
-    {% if request.user.is_authenticated %}
+{% if request.user.is_authenticated %}
     <a href="/accounts/logout/" class="pull-right">Logout</a>
-    {{ request.user.username }}
+    {% if request.user.first_name or request.user.last_name %}
+        {{ request.user.first_name }} {{ request.user.last_name }}
     {% else %}
-    <a href="/accounts/login/" class="pull-right">Login</a>
+        {{ request.user.username }}
     {% endif %}
+    {% if request.user.profile.account_verified %} (verified) {% else %} (unverified) {% endif %}
+{% else %}
+    <a href="/accounts/login/" class="pull-right">Login</a>
+{% endif %}
+
+    <div id="selected-subjects">
+        {% for subj_name in request.user.profile.selected_subject %}
+        <tr class="{% cycle 'row1' 'row2' %}">
+            <td>{{subj_name}}</td>
+        </tr>
+        {% endfor %}
+    </div>
 </body>
 </html>
