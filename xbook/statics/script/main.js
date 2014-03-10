@@ -192,34 +192,35 @@ mubook.controller("SidePaneCtrl", function SidePaneCtrl($scope) {
 });
 
 mubook.controller("LegendCtrl", function LegendCtrl($scope, PopupControl) {
-  visualizeGraphHelper();
-  $scope.$openIcon = $("#legendOpenIcon");
-  $scope.$closeIcon = $("#legendCloseIcon");
+  legendInit();
+
   $scope.$legend = $("#legend");
-  $scope.$legendGraph = $("#legendGraph");
-  $scope.$closeIcon.hide();
-  $scope.$legendGraph.hide();
-  $scope.toggle = PopupControl.register("legend",
+  $scope.$legendGraph = $("#legendGraph").hide();
+
+  $scope.$openIcon = $("#legendOpenIcon");
+  $scope.$closeIcon = $("#legendCloseIcon").hide();
+
+  $scope.toggleLegend = PopupControl.register("legend",
     {
       scope: $scope,
       standalone: true,
       onOpen: function() {
-        $scope.$openIcon.hide(0);
-        $scope.$closeIcon.delay(1000).fadeIn(300).show(0);
-        $scope.$legendGraph.delay(500).show(500);
+        $scope.$openIcon.fadeOut();
+        $scope.$closeIcon.delay(500).fadeIn();
+        $scope.$legend.animate({width: "170px"}, 500).animate({height: "190px"}, 500);
+        $scope.$legendGraph.delay(1000).fadeIn(500);
       },
       onClose: function() {
-        $scope.$closeIcon.hide(0);
-        $scope.$openIcon.delay(1000).fadeIn(300).show(0);
-        $scope.$legendGraph.fadeOut(300).hide(0);
-      },
-      onToggle: function() {
-        $scope.$legend.toggleClass("default altered");
+        $scope.$closeIcon.fadeOut();
+        $scope.$openIcon.delay(500).fadeIn();
+        $scope.$legendGraph.fadeOut(500);
+        $scope.$legend.delay(500).animate({height: "25px"}, 500).animate({width: "25px"}, 500);
+        docCookies.setItem("legendSeen", true);
       }
     }
   );
 
-  $scope.isVisible = PopupControl.visibilityOf("legend");
+  if (!docCookies.getItem("legendSeen")) { $scope.toggleLegend(); }
 });
 
 mubook.controller("GraphTypeCtrl", function GraphTypeCtrl($scope, $location, Global) {
