@@ -10,7 +10,7 @@
 ## What need to be done
 
 * OPTIONAL: Put test data into your own DB
-	- Command: pg_restore --verbose --clean --no-acl --no-owner -h localhost -U USER_NAME -d DB_NAME DUMP_NAME.dump
+	- Command: `pg_restore --verbose --clean --no-acl --no-owner -h localhost -U USER_NAME -d DB_NAME DUMP_NAME.dump`
 	- make sure postgres bin folder is in your PATH
 	- USER_NAME: your user name for your db
 	- DB_NAME: your db name in postgres
