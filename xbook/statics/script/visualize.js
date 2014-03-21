@@ -112,7 +112,7 @@ var visualizeGraph = (function() {
         }
 
         if (d.code != prevHighlightNode) {
-          deleteNode(graph, d, d.code);
+          highlightSubtree(graph, d, d.code);
           showSubjectDetails(d, selectedName, selectedCode);
           this.classList.add("selected");
         } else {
@@ -237,7 +237,7 @@ var visualizeGraph = (function() {
         graphContainer.appendChild(restoreBtn);
       }
 
-      function deleteNode(graph, d, subjectCode) {
+      function highlightSubtree(graph, d, subjectCode) {
         prevHighlightNode = subjectCode;
         var nodeQueue = new SetQueue();
         var rootPosition = 0;
