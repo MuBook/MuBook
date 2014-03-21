@@ -76,13 +76,11 @@
 	</section>
 
 	<section ng-view id="graphContainer"></section>
-	<section id="legend" ng-controller="LegendCtrl">
-		<button id="legendBtn" class="btn btn-info" ng-click="toggle()" ng-hide="isVisible()">Legend</button>
-		<section id="legendGraph" ng-show="isVisible()">
-			<button id="legendGraphCloseBtn" class="btn btn-default" ng-click="toggle()">
-				<i class="glyphicon glyphicon-remove"></i>
-			</button>
-		</section>
+
+	<section id="legend" class="default" ng-controller="LegendCtrl">
+		<i id="legendCloseIcon" class="glyphicon glyphicon-remove" ng-click="toggleLegend()"></i>
+		<i id="legendOpenIcon" class="glyphicon glyphicon-info-sign" ng-click="toggleLegend()"></i>
+		<div id="legendGraph"></div>
 	</section>
 
 	<section id="typeSwitcher" class="btn-group" ng-controller="GraphTypeCtrl">
@@ -149,7 +147,7 @@
 	</section>
 
 	<script src="//cdnjs.cloudflare.com/ajax/libs/d3/3.4.1/d3.min.js" charset="utf-8"></script>
-	<script src="//cpettitt.github.io/project/dagre-d3/latest/dagre-d3.min.js"></script>
+	<script src="//cdn.jsdelivr.net/dagre-d3/0.1.4/dagre-d3.min.js"></script>
 	<script src="static/script/main.js"></script>
 	<script src="static/script/visualize.js"></script>
 </body>
