@@ -447,16 +447,6 @@ a:focus {
 	left: 5px;
 }
 
-#graphLegendSVG .edgePath,
-#graphLegendSVG .edge,
-#graphLegendSVG rect {
-	opacity: 1;
-}
-
-#graphLegendSVG text {
-	fill: #222;
-}
-
 #legendOpenIcon,
 #legendCloseIcon {
 	position: absolute;
