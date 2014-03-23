@@ -88,10 +88,9 @@
 		<span class="btn btn-default" ng-class="{active: !prereq()}" ng-cloak ng-click="toPost()">Postrequisites</span>
 	</section>
 
-	<section id="search" ng-controller="SearchCtrl" ng-cloak>
-		<input type="text" id="searchInput" placeholder="Search" ng-click="toggleSearch()"
-				ng-model="query" ng-keyup="esc($event)" ng-keydown="move($event)">
-		<button class="btn btn-default" id="searchBtn" ng-click="toggleSearch()">
+	<section id="search" ng-controller="SearchCtrl" ng-cloak popup>
+		<input type="text" id="searchInput" placeholder="Search" ng-click="toggleSearch($event)" ng-model="query">
+		<button class="btn btn-default" id="searchBtn" ng-click="toggleSearch($event)">
 			<i class="glyphicon glyphicon-search"></i>
 		</button>
 		<div id="searchResult" ng-show="isVisible()">
@@ -107,8 +106,8 @@
 		</div>
 	</section>
 
-	<section id="header-right" ng-controller="FeedbackCtrl">
-		<span id="feedback-button" class="pull-right" ng-click="toggleForm()">Contact</span>
+	<section id="header-right" ng-controller="FeedbackCtrl" popup>
+		<span id="feedback-button" class="pull-right" ng-click="toggleForm($event)">Contact</span>
 		<a id="share-google" class="share-button pull-right" target="_blank"
 				href="https://plus.google.com/share?url=http://mubook.me">g</a>
 		<a id="share-facebook" class="share-button pull-right" target="_blank"
