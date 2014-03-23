@@ -62,7 +62,7 @@ Graph.prototype.renderGraph = function(config) {
   this.node = d3.select(this._id + " .nodes");
   this.edge = d3.select(this._id + " .edgePaths");
 
-  this.setStyle({resetOpacity: true, highlightRoot: true});
+  this.setStyle({ resetOpacity: true, highlightRoot: true });
 
   d3.selectAll(this._id + " .node text")
     .attr("class", "button-text")
@@ -129,13 +129,13 @@ Graph.prototype.deleteNode = function(subjectCode, node) {
   document.querySelector("#restoreBtn").style.display = "inline";
   node.classList.add("deleted");
   updateCorrespondingEdge(this, subjectCode, DELETE);
-  this.setStyle({resetOpacity: true, removeSelected: true});
+  this.setStyle({ resetOpacity: true, removeSelected: true });
 };
 
 Graph.prototype.restoreNode = function(subjectCode) {
   var index = this.nodeData.nodes.findIndex({ code: subjectCode });
   this.nodes[0][index].classList.remove("deleted");
-  this.setStyle({resetOpacity: true, removeSelected: true});
+  this.setStyle({ resetOpacity: true, removeSelected: true });
 };
 
 Graph.prototype.highlightSubtree = function(subjectCode) {
@@ -169,7 +169,7 @@ Graph.prototype.onClickHandler = function(d, graph, clickedNode, config) {
     return;
   }
 
-  graph.setStyle({dimOpacity: true, removeSelected: true});
+  graph.setStyle({ dimOpacity: true, removeSelected: true });
 
   if (d.code != graph.prevHighlightNode) {
     graph.highlightSubtree(d.code);
@@ -181,7 +181,7 @@ Graph.prototype.onClickHandler = function(d, graph, clickedNode, config) {
   } else {
     clickedNode.classList.remove("selected");
     graph.prevHighlightNode = "";
-    graph.setStyle({resetOpacity: true});
+    graph.setStyle({ resetOpacity: true });
   }
 };
 
