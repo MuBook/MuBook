@@ -85,8 +85,6 @@ mubook.factory("PopupControl", ["$timeout", function($timeout) {
     popup = undefined;
   }
 
-  var devNull = { stopPropagation: function(e) {} };
-
   var controller = {
     register: function(key, config) {
       if (popups[key]) { console.warn(key + " already exists"); }
@@ -99,8 +97,6 @@ mubook.factory("PopupControl", ["$timeout", function($timeout) {
       }
 
       return function($event) {
-        $event = $event || devNull;
-
         var onClose = popup.visible;
 
         if (onClose) {
