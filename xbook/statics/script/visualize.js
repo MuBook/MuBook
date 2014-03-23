@@ -9,23 +9,25 @@ var visualizeGraph = (function () {
   return function (url) {
     d3.json(url, function (error, data) {
       var isPrereq = angular.element($("#typeSwitcher")).scope().prereq();
-      var config = {
-        nodeData: data,
-        width: window.innerWidth - $sidePane.width(),
-        height: window.innerHeight - $topBar.height()
-      }
-
-      var graph = new Graph(config);
+      var graph = new Graph(
+        data,
+        "graphSVG",
+        window.innerWidth - $sidePane.width(),
+        window.innerHeight - $topBar.height()
+      );
       graph.makeGraph();
       graph.renderGraph();
       defaultShowNodeDetails(data.nodes[0], graph.selectedName, graph.selectedCode);
       graph.centerGraph(isPrereq);
       graph.addPanZoom(SCALE_RANGE);
-      graph.addOnClickListener({
-        enableDelete: true,
-        showNodeDetails: defaultShowNodeDetails
+      graph.nodes.on("click", function(d) {
+        graph.onClickHandler(
+          d,
+          graph,
+          this,
+          {enableDelete: true, showNodeDetails: defaultShowNodeDetails});
       });
-      graph.addOnDblClickListener();
+      graph.nodes.on("dblclick", graph.onDblClickHandler);
       makeRestoreButton();
 
       restoreBtn.onclick = function (e) {
@@ -41,7 +43,7 @@ var visualizeGraph = (function () {
 
       $searchInput.val(data.nodes[0].code + " - " + data.nodes[0].name);
     });
-}
+  }
 })();
 
 // overriding d3 default rendering functions to avoid a bug occured when hiding legend
@@ -50,17 +52,17 @@ function legendPostRender(graph, root) {
     root
       .append('svg:defs')
       .append('svg:marker')
-      .attr('id', 'legendArrowhead')
-      .attr('viewBox', '0 0 10 10')
-      .attr('refX', 8)
-      .attr('refY', 5)
-      .attr('markerUnits', 'strokewidth')
-      .attr('markerWidth', 8)
-      .attr('markerHeight', 5)
-      .attr('orient', 'auto')
-      .attr('style', 'fill: #333')
+        .attr('id', 'legendArrowhead')
+        .attr('viewBox', '0 0 10 10')
+        .attr('refX', 8)
+        .attr('refY', 5)
+        .attr('markerUnits', 'strokewidth')
+        .attr('markerWidth', 8)
+        .attr('markerHeight', 5)
+        .attr('orient', 'auto')
+        .attr('style', 'fill: #333')
       .append('svg:path')
-      .attr('d', 'M 0 0 L 10 5 L 0 10 z');
+        .attr('d', 'M 0 0 L 10 5 L 0 10 z');
   }
 }
 
@@ -73,10 +75,10 @@ function legendDrawEdgePaths (g, root) {
   svgEdgePaths
     .enter()
     .append('g')
-    .attr('class', 'edgePath enter')
+      .attr('class', 'edgePath enter')
     .append('path')
-    .style('opacity', 0)
-    .attr('marker-end', 'url(#legendArrowhead)');
+      .style('opacity', 0)
+      .attr('marker-end', 'url(#legendArrowhead)');
 
   this._transition(svgEdgePaths.exit())
     .style('opacity', 0)
@@ -88,24 +90,31 @@ function legendDrawEdgePaths (g, root) {
 function legendInit() {
 
   var graphData = {
-    nodes: [{id: 0, root: false, code: "Prerequisite of A"},
-            {id: 1, root: true, code: "Subject A"},
-            {id: 2, root: false, code: "Postrequisite of A"}],
-    links: [{source: 0, target: 1},
-            {source: 1, target: 2}]
+    nodes: [
+      {id: 0, root: false, code: "Prerequisite of A"},
+      {id: 1, root: true, code: "Subject A"},
+      {id: 2, root: false, code: "Postrequisite of A"}
+    ],
+    links: [
+      {source: 0, target: 1}, {source: 1, target: 2}
+    ]
   };
 
-  var graph = new Graph({
-    nodeData: graphData,
-    width: 150,
-    height: 180,
-    name: "graphLegendSVG",
-    parentContainer: "#legendGraph",
-    drawEdgePath: legendDrawEdgePaths,
-    postRenderer: legendPostRender
-  });
+  var graph = new Graph(
+    graphData,
+    "graphLegendSVG",
+    150,
+    180,
+    {
+      parentContainer: "#legendGraph",
+      drawEdgePath: legendDrawEdgePaths,
+      postRenderer: legendPostRender
+    }
+  );
 
   graph.makeGraph();
   graph.renderGraph();
-  graph.addOnClickListener();
+  graph.nodes.on("click", function(d) {
+    graph.onClickHandler(d, graph, this, {});
+  });
 }
