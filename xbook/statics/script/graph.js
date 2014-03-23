@@ -269,7 +269,7 @@ function showNodeDetails(d, selectedName, selectedCode) {
   selectedName.innerHTML = d.name;
   selectedCode.innerHTML = d.code;
   for (var i = 0; i < detailsContainer.length; ++i) {
-    detailsContainer[i] = data[i] || "None";
+    detailsContainer[i].innerHTML = data[i] || "None";
   }
 }
 
