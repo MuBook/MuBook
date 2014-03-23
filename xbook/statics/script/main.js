@@ -33,6 +33,8 @@ mubook.run(["$window", "PopupControl", function($window, PopupControl) {
     if (event.keyCode === 27) {
       PopupControl.closeOpened();
     }
+  }).on("click", function() {
+    PopupControl.closeOpened();
   });
 }]);
 
@@ -44,6 +46,15 @@ mubook.factory("Global", function() {
   return {
     code: "COMP30018",
     reqType: "prereq"
+  };
+});
+
+mubook.directive("popup", function() {
+  return {
+    restrict: "A",
+    link: function(scope, elem, attr) {
+      $(elem).on("click", function(event) { event.stopPropagation(); });
+    }
   };
 });
 
@@ -74,9 +85,11 @@ mubook.factory("PopupControl", ["$timeout", function($timeout) {
     popup = undefined;
   }
 
+  var devNull = { stopPropagation: function(e) {} };
+
   var controller = {
     register: function(key, config) {
-      if (popups[key] !== undefined) { console.warn(key + " already exists"); }
+      if (popups[key]) { console.warn(key + " already exists"); }
       if (!config.scope) { console.warn("Required parameter is missing: scope"); }
 
       var popup = popups[key] = new Popup(key);
@@ -85,24 +98,26 @@ mubook.factory("PopupControl", ["$timeout", function($timeout) {
         popup[key] = config[key];
       }
 
-      return function() {
+      return function($event) {
+        $event = $event || devNull;
+
         var onClose = popup.visible;
 
         if (onClose) {
           popup.close();
-          popup.onClose();
+          popup.onClose($event);
         } else {
           this.closeOpened(popup.group);
 
           popup.open();
-          popup.onOpen();
+          popup.onOpen($event);
 
           if (!popup.standalone) {
             visiblePopups[popup.group] = popup;
           }
         }
 
-        popup.onToggle();
+        popup.onToggle($event);
 
       }.bind(controller);
     },
@@ -128,11 +143,7 @@ mubook.factory("PopupControl", ["$timeout", function($timeout) {
   return controller;
 }]);
 
-mubook.factory("$searchResult", function() {
-  return $("#searchResult");
-});
-
-mubook.controller("SearchCtrl", function SearchCtrl($scope, $timeout, $rootScope, Subjects, Global, PopupControl, $searchResult) {
+mubook.controller("SearchCtrl", function SearchCtrl($scope, $timeout, Subjects, Global, PopupControl) {
   $scope.$input = $("#searchInput");
 
   $scope.toggleSearch = PopupControl.register("search",
@@ -148,7 +159,7 @@ mubook.controller("SearchCtrl", function SearchCtrl($scope, $timeout, $rootScope
   );
 
   $scope.replacePath = function(code) {
-    $rootScope.replacePath(code);
+    $scope.$parent.replacePath(code);
     $scope.toggleSearch();
   };
 
