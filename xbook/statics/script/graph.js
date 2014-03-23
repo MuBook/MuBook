@@ -1,9 +1,9 @@
-var DELETE = 0,
+var DELETE  = 0,
     RESTORE = 1;
 
-function Graph(data, name, width, height, config) {
-  /* Pre-render setup */
+function Graph(config) {
   config = config || {};
+
   this.deletedNodeContainer = [];
   this.prevHighlightNode = "";
   this.renderer = new dagreD3.Renderer();
@@ -12,13 +12,11 @@ function Graph(data, name, width, height, config) {
   this.selectedName = document.querySelector("#selectedName");
   this.selectedCode = document.querySelector("#selectedCode");
   this.parentContainer = "#graph";
-  this.name = name;
-  this.nodeData = data;
-  this.width = width;
-  this.height = height;
+
   for (var key in config) {
     this[key] = config[key];
   }
+
   this._id = "#" + this.name;
 
   if (this.drawEdgePath) {
@@ -30,7 +28,7 @@ function Graph(data, name, width, height, config) {
   }
 }
 
-Graph.prototype._makeNode = function(node) {return { label: node.code || node.id };};
+Graph.prototype._makeNode = function(node) { return { label: node.code || node.id }; };
 
 Graph.prototype.makeGraph = function() {
   for (var i = 0; i < this.nodeData.nodes.length; ++i) {
@@ -42,17 +40,17 @@ Graph.prototype.makeGraph = function() {
   }
 };
 
-Graph.prototype.renderGraph = function (config) {
+Graph.prototype.renderGraph = function(config) {
   config = config || {};
   this.renderer
-  .layout(this.layout)
-  .run(
-    this.g,
-    d3.select(this.parentContainer)
-      .append("svg")
-        .attr("id", this.name)
-        .attr("width", this.width)
-        .attr("height", this.height)
+    .layout(this.layout)
+    .run(
+      this.g,
+      d3.select(this.parentContainer)
+        .append("svg")
+          .attr("id", this.name)
+          .attr("width", this.width)
+          .attr("height", this.height)
     );
   this.svg = d3.select("#" + this.name);
   this.nodes = this.svg.selectAll(".node")
@@ -72,7 +70,7 @@ Graph.prototype.renderGraph = function (config) {
 
   this.nodes.append("text")
     .attr("class", "info")
-    .text(function (d) {
+    .text(function(d) {
       return d.name;
     })
     .attr("text-anchor", "middle")
@@ -92,45 +90,38 @@ Graph.prototype.centerGraph = function(isPrereq) {
 };
 
 Graph.prototype.setStyle = function(config) {
+  config = config || {};
+
   var edges = this.edges[0],
       nodes = this.nodes[0];
+
   if (config.resetOpacity) {
-    for (var i = 0; i < edges.length; ++i) {
-      edges[i].style.opacity = 1;
-    }
-    for (var i = nodes.length - 1; i >=0; --i) {
-      nodes[i].classList.add("visible");
-    }
+    edges.map(function(edge) { edge.style.opacity = 1; });
+    nodes.map(function(node) { node.classList.add("visible"); });
   } else if (config.dimOpacity) {
-    for (var i = 0; i < edges.length; ++i) {
-      edges[i].style.opacity = 0.2;
-    }
-    for (var i = nodes.length - 1; i >=0; --i) {
-      nodes[i].classList.remove("visible");
-    }
+    edges.map(function(edge) { edge.style.opacity = 0.2; });
+    nodes.map(function(node) { node.classList.remove("visible"); });
   }
 
   if (config.removeSelected) {
-    for (var i = nodes.length - 1; i >=0; --i) {
-      nodes[i].classList.remove("selected");
-    }
+    nodes.map(function(node) { node.classList.remove("selected"); });
   }
 
   if (config.highlightRoot) {
     this.rects
-      .attr("style", function (d) {
+      .attr("style", function(d) {
         return d.root ? "stroke: red" : "inherit";
       });
   }
 };
 
-Graph.prototype.addPanZoom = function (scaleRange) {
+Graph.prototype.addPanZoom = function(scaleRange) {
   var graph = this;
   this.svg.call(
     d3.behavior.zoom()
       .translate(this.centerPosition)
       .scaleExtent([0.4, 2])
-      .on("zoom", function () {zoomScale(graph.node, graph.edge);})
+      .on("zoom", function() { zoomScale(graph.node, graph.edge); })
     );
 };
 
@@ -142,26 +133,22 @@ Graph.prototype.deleteNode = function(subjectCode, node) {
 };
 
 Graph.prototype.restoreNode = function(subjectCode) {
-  var index = this.nodeData.nodes.indexOfSubjectCode(subjectCode);
+  var index = this.nodeData.nodes.findIndex({ code: subjectCode });
   this.nodes[0][index].classList.remove("deleted");
   this.setStyle({resetOpacity: true, removeSelected: true});
 };
 
 Graph.prototype.highlightSubtree = function(subjectCode) {
-  var nodeQueue = new SetQueue();
-  var rootPosition = 0;
-  for (var i = 0; i < this.nodeData.nodes.length; ++i) {
-    if (this.nodeData.nodes[i].code === subjectCode) {
-      rootPosition = i;
-      break;
-    }
-  }
+  var nodeQueue    = new SetQueue(),
+      rootPosition = this.nodeData.nodes.findIndex({ code: subjectCode });
+
   nodeQueue.push(rootPosition);
+
   var currentRoot,
       queueHead = 0,
-      edges = this.edges[0],
-      nodes = this.nodes[0];
-  while (queueHead != nodeQueue.length()) {
+      edges     = this.edges[0],
+      nodes     = this.nodes[0];
+  while (queueHead !== nodeQueue.length()) {
     currentRoot = nodeQueue.get(queueHead++);
     if (this.deletedNodeContainer.indexOf(this.nodeData.nodes[currentRoot].code) >= 0) {
       continue;
@@ -177,10 +164,9 @@ Graph.prototype.highlightSubtree = function(subjectCode) {
 };
 
 Graph.prototype.onClickHandler = function(d, graph, clickedNode, config) {
-  if (config.enableDelete &&
-    (d3.event.button === 0 && d3.event.shiftKey)) {
+  if (config.enableDelete && d3.event.button === 0 && d3.event.shiftKey) {
     graph.deleteNode(d.code, clickedNode);
-  return;
+    return;
   }
 
   graph.setStyle({dimOpacity: true, removeSelected: true});
@@ -206,17 +192,17 @@ Graph.prototype.onDblClickHandler = function(d) {
 };
 
 function zoomScale(node, edge) {
-  node.attr("transform", "translate(" + d3.event.translate + ") scale(" + d3.event.scale + ")");
-  edge.attr("transform", "translate(" + d3.event.translate + ") scale(" + d3.event.scale + ")");
+  node.attr("transform", "translate(" + d3.event.translate + "); scale(" + d3.event.scale + ");");
+  edge.attr("transform", "translate(" + d3.event.translate + "); scale(" + d3.event.scale + ");");
 }
 
 function updateCorrespondingEdge(graph, subjectCode, operation) {
-  var position = graph.nodeData.nodes.indexOfSubjectCode(subjectCode),
+  var position = graph.nodeData.nodes.findIndex({ code: subjectCode }),
       data = graph.nodeData,
       edges = graph.edges[0];
   for (var i = 0; i < data.links.length; ++i) {
     var source = data.links[i].source,
-    target = data.links[i].target;
+        target = data.links[i].target;
     if (position === source || position === target) {
       switch (operation) {
         case DELETE:
@@ -244,20 +230,20 @@ function SetQueue() {
 }
 
 SetQueue.prototype = {
-  push : function (item) {
+  push: function(item) {
     if (this._container.indexOf(item) < 0) {
       this._container.push(item);
     }
   },
 
-  get : function (index) {
+  get: function(index) {
     return this._container[index];
   },
 
-  length : function () {
+  length: function() {
     return this._container.length;
   }
-}
+};
 
 function makeRestoreButton() {
   var graphContainer = document.querySelector("#graph");
@@ -267,28 +253,50 @@ function makeRestoreButton() {
   restoreBtn.innerHTML = "Restore Node";
   restoreBtn.style.display = "none";
   graphContainer.appendChild(restoreBtn);
+
+  return restoreBtn;
 }
 
-function defaultShowNodeDetails(d, selectedName, selectedCode) {
+function showNodeDetails(d, selectedName, selectedCode) {
   var detailsContainer = document.querySelectorAll(".subjectDetail");
+      data = [
+        d.credit,          d.commence_date,
+        d.time_commitment, d.prereq,
+        d.assessment,      d.coreq,
+        d.overview,        d.objectives
+      ];
 
   selectedName.innerHTML = d.name;
   selectedCode.innerHTML = d.code;
-  detailsContainer[0].innerHTML = d.credit || "None";
-  detailsContainer[1].innerHTML = d.commence_date || "None";
-  detailsContainer[2].innerHTML = d.time_commitment || "None";
-  detailsContainer[3].innerHTML = d.prereq || "None";
-  detailsContainer[4].innerHTML = d.assessment || "None";
-  detailsContainer[5].innerHTML = d.coreq || "None";
-  detailsContainer[6].innerHTML = d.overview || "None";
-  detailsContainer[7].innerHTML = d.objectives || "None";
+  for (var i = 0; i < detailsContainer.length; ++i) {
+    detailsContainer[i] = data[i] || "None";
+  }
 }
 
-Array.prototype.indexOfSubjectCode = function(subjectCode) {
-  for (var i = 0; i < this.length; ++i) {
-    if (this[i].code === subjectCode) {
-      return i;
+Array.prototype.findIndex = function(tester) {
+  switch(tester) {
+  case "function":
+    for (var i = 0; i < this.length; ++i) {
+      if (tester(this[i])) {
+        return i;
+      }
     }
+    break;
+  case "object":
+    for (var i = 0; i < this.length; ++i) {
+      var match = true,
+          elem  = this[i];
+      for (var key in tester) {
+        if (elem[key] !== tester[key]) {
+          match = false;
+          break;
+        }
+      }
+      if (match) { return i; }
+    }
+    break;
+  default:
+    return this.indexOf(tester);
   }
   return -1;
 };

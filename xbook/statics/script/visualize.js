@@ -1,23 +1,23 @@
 var visualizeGraph = (function () {
   "use strict";
 
-  var $sidePane = $("#sidePane"),
-      $topBar = $("#topBar"),
+  var $sidePane    = $("#sidePane"),
+      $topBar      = $("#topBar"),
       $searchInput = $("#searchInput"),
-      SCALE_RANGE = [0.4, 2];
+      SCALE_RANGE  = [0.4, 2];
 
   return function (url) {
     d3.json(url, function (error, data) {
       var isPrereq = angular.element($("#typeSwitcher")).scope().prereq();
-      var graph = new Graph(
-        data,
-        "graphSVG",
-        window.innerWidth - $sidePane.width(),
-        window.innerHeight - $topBar.height()
-      );
+      var graph = new Graph({
+        nodeData: data,
+        name: "graphSVG",
+        width: window.innerWidth - $sidePane.width(),
+        height: window.innerHeight - $topBar.height()
+      });
       graph.makeGraph();
       graph.renderGraph();
-      defaultShowNodeDetails(data.nodes[0], graph.selectedName, graph.selectedCode);
+      showNodeDetails(data.nodes[0], graph.selectedName, graph.selectedCode);
       graph.centerGraph(isPrereq);
       graph.addPanZoom(SCALE_RANGE);
       graph.nodes.on("click", function(d) {
@@ -25,12 +25,11 @@ var visualizeGraph = (function () {
           d,
           graph,
           this,
-          {enableDelete: true, showNodeDetails: defaultShowNodeDetails});
+          { enableDelete: true, showNodeDetails: showNodeDetails }
+        );
       });
       graph.nodes.on("dblclick", graph.onDblClickHandler);
-      makeRestoreButton();
-
-      restoreBtn.onclick = function (e) {
+      makeRestoreButton().onclick = function (e) {
         if (graph.deletedNodeContainer.length != 0) {
           var curNode = graph.deletedNodeContainer.pop();
           graph.restoreNode(curNode);
@@ -39,7 +38,7 @@ var visualizeGraph = (function () {
             restoreBtn.style.display = "none";
           }
         }
-      }
+      };
 
       $searchInput.val(data.nodes[0].code + " - " + data.nodes[0].name);
     });
@@ -88,29 +87,27 @@ function legendDrawEdgePaths (g, root) {
 };
 
 function legendInit() {
-
   var graphData = {
     nodes: [
-      {id: 0, root: false, code: "Prerequisite of A"},
-      {id: 1, root: true, code: "Subject A"},
-      {id: 2, root: false, code: "Postrequisite of A"}
+      { id: 0, root: false, code: "Prerequisite of A" },
+      { id: 1, root: true, code: "Subject A" },
+      { id: 2, root: false, code: "Postrequisite of A" }
     ],
     links: [
-      {source: 0, target: 1}, {source: 1, target: 2}
+      { source: 0, target: 1 },
+      { source: 1, target: 2 }
     ]
   };
 
-  var graph = new Graph(
-    graphData,
-    "graphLegendSVG",
-    150,
-    180,
-    {
-      parentContainer: "#legendGraph",
-      drawEdgePath: legendDrawEdgePaths,
-      postRenderer: legendPostRender
-    }
-  );
+  var graph = new Graph({
+    nodeData: graphData,
+    name: "graphLegendSVG",
+    width: 150,
+    height: 180,
+    parentContainer: "#legendGraph",
+    drawEdgePath: legendDrawEdgePaths,
+    postRenderer: legendPostRender
+  });
 
   graph.makeGraph();
   graph.renderGraph();
