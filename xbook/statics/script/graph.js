@@ -192,8 +192,8 @@ Graph.prototype.onDblClickHandler = function(d) {
 };
 
 function zoomScale(node, edge) {
-  node.attr("transform", "translate(" + d3.event.translate + ") scale(" + d3.event.scale + ");");
-  edge.attr("transform", "translate(" + d3.event.translate + ") scale(" + d3.event.scale + ");");
+  node.attr("transform", "translate(" + d3.event.translate + ") scale(" + d3.event.scale + ")");
+  edge.attr("transform", "translate(" + d3.event.translate + ") scale(" + d3.event.scale + ")");
 }
 
 function updateCorrespondingEdge(graph, subjectCode, operation) {
@@ -277,9 +277,7 @@ Array.prototype.findIndex = function(tester) {
   switch(typeof tester) {
   case "function":
     for (var i = 0; i < this.length; ++i) {
-      if (tester(this[i])) {
-        return i;
-      }
+      if (tester(this[i])) { return i; }
     }
     break;
   case "object":
