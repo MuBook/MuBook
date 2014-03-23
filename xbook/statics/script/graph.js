@@ -274,7 +274,7 @@ function showNodeDetails(d, selectedName, selectedCode) {
 }
 
 Array.prototype.findIndex = function(tester) {
-  switch(tester) {
+  switch(typeof tester) {
   case "function":
     for (var i = 0; i < this.length; ++i) {
       if (tester(this[i])) {
