@@ -192,8 +192,8 @@ Graph.prototype.onDblClickHandler = function(d) {
 };
 
 function zoomScale(node, edge) {
-  node.attr("transform", "translate(" + d3.event.translate + "); scale(" + d3.event.scale + ");");
-  edge.attr("transform", "translate(" + d3.event.translate + "); scale(" + d3.event.scale + ");");
+  node.attr("transform", "translate(" + d3.event.translate + ") scale(" + d3.event.scale + ");");
+  edge.attr("transform", "translate(" + d3.event.translate + ") scale(" + d3.event.scale + ");");
 }
 
 function updateCorrespondingEdge(graph, subjectCode, operation) {
