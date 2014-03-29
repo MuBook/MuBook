@@ -2,7 +2,7 @@ import os
 import json
 
 from django.http import HttpResponse
-from django.shortcuts import render
+from django.shortcuts import render, redirect
 from django.core.mail import send_mail
 from django.views.decorators.http import require_POST
 from django.views.decorators.cache import cache_page
@@ -50,6 +50,10 @@ def user_profile(request):
 
 def add_subject(request, code):
     profile = request.user.profile
-    profile.add_subject(code)
-    return render_to_response("user_profile.html",
-                              RequestContext(request))
+    try:
+        profile.add_subject(code)
+    except Exception:
+        return redirect('home')
+
+    payload = {'add': 'ok'}
+    return HttpResponse(json.dumps(payload), mimetype="application/json")

@@ -14,7 +14,7 @@ urlpatterns += patterns('xbook.front.views',
     # Examples:
     # url(r'^$', 'xbook.views.home', name='home'),
     # url(r'^xbook/', include('xbook.foo.urls')),
-    url(r'^$', 'index'),
+    url(r'^$', 'index', name='home'),
     url(r'^ajax/', include('xbook.ajax.urls')),
 
     url(r'^accounts/profile/$', 'user_profile'),
