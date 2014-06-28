@@ -36,4 +36,8 @@ DATABASES['default'] = dj_database_url.config()
 * run this command `python manage.py runserver`
 	- then open browser, go to http://127.0.0.1:8000/
 
-#### By PO CHEN
+# How to update the database
+
+- [Heroku documentation link](https://devcenter.heroku.com/articles/heroku-postgres-import-export)
+
+tell me if you need more instructions
