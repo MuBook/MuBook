@@ -86,7 +86,7 @@ function legendDrawEdgePaths (g, root) {
   return svgEdgePaths;
 };
 
-function legendInit() {
+(function legendInit() {
   var graphData = {
     nodes: [
       { id: 0, root: false, code: "Prerequisite of A" },
@@ -114,4 +114,4 @@ function legendInit() {
   graph.nodes.on("click", function(d) {
     graph.onClickHandler(d, graph, this, {});
   });
-}
+})();

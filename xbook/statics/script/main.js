@@ -199,8 +199,6 @@ mubook.controller("SidePaneCtrl", function SidePaneCtrl($scope) {
 });
 
 mubook.controller("LegendCtrl", function LegendCtrl($scope, PopupControl) {
-  legendInit();
-
   $scope.$legend = $("#legend");
   $scope.$legendGraph = $("#legendGraph").hide();
 
