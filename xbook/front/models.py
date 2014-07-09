@@ -24,14 +24,14 @@ class UserProfile(models.Model):
         if len(self.selected_subjects.all()):
             return [subj.code + " " + subj.name  for subj in self.selected_subjects.all()]
         else:
-            return ["You haven't selected any subjects so for."]
+            return ["You haven't selected any subjects so far."]
 
     def add_subject(self, code):
         subject = Subject.objects.filter(code=code)
         if len(subject):
             self.selected_subjects.add(subject[0])
         else:
-            raise Exception("No such subjects in our database")
+            raise Exception("No such subject in our database")
 
 
 User.profile = property(lambda u: UserProfile.objects.get_or_create(user=u)[0])
