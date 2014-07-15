@@ -63,7 +63,9 @@
         <span class="btn btn-default" ng-class="{active: prereq()}" ng-cloak ng-click="toPre()">Prerequisites</span>
         <span class="btn btn-default" ng-class="{active: !prereq()}" ng-cloak ng-click="toPost()">Postrequisites</span>
     </section>
+{% endblock %}
 
+{% block search-bar %}
     <section id="search" ng-controller="SearchCtrl" ng-cloak popup>
         <input type="text" id="searchInput" placeholder="Search" ng-click="toggleSearch($event)" ng-model="query">
         <button class="btn btn-default" id="searchBtn" ng-click="toggleSearch($event)">

@@ -151,22 +151,21 @@ a:focus {
 }
 
 /************
-* =TopBar
+* =Header
 *************/
-#topBar {
-	background-color: #38f;
-	position: relative;
-	height: 50px;
+
+/* navbar */
+.navbar-static-top {
+    background-color: #38f;
 }
 
-#brand {
-	color: #fff;
-	font-family: 'Russo One', sans-serif;
-	line-height: 50px;
+/* title */
+.navbar-static-top .navbar-brand {
+    color: #fff;
+    font-family: 'Russo One', sans-serif;
 	font-size: 24px;
-	width: 160px;
-	text-align: center;
 }
+
 
 /************
 * =SidePane
@@ -332,21 +331,23 @@ ul.pageNav
 /***********
 * =Header Right
 ************/
-#header-right {
-	position: absolute;
-	right: 0;
-	top: 0;
-	height: 50px;
+#username {
+    background-color: #38f;
+	font-size: 20px;
+    color: #fff;
+}
+
+.login {
+    font-size: 14px;
+    background-color: #38f;
+    color: #fff;
 }
 
 #feedback-button {
 	color: #fff;
+    background-color: #38f;
 	cursor: pointer;
-	display: block;
-	font: 20px 'Open Sans', sans-serif;
-	line-height: 50px;
-	text-align: center;
-	width: 100px;
+    font-size: 18px;
 }
 
 #feedback-form {

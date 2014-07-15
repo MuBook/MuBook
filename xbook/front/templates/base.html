@@ -12,11 +12,13 @@
 	<link href='http://fonts.googleapis.com/css?family=Russo+One&subset=latin,latin-ext,cyrillic' rel='stylesheet' type='text/css'>
 	<link href='http://fonts.googleapis.com/css?family=Open+Sans' rel='stylesheet' type='text/css'>
 	<link href='http://fonts.googleapis.com/css?family=Ubuntu:700' rel='stylesheet' type='text/css'>
-	<link rel="stylesheet" href="//netdna.bootstrapcdn.com/bootstrap/3.1.0/css/bootstrap.min.css">
 	<link rel="stylesheet" href="/static/style/visual.css">
-	<script src="//ajax.googleapis.com/ajax/libs/angularjs/1.2.12/angular.min.js"></script>
-	<script src="//ajax.googleapis.com/ajax/libs/angularjs/1.2.12/angular-route.min.js"></script>
-	<script src="//ajax.googleapis.com/ajax/libs/jquery/1.10.2/jquery.min.js"></script>
+    <link rel="stylesheet" type="text/css" href="//netdna.bootstrapcdn.com/bootstrap/3.1.1/css/bootstrap.min.css">
+
+    <script src="//ajax.googleapis.com/ajax/libs/angularjs/1.2.12/angular.min.js"></script>
+    <script src="//ajax.googleapis.com/ajax/libs/angularjs/1.2.12/angular-route.min.js"></script>
+    <script src="//ajax.googleapis.com/ajax/libs/jquery/1.11.0/jquery.min.js"></script>
+    <script src="//netdna.bootstrapcdn.com/bootstrap/3.1.1/js/bootstrap.min.js"></script>
 	<script type="text/javascript">
 	  var _gaq = _gaq || [];
 	  var pluginUrl = (('https:' == document.location.protocol) ? 'https://ssl.' : 'http://www.') + 'google-analytics.com/plugins/ga/inpage_linkid.js';
@@ -33,148 +35,90 @@
 </head>
 
 <body>
-	<header class="row" id="topBar" ng-controller="UICtrl">
-		<h1 id="brand">µBook</h1>
-	</header>
+<nav class="navbar navbar-static-top" role="navigation" ng-controller="UICtrl">
+    <div class="container-fluid">
+        <a class="navbar-brand" href="#">µBook</a>
+        {% block search-bar %}
+        {% endblock %}
 
-    {% block body %}
-	<section id="sidePane" ng-controller="SidePaneCtrl">
-		<div id="selectedSubject">
-			<h2 id="selectedName">No Subject Selected</h2>
-			<h4 id="selectedCode">Use the search to find a subject</h4>
-		</div>
-		<div id="creditPoint">
-			<h4 class="subjectDetailHeading">Credit Points</h4>
-			<p class="subjectDetail" id="creditPointDetail"></p>
-		</div>
-		<div id="semester">
-			<h4 class="subjectDetailHeading">Semester</h4>
-			<p class="subjectDetail" id="semesterDetail"></p>
-		</div>
-		<div id="timeCommit">
-			<h4 class="subjectDetailHeading">Time Commitment</h4>
-			<p class="subjectDetail" id="timeCommitDetail"></p>
-		</div>
-		<div id="prerequisites">
-			<h4 class="subjectDetailHeading">Prerequisites</h4>
-			<p class="subjectDetail" id="prerequisitesDetail"></p>
-		</div>
-		<div id="assessments">
-			<h4 class="subjectDetailHeading">Assessment</h4>
-			<p class="subjectDetail" id="assessmentsDetail"></p>
-		</div>
-		<div id="corequisites">
-			<h4 class="subjectDetailHeading">Corequisites</h4>
-			<p class="subjectDetail" id="corequisitesDetail"></p>
-		</div>
-		<div id="subjectOverview">
-			<h4 class="subjectDetailHeading">Subject Overview</h4>
-			<p class="subjectDetail" id="subjectOverviewDetail"></p>
-		</div>
-		<div id="objectives">
-			<h4 class="subjectDetailHeading">Objectives</h4>
-			<p class="subjectDetail" id="objectivesDetail"></p>
-		</div>
-	</section>
+        <ul class="nav navbar-nav navbar-right">
+            {% if user.is_authenticated %}
+                <li class="dropdown">
+                    <a id="username" href="#" class="dropdown-toggle" data-toggle="dropdown">{{ user.username }}<span
+                            class="caret"></span></a>
+                    <ul class="dropdown-menu" role="menu">
+                        <li><a href={% url 'user_profile' user.username %}>Your Profile</a></li>
+                        <li><a href={% url 'account_logout' %}>Log out</a></li>
+                    </ul>
+                </li>
+            {% else %}
+                <li><a class="login" href="{% url 'account_signup' %}">Sign Up</a></li>
+                <li><a class="login" href="{% url 'account_login' %}">Log in</a></li>
+            {% endif %}
 
-	<section ng-view id="graphContainer"></section>
-
-	<section id="legend" class="default" ng-controller="LegendCtrl">
-		<i id="legendCloseIcon" class="glyphicon glyphicon-remove" ng-click="toggleLegend()"></i>
-		<i id="legendOpenIcon" class="glyphicon glyphicon-info-sign" ng-click="toggleLegend()"></i>
-		<div id="legendGraph"></div>
-	</section>
-
-	<section id="typeSwitcher" class="btn-group" ng-controller="GraphTypeCtrl">
-		<span class="btn btn-default" ng-class="{active: prereq()}" ng-cloak ng-click="toPre()">Prerequisites</span>
-		<span class="btn btn-default" ng-class="{active: !prereq()}" ng-cloak ng-click="toPost()">Postrequisites</span>
-	</section>
-
-	<section id="search" ng-controller="SearchCtrl" ng-cloak popup>
-		<input type="text" id="searchInput" placeholder="Search" ng-click="toggleSearch($event)" ng-model="query">
-		<button class="btn btn-default" id="searchBtn" ng-click="toggleSearch($event)">
-			<i class="glyphicon glyphicon-search"></i>
-		</button>
-		<div id="searchResult" ng-show="isVisible()">
-			<table>
-				{% verbatim %}
-				<tr ng-click="replacePath(node.code)" data-code="{{node.code}}"
-						ng-repeat="node in subjects | filter:query | limitTo: 100">
-					<td ng-bind="node.code"></td>
-					<td ng-bind="node.name"></td>
-				</tr>
-				{% endverbatim %}
-			</table>
-		</div>
-	</section>
-    {% endblock %}
-
-	<section id="header-right" ng-controller="FeedbackCtrl" popup>
-        <span id="feedback-button" class="pull-right" ng-click="toggleForm($event)">Contact</span>
-        <a id="share-google" class="share-button pull-right" target="_blank"
-           href="https://plus.google.com/share?url=http://mubook.me">g</a>
-        <a id="share-facebook" class="share-button pull-right" target="_blank"
-           href="https://www.facebook.com/sharer/sharer.php?s=100&p[title]=%C2%B5Book&p[summary]=%C2%B5Book+is+the+unofficial+Melbourne+University+subject+handbook.+Subject+selection+should+be+simple%2C+and+that's+why+%C2%B5Book+exists.&p[url]=http%3A%2F%2Fmubook.me">f</a>
-        <a id="share-twitter" class="share-button pull-right" target="_blank"
-           href="http://twitter.com/intent/tweet?url=http://mubook.me&text=%C2%B5Book+is+the+unofficial+UniMelb+subject+handbook.+Subject+selection+should+be+simple%2C+and+that's+why+%C2%B5Book+exists">t</a>
-
-        {% if user.is_authenticated %}
-            <li class="pull-right">
-                <a href={% url 'account_logout' %}>Log out</a>
+            <li><a id="share-google" class="share-button" target="_blank"
+                   href="https://plus.google.com/share?url=http://mubook.me">g</a></li>
+            <li><a id="share-facebook" class="share-button" target="_blank"
+                   href="https://www.facebook.com/sharer/sharer.php?s=100&p[title]=%C2%B5Book&p[summary]=%C2%B5Book+is+the+unofficial+Melbourne+University+subject+handbook.+Subject+selection+should+be+simple%2C+and+that's+why+%C2%B5Book+exists.&p[url]=http%3A%2F%2Fmubook.me">f</a>
             </li>
-            <li class="pull-right">
-                <a href={% url 'user_profile' user.username %}>
-                    {% if visited_user.first_name or visited_user.last_name %}
-                        {{ visited_user.first_name }} {{ visited_user.last_name }}
-                    {% else %}
-                        {{ visited_user.username }}
-                    {% endif %}
-                </a>
+            <li><a id="share-twitter" class="share-button" target="_blank"
+                   href="http://twitter.com/intent/tweet?url=http://mubook.me&text=%C2%B5Book+is+the+unofficial+UniMelb+subject+handbook.+Subject+selection+should+be+simple%2C+and+that's+why+%C2%B5Book+exists">t</a>
             </li>
-        {% else %}
-            <a class="pull-right" href="{% url 'account_signup' %}">Sign Up</a>
-            <a class="pull-right" href="{% url 'account_login' %}">Log in</a>
-            {% load socialaccount %}
-            <a class="pull-right" href="{% provider_login_url 'facebook' method='oauth2' %}">Facebook Connect</a>
-        {% endif %}
 
-		<form id="feedback-form" class="form-horizontal" role="form" ng-show="isVisible()" ng-cloak ng-submit="sendFeedback($event)">
-			{% csrf_token %}
-			<div class="form-group">
-				<label for="feedback-name" class="col-sm-2 control-label">Name</label>
-				<div class="col-sm-10">
-					<input type="text" class="form-control" id="feedback-name" ng-model="name" placeholder="Optional">
-				</div>
-			</div>
+            <li id="header-right" ng-controller="FeedbackCtrl" popup>
+                <a id="feedback-button" ng-click="toggleForm($event)">Contact</a>
 
-			<div class="form-group">
-				<label for="feedback-email" class="col-sm-2 control-label">Email</label>
-				<div class="col-sm-10">
-					<input type="email" class="form-control" id="feedback-email" ng-model="email" placeholder="Enter Email">
-				</div>
-			</div>
+                <form id="feedback-form" class="form-horizontal" role="form" ng-show="isVisible()" ng-cloak
+                      ng-submit="sendFeedback($event)">
+                    {% csrf_token %}
+                    <div class="form-group">
+                        <label for="feedback-name" class="col-sm-2 control-label">Name</label>
 
-			<div class="form-group">
-				<label for="feedback-message" class="col-sm-2 control-label">Message</label>
-				<div class="col-sm-10">
-					<textarea class="form-control" id="feedback-message" ng-model="message" placeholder="Ideas? Bugs? Interested to help?"></textarea>
-				</div>
-			</div>
+                        <div class="col-sm-10">
+                            <input type="text" class="form-control" id="feedback-name" ng-model="name"
+                                   placeholder="Optional">
+                        </div>
+                    </div>
 
-			<div class="form-group">
-				<div class="col-sm-offset-2 col-sm-10">
-					<button type="submit" class="btn btn-default" id="feedback-submit">Send</button>
-				</div>
-			</div>
-		</form>
+                    <div class="form-group">
+                        <label for="feedback-email" class="col-sm-2 control-label">Email</label>
+
+                        <div class="col-sm-10">
+                            <input type="email" class="form-control" id="feedback-email" ng-model="email"
+                                   placeholder="Enter Email">
+                        </div>
+                    </div>
+
+                    <div class="form-group">
+                        <label for="feedback-message" class="col-sm-2 control-label">Message</label>
+
+                        <div class="col-sm-10">
+                            <textarea class="form-control" id="feedback-message" ng-model="message"
+                                      placeholder="Ideas? Bugs? Interested to help?"></textarea>
+                        </div>
+                    </div>
+
+                    <div class="form-group">
+                        <div class="col-sm-offset-2 col-sm-10">
+                            <button type="submit" class="btn btn-default" id="feedback-submit">Send</button>
+                        </div>
+                    </div>
+                </form>
+            </li>
+        </ul>
+    </div>
+</nav>
 
 
-	</section>
+{% block body %}
+{% endblock %}
 
-	<script src="//cdnjs.cloudflare.com/ajax/libs/d3/3.4.1/d3.min.js" charset="utf-8"></script>
-	<script src="//cdn.jsdelivr.net/dagre-d3/0.1.4/dagre-d3.min.js"></script>
-	<script src="static/script/main.js"></script>
-	<script src="static/script/graph.js"></script>
-	<script src="static/script/visualize.js"></script>
+
+
+<script src="//cdnjs.cloudflare.com/ajax/libs/d3/3.4.1/d3.min.js" charset="utf-8"></script>
+<script src="//cdn.jsdelivr.net/dagre-d3/0.1.4/dagre-d3.min.js"></script>
+<script src="static/script/main.js"></script>
+<script src="static/script/graph.js"></script>
+<script src="static/script/visualize.js"></script>
 </body>
 </html>
