@@ -120,7 +120,7 @@
                 <a href="{% url 'account_logout' %}">Log out</a>
             </li>
             <li class="pull-right">
-                <a href="/accounts/profile/">My Account</a>
+                <a href={% url 'user_profile' user.username %}>My Profile</a>
             </li>
         {% else %}
             <a class="pull-right" href="{% url 'account_signup' %}">Sign Up</a>

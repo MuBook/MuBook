@@ -9,6 +9,7 @@ from django.views.decorators.cache import cache_page
 from django.views.decorators.csrf import csrf_protect
 from django.shortcuts import render_to_response
 from django.template import RequestContext
+from django.contrib.auth.models import User
 from allauth.account.decorators import verified_email_required
 
 CURRENT_PATH = os.path.dirname(os.path.abspath(__file__))
@@ -44,9 +45,12 @@ def sendFeedback(request):
               ["xbookfeedback@gmail.com"], fail_silently=False)
     return HttpResponse("OK")
 
-def user_profile(request):
-    return render_to_response("user_profile.html",
-                              RequestContext(request))
+def user_profile(request, username):
+    user = User.objects.get(username=username)
+    context = RequestContext(request, {
+        'visited_user': user,
+    })
+    return render_to_response("user_profile.html", context)
 
 def add_subject(request, code):
     profile = request.user.profile
