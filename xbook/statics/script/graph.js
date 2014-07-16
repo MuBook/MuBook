@@ -171,7 +171,11 @@ Graph.prototype.onClickHandler = function(d, graph, clickedNode, config) {
 
   graph.setStyle({ dimOpacity: true, removeSelected: true });
 
+  var $graphCtrl = angular.element($("#graphContainer")).scope();
+
   if (d.code != graph.prevHighlightNode) {
+    $graphCtrl.setSelected(d.code);
+    $graphCtrl.$apply();
     graph.highlightSubtree(d.code);
     clickedNode.classList.add("selected");
     graph.prevHighlightNode = d.code;
@@ -179,6 +183,8 @@ Graph.prototype.onClickHandler = function(d, graph, clickedNode, config) {
       config.showNodeDetails(d, graph.selectedName, graph.selectedCode);
     }
   } else {
+    $graphCtrl.setSelected();
+    $graphCtrl.$apply();
     clickedNode.classList.remove("selected");
     graph.prevHighlightNode = "";
     graph.setStyle({ resetOpacity: true });

@@ -460,3 +460,32 @@ ul.pageNav
 	padding: 1px;
 	cursor: pointer;
 }
+
+/***********
+* =Subject Adder
+************/
+#subjectAdderAddBtn {
+	position: fixed;
+	left: 25%;
+	top: 50px;
+	margin: 10px;
+}
+
+#subjectAdderForm {
+	position: fixed;
+	left: 50%;
+	top: 25%;
+	width: 600px;
+	margin-left: -300px;
+	background-color: #fff;
+}
+
+#subjectAdderTitle {
+	border-bottom: 1px solid #000;
+	padding: 5px;
+	margin: 5px 5px 10px;
+}
+
+.error-label {
+	margin-top: 7px;
+}

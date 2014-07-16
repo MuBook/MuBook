@@ -24,8 +24,14 @@ mubook.run(["$location", "$rootScope", function($location, $rootScope) {
 mubook.run(["$location", "Global", "$rootScope", function($location, Global, $rootScope) {
   $rootScope.replacePath = function replacePath(code) {
     Global.code = code;
+    Global.selected = code;
     $location.path(Global.reqType + "/melbourne/" + code);
   };
+
+  $rootScope.setSelected = function setSelected(code) {
+    Global.selected = code || Global.code;
+    console.log(Global.selected);
+  }
 }]);
 
 mubook.run(["$window", "PopupControl", function($window, PopupControl) {
@@ -45,7 +51,8 @@ mubook.factory("Subjects", function($http) {
 mubook.factory("Global", function() {
   return {
     code: "COMP30018",
-    reqType: "prereq"
+    reqType: "prereq",
+    selected: "COMP30018"
   };
 });
 
@@ -189,6 +196,7 @@ mubook.controller("GraphCtrl", function GraphCtrl($scope, $routeParams, $locatio
   }
 
   Global.code = status.code;
+  Global.selected = Global.code;
   Global.reqType = status.reqType;
 
   loadTree(status.reqType, $routeParams.subjectCode);
@@ -296,6 +304,32 @@ mubook.controller("FeedbackCtrl", function FeedbackCtrl($scope, $http, $timeout,
       $scope.toggleForm();
     });
   };
+});
+
+mubook.controller("SubjectAddCtrl", function SubjectAddCtrl($scope, Global, PopupControl) {
+  $scope.semesters = [
+    "Summer",
+    "Semester 1",
+    "Winter",
+    "Semester 2",
+    "Other"
+  ]
+
+  $scope.states = [
+    "Planned",
+    "Studying",
+    "Completed"
+  ]
+
+  $scope.togglePopup = PopupControl.register("addSubject",
+  {
+    scope: $scope,
+    standalone: true
+  });
+
+  $scope.isValidYear = function() {
+    return $scope.subjectAdderForm.subjectYear.$error.min || $scope.subjectAdderForm.subjectYear.$error.max;
+  }
 });
 
 function loadTree(type, code) {
