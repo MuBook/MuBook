@@ -6,7 +6,8 @@
 {% block head_title %}{% trans "Signup" %}{% endblock %}
 
 {% block content %}
-
+    <a href="/accounts/facebook/login/"><div class="fb"></div></a>
+    {% include "socialaccount/snippets/login_extra.html" %}
     <div class="inset">
         <form class="signup" id="signup_form" method="post" action="{% url 'account_signup' %}">
           {% csrf_token %}

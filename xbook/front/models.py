@@ -3,6 +3,7 @@ from xbook.ajax.models import Subject
 from django.db import models
 from allauth.account.models import EmailAddress
 
+
 class UserProfile(models.Model):
     user = models.OneToOneField(User, related_name='profile')
     selected_subjects = models.ManyToManyField(Subject, related_name='profiles')
@@ -21,10 +22,7 @@ class UserProfile(models.Model):
         return False
 
     def selected_subject(self):
-        if len(self.selected_subjects.all()):
-            return [subj.code + " " + subj.name  for subj in self.selected_subjects.all()]
-        else:
-            return ["You haven't selected any subjects so far."]
+        return [subj.code + " " + subj.name for subj in self.selected_subjects.all()]
 
     def add_subject(self, code):
         subject = Subject.objects.filter(code=code)
