@@ -12,8 +12,8 @@
 	<link href='http://fonts.googleapis.com/css?family=Russo+One&subset=latin,latin-ext,cyrillic' rel='stylesheet' type='text/css'>
 	<link href='http://fonts.googleapis.com/css?family=Open+Sans' rel='stylesheet' type='text/css'>
 	<link href='http://fonts.googleapis.com/css?family=Ubuntu:700' rel='stylesheet' type='text/css'>
-	<link rel="stylesheet" href="/static/style/visual.css">
     <link rel="stylesheet" type="text/css" href="//netdna.bootstrapcdn.com/bootstrap/3.1.1/css/bootstrap.min.css">
+    <link rel="stylesheet" href="/static/style/visual.css">
 
     <script src="//ajax.googleapis.com/ajax/libs/angularjs/1.2.12/angular.min.js"></script>
     <script src="//ajax.googleapis.com/ajax/libs/angularjs/1.2.12/angular-route.min.js"></script>
@@ -44,8 +44,13 @@
         <ul class="nav navbar-nav navbar-right">
             {% if user.is_authenticated %}
                 <li class="dropdown">
-                    <a id="username" href="#" class="dropdown-toggle" data-toggle="dropdown">{{ user.username }}<span
-                            class="caret"></span></a>
+                    <a id="username" href="#" class="dropdown-toggle" data-toggle="dropdown">
+                        {% if request.user.first_name or request.user.last_name %}
+                            {{ request.user.first_name }} {{ request.user.last_name }}
+                        {% else %}
+                            {{ request.user.username }}
+                        {% endif %}
+                        <span class="caret"></span></a>
                     <ul class="dropdown-menu" role="menu">
                         <li><a href={% url 'user_profile' user.username %}>Your Profile</a></li>
                         <li><a href={% url 'account_logout' %}>Log out</a></li>
