@@ -157,6 +157,7 @@ a:focus {
 /* navbar */
 .navbar-static-top {
     background-color: #38f;
+    border: 0;
 }
 
 /* title */
