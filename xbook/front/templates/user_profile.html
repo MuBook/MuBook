@@ -3,11 +3,11 @@
 {% load url from future %}
 
 {% block body %}
-    <div id="selected-subjects">
+    <div id="selected-esubjects">
         <p>Completed subjects:</p>
-        {% for subj_name in visited_user.profile.selected_subject %}
+        {% for user_subject in user_subjects %}
             <tr class="{% cycle 'row1' 'row2' %}">
-                <td>{{ subj_name }}</td>
+                <td>{{ user_subject.subject.name }}</td>
             </tr>
         {% endfor %}
     </div>

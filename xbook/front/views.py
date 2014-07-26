@@ -10,7 +10,8 @@ from django.views.decorators.csrf import csrf_protect
 from django.shortcuts import render_to_response
 from django.template import RequestContext
 from django.contrib.auth.models import User
-from allauth.account.decorators import verified_email_required
+from xbook.ajax.models import Subject
+from xbook.front.models import UserSubject
 
 CURRENT_PATH = os.path.dirname(os.path.abspath(__file__))
 INDEX_PATH = os.path.join(
@@ -45,19 +46,24 @@ def sendFeedback(request):
               ["xbookfeedback@gmail.com"], fail_silently=False)
     return HttpResponse("OK")
 
+
 def user_profile(request, username):
     user = User.objects.get(username=username)
+    assert isinstance(user, User)
+    user_subjects = user.user_subject.all()
     context = RequestContext(request, {
-        'visited_user': user,
+        'user_subjects': user_subjects,
     })
     return render_to_response("user_profile.html", context)
 
-def add_subject(request, code):
-    profile = request.user.profile
-    try:
-        profile.add_subject(code)
-    except Exception:
-        return redirect('home')
+
+def add_subject(request):
+    code = request.GET.get('code')
+    year = request.GET.get('year')
+    semester = request.GET.get('semester')
+    state = request.GET.get('state')
+    subject = Subject.objects.get(code=code)
+    UserSubject.add(request.user, subject, year, semester, state)
 
     payload = {'add': 'ok'}
     return HttpResponse(json.dumps(payload), mimetype="application/json")

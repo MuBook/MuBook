@@ -1,12 +1,10 @@
-import os.path
 import json
 
 from collections import deque
-
 from django.http import HttpResponse
 from django.core.exceptions import ObjectDoesNotExist
 from django.views.decorators.cache import cache_page
-from xbook.ajax.models import Subject, SubjectPrereq, NonallowedSubject
+from xbook.ajax.models import Subject, SubjectPrereq
 
 
 def Ajax(*args, **kwargs):
