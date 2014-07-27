@@ -11,14 +11,11 @@ urlpatterns = patterns('',
 )
 
 urlpatterns += patterns('xbook.front.views',
-    # Examples:
-    # url(r'^$', 'xbook.views.home', name='home'),
-    # url(r'^xbook/', include('xbook.foo.urls')),
     url(r'^$', 'index', name='home'),
     url(r'^ajax/', include('xbook.ajax.urls')),
 
+    url(r'^profile/selected_subjects/add/$', 'add_subject'),
     url(r'^profile/(?P<username>.*?)/$', 'user_profile', name='user_profile'),
-    url(r'^accounts/profile/selected_subjects/add/(?P<code>.*?)/$', 'add_subject'),
 
     # Uncomment the next line to enable the admin:
     url(r'^admin/?', include(admin.site.urls)),

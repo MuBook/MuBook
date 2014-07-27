@@ -1,7 +1,7 @@
 # Django settings for xbook project.
 import os
 
-import dj_database_url
+# import dj_database_url
 
 DEBUG = True
 TEMPLATE_DEBUG = DEBUG
@@ -25,13 +25,13 @@ DATABASES = {
 
         # The following settings are not used with sqlite3:
         'USER': 'postgres',
-        'PASSWORD': 'pochen',
+        'PASSWORD': 'Liuchang94',
         'HOST': '',                      # Empty for localhost through domain sockets or '127.0.0.1' for localhost through TCP.
         'PORT': '',                      # Set to empty string for default.
     }
 }
 # Comment out the following line to run locally
-DATABASES['default'] = dj_database_url.config()
+# DATABASES['default'] = dj_database_url.config()
 
 # Absolute path to the directory static files should be collected to.
 # Don't put anything in this directory yourself; store your static files
