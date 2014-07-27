@@ -56,19 +56,7 @@ def user_profile(request, username):
     })
     return render_to_response("user_profile.html", context)
 
-
 def add_subject(request):
-    code = request.GET.get('code')
-    year = request.GET.get('year')
-    semester = request.GET.get('semester')
-    state = request.GET.get('state')
-    subject = Subject.objects.get(code=code)
-    UserSubject.add(request.user, subject, year, semester, state)
-
-    payload = {'add': 'ok'}
-    return HttpResponse(json.dumps(payload), mimetype="application/json")
-
-def addSubject(request):
     if not request.user.is_authenticated():
         return HttpResponse("Error: Un-authorized user.")
 
@@ -76,21 +64,15 @@ def addSubject(request):
     subject_code = request.POST["subject"]
     subject_year = request.POST["year"]
     subject_state = request.POST["state"]
-    semester = request.POST["semester"]
+    subject_semester = request.POST["semester"]
 
-    if not subject_code and not subject_year and not subject_state and not semester:
+    if not subject_code and not subject_year and not subject_state and not subject_semester:
         return HttpResponse("Error: Bad payload.")
 
     selected_subject = Subject.objects.filter(code=subject_code)[0]
 
-    u_s = UserSubject(
-        subject = selected_subject,
-        user = current_user,
-        year = subject_year,
-        state = subject_state,
-        semester = semester
-    )
-
-    u_s.save()
+    UserSubject.add(current_user, selected_subject,
+                    subject_year, subject_semester,
+                    subject_state)
 
     return HttpResponse("Success")

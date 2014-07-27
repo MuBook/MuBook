@@ -396,7 +396,7 @@ mubook.controller("SubjectAddCtrl", function SubjectAddCtrl($scope, $timeout, Gl
     $.ajax({
       headers: { "X-CSRFToken": docCookies.getItem("csrftoken") },
       type: 'POST',
-      url: 'addsubject',
+      url: 'profile/selected_subjects/add/',
       data: payload
     })
     .done(function(message) {

@@ -27,7 +27,5 @@ urlpatterns += patterns('xbook.front.views',
 
     url(r'^feedback$', 'sendFeedback'),
 
-    url(r'^addsubject$', 'addSubject'),
-
     url(r'^(.*?)$', 'error404'),
 )

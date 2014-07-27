@@ -55,13 +55,3 @@ class MajorRequirement(models.Model):
 
 	def __unicode__(self):
 		return self.major.name + ": " + self.required.code
-
-class UserSubject(models.Model):
-	subject = models.ForeignKey(Subject)
-	user = models.ForeignKey(User)
-	year = models.IntegerField()
-	semester = models.CharField(max_length=20)
-	state = models.CharField(max_length=20)
-
-	def __unicode__(self):
-		return self.user.username + " " + self.state + " " + self.subject.code
