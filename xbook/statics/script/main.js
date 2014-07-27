@@ -321,7 +321,8 @@ mubook.controller("SubjectAddCtrl", function SubjectAddCtrl($scope, $timeout, Gl
   $scope.states = [
     "Planned",
     "Studying",
-    "Completed"
+    "Completed",
+    "Bookmarked"
   ]
 
   $scope.$year = $("#subjectAdderYear");
