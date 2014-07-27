@@ -89,9 +89,9 @@ function legendDrawEdgePaths (g, root) {
 (function legendInit() {
   var graphData = {
     nodes: [
-      { id: 0, root: false, code: "Prerequisite of A" },
+      { id: 0, root: false, code: "Postrequisite of A" },
       { id: 1, root: true, code: "Subject A" },
-      { id: 2, root: false, code: "Postrequisite of A" }
+      { id: 2, root: false, code: "Prerequisite of A" }
     ],
     links: [
       { source: 0, target: 1 },
