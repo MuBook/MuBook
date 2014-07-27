@@ -11,6 +11,7 @@ from django.shortcuts import render_to_response
 from django.template import RequestContext
 from django.contrib.auth.models import User
 from allauth.account.decorators import verified_email_required
+from xbook.ajax.models import UserSubject, Subject
 
 CURRENT_PATH = os.path.dirname(os.path.abspath(__file__))
 INDEX_PATH = os.path.join(
@@ -61,3 +62,30 @@ def add_subject(request, code):
 
     payload = {'add': 'ok'}
     return HttpResponse(json.dumps(payload), mimetype="application/json")
+
+def addSubject(request):
+    if not request.user.is_authenticated():
+        return HttpResponse("Error: Un-authorized user.")
+
+    current_user = request.user
+    subject_code = request.POST["subject"]
+    subject_year = request.POST["year"]
+    subject_state = request.POST["state"]
+    semester = request.POST["semester"]
+
+    if not subject_code and not subject_year and not subject_state and not semester:
+        return HttpResponse("Error: Bad payload.")
+
+    selected_subject = Subject.objects.filter(code=subject_code)[0]
+
+    u_s = UserSubject(
+        subject = selected_subject,
+        user = current_user,
+        year = subject_year,
+        state = subject_state,
+        semester = semester
+    )
+
+    u_s.save()
+
+    return HttpResponse("Success")

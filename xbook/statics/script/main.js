@@ -306,7 +306,7 @@ mubook.controller("FeedbackCtrl", function FeedbackCtrl($scope, $http, $timeout,
   };
 });
 
-mubook.controller("SubjectAddCtrl", function SubjectAddCtrl($scope, Global, PopupControl) {
+mubook.controller("SubjectAddCtrl", function SubjectAddCtrl($scope, $timeout, Global, PopupControl) {
   $scope.semesters = [
     "Summer",
     "Semester 1",
@@ -321,14 +321,95 @@ mubook.controller("SubjectAddCtrl", function SubjectAddCtrl($scope, Global, Popu
     "Completed"
   ]
 
+  $scope.$year = $("#subjectAdderYear");
+  $scope.$semester = $("#subjectAdderSemester");
+  $scope.$state = $("#subjectAdderState");
+  $scope.$addBtn = $("#subjectAdderConfirmBtn")
+
   $scope.togglePopup = PopupControl.register("addSubject",
   {
     scope: $scope,
-    standalone: true
+    onOpen: function() {
+      $scope.resetForm();
+      $timeout(function() {
+        $subjectAdderTitle = $("#subjectAdderTitle");
+        $subjectAdderTitle.text("Subject Code: " + Global.selected);
+      });
+    }
   });
 
+  $scope.isVisible = PopupControl.visibilityOf("addSubject");
+
   $scope.isValidYear = function() {
-    return $scope.subjectAdderForm.subjectYear.$error.min || $scope.subjectAdderForm.subjectYear.$error.max;
+    return !($scope.subjectAdderForm.subjectYear.$error.min || $scope.subjectAdderForm.subjectYear.$error.max);
+  }
+
+  $scope.isValidSemester = function() {
+    return !!$scope.subjectAdderForm.subjectSemester.$viewValue;
+  }
+
+  $scope.isValidState = function() {
+    return !!$scope.subjectAdderForm.subjectState.$viewValue;
+  }
+
+  $scope.disableForm = function() {
+    $scope.$year.prop('disabled', true);
+    $scope.$semester.prop('disabled', true);
+    $scope.$state.prop('disabled', true);
+    $scope.$addBtn.prop('disabled', true);
+  }
+
+  $scope.enableForm = function() {
+    $scope.$year.prop('disabled', false);
+    $scope.$semester.prop('disabled', false);
+    $scope.$state.prop('disabled', false);
+    $scope.$addBtn.prop('disabled', false);
+  }
+
+  $scope.resetForm = function() {
+    $scope.year = '';
+    $scope.semester = '';
+    $scope.state = '';
+  }
+
+  $scope.addSubject = function(e) {
+    if (!$scope.isValidYear()) {
+      $scope.$year.focus();
+      return;
+    } else if (!$scope.isValidSemester()) {
+      $scope.$semester.focus();
+      return;
+    } else if (!$scope.isValidState()) {
+      $scope.$state.focus();
+      return;
+    }
+
+    $scope.disableForm();
+
+    payload = {
+      subject: Global.selected,
+      year: $scope.year,
+      semester: $scope.semester,
+      state: $scope.state
+    }
+
+    $.ajax({
+      headers: { "X-CSRFToken": docCookies.getItem("csrftoken") },
+      type: 'POST',
+      url: 'addsubject',
+      data: payload
+    })
+    .done(function(message) {
+      alert(message);
+    })
+    .fail(function(message) {
+      console.warn("Fail: " + message);
+    })
+    .always(function() {
+      $scope.enableForm();
+    });
+    $scope.resetForm();
+    $scope.togglePopup();
   }
 });
 

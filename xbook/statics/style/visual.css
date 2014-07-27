@@ -473,13 +473,15 @@ ul.pageNav
 	margin: 10px;
 }
 
-#subjectAdderForm {
+#subjectAdderPopup {
 	position: fixed;
 	left: 50%;
 	top: 25%;
 	width: 600px;
 	margin-left: -300px;
 	background-color: #fff;
+	padding: 10px;
+	box-shadow: 0 4px 6px 2px rgba(0, 0, 0, .10);
 }
 
 #subjectAdderTitle {

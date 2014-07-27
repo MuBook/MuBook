@@ -62,3 +62,6 @@ class UserSubject(models.Model):
 	year = models.IntegerField()
 	semester = models.CharField(max_length=20)
 	state = models.CharField(max_length=20)
+
+	def __unicode__(self):
+		return self.user.username + " " + self.state + " " + self.subject.code

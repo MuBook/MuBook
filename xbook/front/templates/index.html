@@ -64,38 +64,51 @@
         <span class="btn btn-default" ng-class="{active: !prereq()}" ng-cloak ng-click="toPost()">Postrequisites</span>
     </section>
 
-    <section id="subjectAdder" ng-controller="SubjectAddCtrl" popup>
+    <section id="subjectAdder" ng-controller="SubjectAddCtrl" popup ng-cloak>
 		<button id="subjectAdderAddBtn" class="btn btn-primary" type="button" ng-click="togglePopup($event)">Add Subject</button>
-
-			<form name="subjectAdderForm" id="subjectAdderForm" class="form-horizontal" role="form" ng-show="true" ng-submit="addSubject($event)">
-				<h1 id="subjectAdderTitle">Title</h1>
+        <div id="subjectAdderPopup" ng-show="isVisible()" ng-submit="addSubject($event)">
+			<form name="subjectAdderForm" id="subjectAdderForm" class="form-horizontal" role="form">
+                {% csrf_token %}
+				<h2 id="subjectAdderTitle" ng-bind="Global.selected"></h2>
 				<div class="form-group">
 					<label for="subjectAdderYear" class="col-sm-4 control-label">Year</label>
 					<div class="col-sm-4">
-						<input id="subjectAdderYear" class="form-control" name="subjectYear" type="number" ng-model="year" min="1853" max="3000" required>
+						<input id="subjectAdderYear" class="form-control" name="subjectYear" type="number" ng-model="year" min="1853" max="3000" required="">
 					</div>
-					<div class="control-label pull-left" ng-clock>
-						<span ng-show="isValidYear()" class="label label-danger error-label">Invalid Year</span>
+					<div class="control-label pull-left">
+						<span ng-hide="isValidYear()" class="label label-danger error-label">Invalid Year</span>
 					</div>
 				</div>
 				<div class="form-group">
 					<label for="subjectAdderSemester" class="col-sm-4 control-label">Semester</label>
 					<div class="col-sm-4">
-						<select name="subjectSemester" id="subjectAdderSemester" class="form-control" ng-model="semester" ng-options="semester for semester in semesters" required>
+						<select name="subjectSemester" id="subjectAdderSemester" class="form-control" ng-model="semester" ng-options="semester for semester in semesters">
 							<option value="">-- semester --</option>
 						</select>
 					</div>
+                    <div class="control-label pull-left">
+                        <span ng-hide="isValidSemester()" class="label label-danger error-label">Invalid Semester</span>
+                    </div>
 				</div>
 				<div class="form-group">
 					<label for="subjectAdderState" class="col-sm-4 control-label">State</label>
 					<div class="col-sm-4">
-						<select name="subjectState" id="subjectAdderState" class="form-control" ng-model="state" ng-options="state for state in states" required>
+						<select name="subjectState" id="subjectAdderState" class="form-control" ng-model="state" ng-options="state for state in states">
 							<option value="">-- state --</option>
 						</select>
 					</div>
+                    <div class="control-label pull-left">
+                        <span ng-hide="isValidState()" class="label label-danger error-label">Invalid Semester</span>
+                    </div>
 				</div>
+                <div class="form-group">
+                    <div class="col-sm-2"></div>
+                    <button id="subjectAdderConfirmBtn" class="col-sm-3 btn btn-success" type="submit">Add</button>
+                    <div class="col-sm-1"></div>
+                    <button class="col-sm-3 btn btn-default" ng-click="togglePopup($event)" type="button">Cancel</button>
+                </div>
 			</form>
-
+        </div>
 	</section>
 {% endblock %}
 
