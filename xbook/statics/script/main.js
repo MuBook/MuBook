@@ -30,7 +30,10 @@ mubook.run(["$location", "Global", "$rootScope", function($location, Global, $ro
 
   $rootScope.setSelected = function setSelected(code) {
     Global.selected = code || Global.code;
-    console.log(Global.selected);
+  }
+
+  $rootScope.getSelected = function getSelected() {
+    return Global.selected;
   }
 }]);
 

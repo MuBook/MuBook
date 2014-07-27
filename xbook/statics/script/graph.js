@@ -179,15 +179,20 @@ Graph.prototype.onClickHandler = function(d, graph, clickedNode, config) {
     graph.highlightSubtree(d.code);
     clickedNode.classList.add("selected");
     graph.prevHighlightNode = d.code;
-    if (config.showNodeDetails) {
-      config.showNodeDetails(d, graph.selectedName, graph.selectedCode);
-    }
   } else {
     $graphCtrl.setSelected();
     $graphCtrl.$apply();
     clickedNode.classList.remove("selected");
     graph.prevHighlightNode = "";
     graph.setStyle({ resetOpacity: true });
+    d = $.grep(graph.nodeData.nodes,
+               function(element) {
+                return element.code == $graphCtrl.getSelected();
+               }
+    )[0];
+  }
+  if (config.showNodeDetails) {
+    config.showNodeDetails(d, graph.selectedName, graph.selectedCode);
   }
 };
 
