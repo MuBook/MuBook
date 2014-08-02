@@ -1,4 +1,5 @@
 import json
+import sys
 
 from collections import deque
 from django.http import HttpResponse
@@ -6,6 +7,34 @@ from django.core.exceptions import ObjectDoesNotExist
 from django.views.decorators.cache import cache_page
 from xbook.ajax.models import Subject, SubjectPrereq
 
+
+def authenticate_user(func):
+	def wrapper(*args, **kwargs):
+		request = args[0]
+		try:
+			if request.user.is_authenticated():
+				return func(*args, **kwargs)
+			else:
+				return Ajax(
+					ajaxCallback(request,
+								 json.dumps(
+										{'error': 'Unauthorized',
+										 'errorCode': '401'}
+								)
+					),
+					content_type='application/json'
+				)
+		except:
+			return Ajax(
+					ajaxCallback(request,
+								 json.dumps(
+										{'error': 'Bad Request',
+										 'errorCode': '400'}
+								)
+					),
+					content_type='application/json'
+				)
+	return wrapper
 
 def Ajax(*args, **kwargs):
 	resp = HttpResponse(*args, **kwargs)
@@ -109,3 +138,58 @@ def ajaxCallback(request, info):
 		return request.GET['callback'] + "({})".format(info)
 	else:
 		return info
+
+
+@authenticate_user
+def getUserSubject(request, username, pretty=False):
+	current_user = request.user
+	user_subjects = current_user.user_subject.all()
+
+	graph = { "nodes": [], "links": [] }
+	user_subjects_queue = deque()
+
+	add_link = lambda source, target: {"source": source, "target": target}
+
+	nodes = graph['nodes']
+	links = graph['links']
+
+	parent_index, code_index = -1, { user_subjects[0].subject.code: 0 }
+
+	for user_subject in user_subjects:
+		nodes.append({
+			"code": user_subject.subject.code,
+			"name": user_subject.subject.name,
+			"url": user_subject.subject.link,
+			"root": parent_index == -1 and True or False,
+			"credit": str(user_subject.subject.credit),
+			"commence_date": user_subject.subject.commence_date,
+			"time_commitment": user_subject.subject.time_commitment,
+			"overview": user_subject.subject.overview,
+			"objectives": user_subject.subject.objectives,
+			"assessment": user_subject.subject.assessment,
+			"prereq": user_subject.subject.prerequisite,
+			"coreq": user_subject.subject.corequisite,
+			"year_completed": user_subject.year,
+			"semester_completed": user_subject.semester,
+			"state": user_subject.state
+		})
+		parent_index += 1
+		relations = SubjectPrereq.objects.filter(**{ "subject__code": user_subject.subject.code })
+
+		for relation in relations:
+			for taken_subject in user_subjects:
+				seen = True
+				related = relation.prereq
+				if (not related.code in code_index) and \
+					(taken_subject.subject.code == related.code):
+					seen = False
+					code_index[related.code] = len(code_index)
+				if taken_subject.subject.code == related.code:
+					links.append(add_link(parent_index, code_index[related.code]))
+
+	info = json.dumps(graph, indent=4 if pretty else None)
+
+	return Ajax(
+		ajaxCallback(request, info),
+		content_type='application/json'
+	)

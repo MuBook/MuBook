@@ -3,6 +3,11 @@ var mubook = angular.module("mubook", ["ngRoute"]);
 mubook.config(["$routeProvider",
   function($routeProvider) {
     $routeProvider
+      .when("/profile/:username/visualize", {
+        title: " - µBook",
+        templateUrl: "/template",
+        controller: "UserCtrl"
+      })
       .when("/:reqType/:university/:subjectCode", {
         title: " - µBook",
         templateUrl: "/template",
@@ -16,8 +21,11 @@ mubook.config(["$routeProvider",
 
 mubook.run(["$location", "$rootScope", function($location, $rootScope) {
   $rootScope.$on("$routeChangeSuccess", function(event, current) {
-    if (!current.params.subjectCode) { return; }
-    $rootScope.pageTitle = current.params.subjectCode.toUpperCase() + current.$$route.title;
+    if (!!current.params.subjectCode) {
+      $rootScope.pageTitle = current.params.subjectCode.toUpperCase() + current.$$route.title;
+    } else if (!!current.params.username) {
+      $rootScope.pageTitle = current.params.username + current.$$route.title;
+    }
   });
 }]);
 
@@ -307,6 +315,17 @@ mubook.controller("FeedbackCtrl", function FeedbackCtrl($scope, $http, $timeout,
       $scope.toggleForm();
     });
   };
+});
+
+mubook.controller("UserCtrl", function UserCtrl($scope, $timeout, $location, $routeParams, Global) {
+  $scope.visualizeUserGraph = function(username) {
+    $location.path("/profile/" + username + "/visualize");
+  }
+
+  if (!$routeParams.username) {
+    return;
+  }
+  visualizeGraph("ajax/profile/" + $routeParams.username);
 });
 
 mubook.controller("SubjectAddCtrl", function SubjectAddCtrl($scope, $timeout, Global, PopupControl) {
