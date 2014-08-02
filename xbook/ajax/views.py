@@ -177,15 +177,12 @@ def getUserSubject(request, username, pretty=False):
 		relations = SubjectPrereq.objects.filter(**{ "subject__code": user_subject.subject.code })
 
 		for relation in relations:
+			compare_index = 0
 			for taken_subject in user_subjects:
-				seen = True
 				related = relation.prereq
-				if (not related.code in code_index) and \
-					(taken_subject.subject.code == related.code):
-					seen = False
-					code_index[related.code] = len(code_index)
 				if taken_subject.subject.code == related.code:
-					links.append(add_link(parent_index, code_index[related.code]))
+					links.append(add_link(parent_index, compare_index))
+				compare_index += 1
 
 	info = json.dumps(graph, indent=4 if pretty else None)
 
