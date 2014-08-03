@@ -6,7 +6,7 @@ from django.core.mail import send_mail
 from django.views.decorators.http import require_POST
 from django.views.decorators.cache import cache_page
 from django.views.decorators.csrf import csrf_protect
-from django.shortcuts import render_to_response
+from django.shortcuts import render_to_response, render
 from django.template import RequestContext
 from django.contrib.auth.models import User
 from xbook.ajax.models import Subject
