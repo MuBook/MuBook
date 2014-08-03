@@ -25,7 +25,7 @@ urlpatterns += patterns('xbook.front.views',
     # Uncomment the admin/doc line below to enable admin documentation:
     # url(r'^admin/doc/', include('django.contrib.admindocs.urls')),
 
-    url(r'^feedback$', 'sendFeedback'),
+    url(r'^feedback$', 'send_feedback'),
 
     url(r'^(.*?)$', 'error404'),
 )

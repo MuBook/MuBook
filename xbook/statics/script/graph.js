@@ -268,20 +268,38 @@ function makeRestoreButton() {
   return restoreBtn;
 }
 
-function showNodeDetails(d, selectedName, selectedCode) {
-  var detailsContainer = document.querySelectorAll(".subjectDetail");
-      data = [
-        d.credit,          d.commence_date,
-        d.time_commitment, d.prereq,
-        d.assessment,      d.coreq,
-        d.overview,        d.objectives
-      ];
+function showStatistics(d) {
+    var statistic_items = document.querySelectorAll(".statisticsItem");
+    var data = [d.num_planned, d.num_studying, d.num_completed, d.num_bookmarked];
+    for (var i = 0; i < statistic_items.length; ++i) {
+        statistic_items[i].innerHTML = data[i];
+    }
 
-  selectedName.innerHTML = d.name;
-  selectedCode.innerHTML = d.code;
-  for (var i = 0; i < detailsContainer.length; ++i) {
-    detailsContainer[i].innerHTML = data[i] || "None";
-  }
+    var social_statistic_items = document.querySelectorAll(".socialStatisticsItem");
+    var social_data = [d.num_friends_planned, d.num_friends_studying,
+                       d.num_friends_completed, d.num_friends_bookmarked];
+
+    for (i = 0; i < social_statistic_items.length; ++i) {
+        social_statistic_items[i].innerHTML = social_data[i];
+    }
+}
+
+function showNodeDetails(d, selectedName, selectedCode) {
+    var detailsContainer = document.querySelectorAll(".subjectDetail");
+    data = [
+        d.credit, d.commence_date,
+        d.time_commitment, d.prereq,
+        d.assessment, d.coreq,
+        d.overview, d.objectives
+    ];
+
+    selectedName.innerHTML = d.name;
+    selectedCode.innerHTML = d.code;
+
+    showStatistics(d);
+    for (var i = 0; i < detailsContainer.length; ++i) {
+        detailsContainer[i].innerHTML = data[i];
+    }
 }
 
 Array.prototype.findIndex = function(tester) {

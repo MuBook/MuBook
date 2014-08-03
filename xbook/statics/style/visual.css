@@ -183,6 +183,14 @@ a:focus {
 	width: 25%;
 }
 
+.statisticsList {
+    list-style-type: none;
+}
+
+.statisticsList li {
+    display: inline;
+}
+
 #selectedSubject {
 	background-color: #194480;
 	color: white;
