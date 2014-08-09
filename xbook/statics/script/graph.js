@@ -171,25 +171,25 @@ Graph.prototype.onClickHandler = function(d, graph, clickedNode, config) {
 
   graph.setStyle({ dimOpacity: true, removeSelected: true });
 
-  var $graphCtrl = angular.element($("#graphContainer")).scope();
+  var $graphScope = angular.element($("#graphContainer")).scope();
 
   if (d.code != graph.prevHighlightNode) {
-    $graphCtrl.setSelected(d.code);
-    $graphCtrl.$apply();
+    $graphScope.setSelected(d.code);
+    $graphScope.$apply();
     graph.highlightSubtree(d.code);
     clickedNode.classList.add("selected");
     graph.prevHighlightNode = d.code;
   } else {
-    $graphCtrl.setSelected();
-    $graphCtrl.$apply();
+    $graphScope.setSelected();
+    $graphScope.$apply();
     clickedNode.classList.remove("selected");
     graph.prevHighlightNode = "";
     graph.setStyle({ resetOpacity: true });
-    d = $.grep(graph.nodeData.nodes,
-               function(element) {
-                return element.code == $graphCtrl.getSelected();
-               }
-    )[0];
+
+    var selected = $graphScope.getSelected();
+    var selectedIndex = graph.nodeData.nodes.findIndex({ code: selected });
+    d = graph.nodeData.nodes[selectedIndex];
+
   }
   if (config.showNodeDetails) {
     config.showNodeDetails(d, graph.selectedName, graph.selectedCode);

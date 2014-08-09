@@ -166,6 +166,10 @@ a:focus {
 	font-size: 24px;
 }
 
+#username:hover {
+	cursor: pointer;
+}
+
 
 /************
 * =SidePane

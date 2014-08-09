@@ -63,7 +63,22 @@ mubook.factory("Global", function() {
   return {
     code: "COMP30018",
     reqType: "prereq",
-    selected: "COMP30018"
+    selected: "COMP30018",
+    semesters:
+    [
+      "Summer",
+      "Semester 1",
+      "Winter",
+      "Semester 2",
+      "Other"
+    ],
+    states:
+    [
+      "Planned",
+      "Studying",
+      "Completed",
+      "Bookmarked"
+    ]
   };
 });
 
@@ -329,20 +344,8 @@ mubook.controller("UserCtrl", function UserCtrl($scope, $timeout, $location, $ro
 });
 
 mubook.controller("SubjectAddCtrl", function SubjectAddCtrl($scope, $timeout, Global, PopupControl) {
-  $scope.semesters = [
-    "Summer",
-    "Semester 1",
-    "Winter",
-    "Semester 2",
-    "Other"
-  ]
-
-  $scope.states = [
-    "Planned",
-    "Studying",
-    "Completed",
-    "Bookmarked"
-  ]
+  $scope.semesters = Global.semesters;
+  $scope.states = Global.states;
 
   $scope.$year = $("#subjectAdderYear");
   $scope.$semester = $("#subjectAdderSemester");
@@ -351,8 +354,7 @@ mubook.controller("SubjectAddCtrl", function SubjectAddCtrl($scope, $timeout, Gl
   $scope.$toggleBtn = $("#subjectAdderAddBtn");
   $scope.$addForm = $("#subjectAdderForm")
 
-  $scope.togglePopup = PopupControl.register("addSubject",
-  {
+  $scope.togglePopup = PopupControl.register("addSubject", {
     scope: $scope,
     standalone: true,
     onOpen: function() {
