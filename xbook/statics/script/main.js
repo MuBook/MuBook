@@ -348,16 +348,29 @@ mubook.controller("SubjectAddCtrl", function SubjectAddCtrl($scope, $timeout, Gl
   $scope.$semester = $("#subjectAdderSemester");
   $scope.$state = $("#subjectAdderState");
   $scope.$addBtn = $("#subjectAdderConfirmBtn")
+  $scope.$toggleBtn = $("#subjectAdderAddBtn");
+  $scope.$addForm = $("#subjectAdderForm")
 
   $scope.togglePopup = PopupControl.register("addSubject",
   {
     scope: $scope,
+
     onOpen: function() {
+      $scope.$toggleBtn
+      .animate({
+        left: "+=500"
+      }, 1000)
+      .hide(0);
+
       $scope.resetForm();
-      $timeout(function() {
-        $subjectAdderTitle = $("#subjectAdderTitle");
-        $subjectAdderTitle.text("Subject Code: " + Global.selected);
-      });
+    },
+
+    onClose: function() {
+      $scope.$toggleBtn
+      .show(0)
+      .animate({
+        left: "50%"
+      }, 1000);
     }
   });
 
