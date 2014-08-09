@@ -18,8 +18,6 @@ INDEX_PATH = os.path.join(
     'index.html'
 )
 
-# Comment out the following line for testing index.html
-@cache_page(60 * 60 * 24)
 @csrf_protect
 def index(request):
     is_social = request.user.is_authenticated() and request.user.socialaccount_set.count() > 0

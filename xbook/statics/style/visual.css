@@ -184,11 +184,31 @@ a:focus {
 }
 
 .statisticsList {
-    list-style-type: none;
+    width: 100%;
+    display: table;
+    table-layout: fixed;
+    padding: 0;
 }
 
 .statisticsList li {
-    display: inline;
+    display: table-cell;
+    text-align: center
+}
+
+#nPlanned, #nSocialStudying{
+    background-color: yellow;
+}
+
+#nBookmarked, #nSocialPlanned{
+    background-color: greenyellow;
+}
+
+#nBookmarked, #nSocialCompleted{
+    background-color: darkseagreen;
+}
+
+#nStudying, #nSocialBookmarked{
+    background-color: cornflowerblue;
 }
 
 #selectedSubject {

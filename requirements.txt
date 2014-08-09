@@ -1,5 +1,5 @@
 facepy
-PIL
+--allow-external PIL
 Django==1.6.2
 dj-database-url==0.2.1
 dj-static==0.0.5
