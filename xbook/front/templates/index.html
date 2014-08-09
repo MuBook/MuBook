@@ -11,7 +11,7 @@
 
         {% if is_social %}
         <div id="social_statistics">
-            <h4 class="statisticsLabel">Social Statistics</h4>
+            <h4 class="subjectMeta">Social Statistics</h4>
             <ul id="socialStatisticsInfo" class="statisticsList">
                 <li class="socialStatisticsItem" id="nSocialPlanned"></li>
                 <li class="socialStatisticsItem" id="nSocialStudying"></li>
@@ -22,7 +22,7 @@
         {% endif %}
 
         <div id="statistics">
-            <h4 class="statisticsLabel">Statistics</h4>
+            <h4 class="subjectMeta">Statistics</h4>
             <ul id="statisticsInfo" class="statisticsList">
                 <li class="statisticsItem" id="nPlanned"></li>
                 <li class="statisticsItem" id="nStudying"></li>
@@ -33,7 +33,10 @@
 
         {% if user.is_authenticated %}
         <div id="subjectAdder" ng-controller="SubjectAddCtrl" popup ng-cloak>
-            <button id="subjectAdderAddBtn" class="btn btn-primary" type="button" ng-click="togglePopup($event)">Add Subject</button>
+            <h4 class="subjectMeta">Actions</h4>
+            <div class="sidePaneBtnWrapper">
+                <button id="subjectAdderAddBtn" class="btn btn-primary" type="button" ng-click="togglePopup($event)">Add Subject</button>
+            </div>
             <div id="subjectAdderSection" ng-show="isVisible()" ng-submit="addSubject($event)">
                 <form name="subjectAdderForm" id="subjectAdderForm" class="form-horizontal" role="form">
                     {% csrf_token %}

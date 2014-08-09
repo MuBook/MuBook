@@ -354,7 +354,7 @@ mubook.controller("SubjectAddCtrl", function SubjectAddCtrl($scope, $timeout, Gl
   $scope.togglePopup = PopupControl.register("addSubject",
   {
     scope: $scope,
-
+    standalone: true,
     onOpen: function() {
       $scope.$toggleBtn
       .animate({
