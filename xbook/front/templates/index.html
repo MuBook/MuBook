@@ -9,31 +9,8 @@
             <h4 id="selectedCode">Use the search to find a subject</h4>
         </div>
 
-        {% if is_social %}
-        <div id="social_statistics">
-            <h4 class="subjectMeta">Social Statistics</h4>
-            <ul id="socialStatisticsInfo" class="statisticsList">
-                <li class="socialStatisticsItem" id="nSocialPlanned"></li>
-                <li class="socialStatisticsItem" id="nSocialStudying"></li>
-                <li class="socialStatisticsItem" id="nSocialCompleted"></li>
-                <li class="socialStatisticsItem" id="nSocialBookmarked"></li>
-            </ul>
-        </div>
-        {% endif %}
-
-        <div id="statistics">
-            <h4 class="subjectMeta">Statistics</h4>
-            <ul id="statisticsInfo" class="statisticsList">
-                <li class="statisticsItem" id="nPlanned"></li>
-                <li class="statisticsItem" id="nStudying"></li>
-                <li class="statisticsItem" id="nCompleted"></li>
-                <li class="statisticsItem" id="nBookmarked"></li>
-            </ul>
-        </div>
-
         {% if user.is_authenticated %}
         <div id="subjectAdder" ng-controller="SubjectAddCtrl" popup ng-cloak>
-            <h4 class="subjectMeta">Actions</h4>
             <div class="sidePaneBtnWrapper">
                 <button id="subjectAdderAddBtn" class="btn btn-primary" type="button" ng-click="togglePopup($event)">Add Subject</button>
             </div>
@@ -81,6 +58,27 @@
             </div>
         </div>
         {% endif %}
+
+
+        <div id="statistics">
+            <h4 class="subjectMeta">Status</h4>
+            <h4 style="padding: 5px 5px 1px 5px;">All Students</h4>
+            <ul id="statisticsInfo" class="statisticsList">
+                <li class="statisticsItem" id="nCompleted"></li>
+                <li class="statisticsItem" id="nStudying"></li>
+                <li class="statisticsItem" id="nPlanned"></li>
+                <li class="statisticsItem" id="nBookmarked"></li>
+            </ul>
+            {% if is_social %}
+            <h4 style="padding: 5px 5px 1px 5px;">Friends</h4>
+            <ul id="socialStatisticsInfo" class="statisticsList">
+                <li class="socialStatisticsItem" id="nSocialCompleted"></li>
+                <li class="socialStatisticsItem" id="nSocialStudying"></li>
+                <li class="socialStatisticsItem" id="nSocialPlanned"></li>
+                <li class="socialStatisticsItem" id="nSocialBookmarked"></li>
+            </ul>
+            {% endif %}
+        </div>
 
         <div id="creditPoint">
             <h4 class="subjectDetailHeading">Credit Points</h4>

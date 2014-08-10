@@ -188,11 +188,12 @@ a:focus {
 }
 
 .subjectMeta {
-	background-color: #00A0B0;
-	color: #fff;
-	font-weight: 600;
-	font-size: 24px;
+	text-align: center;
 	padding: 5px;
+	font-size: 24px;
+	font-weight: 600;
+	color: #FFF;
+	background: #2666BF;
 }
 
 .statisticsList {
@@ -207,26 +208,43 @@ a:focus {
     text-align: center
 }
 
-#statisticsInfo {
+#statisticsInfo, #socialStatisticsInfo {
 	color: #fff;
 	font-weight: 600;
 }
 
-#nPlanned, #nSocialStudying{
-    background-color: #BAE563;
+#nPlanned{
+    background-color: #993434;
 }
 
-#nBookmarked, #nSocialPlanned{
-    background-color: #4ECDC4;
+#nStudying{
+    background-color: #3083B1;
 }
 
-#nCompleted, #nSocialCompleted{
+#nCompleted{
+    background-color: #41923A;
+}
+
+#nBookmarked{
+    background-color: #343A41;
+}
+
+#nSocialPlanned{
+    background-color: #D15555;`
+}
+
+#nSocialStudying{
+    background-color: #5AADDB;
+}
+
+#nSocialCompleted{
+    background-color: #6DC765;
+}
+
+#nSocialBookmarked{
     background-color: #556270;
 }
 
-#nStudying, #nSocialBookmarked{
-    background-color: #FF6B6B;
-}
 
 #selectedSubject {
 	background-color: #194480;
@@ -522,8 +540,8 @@ ul.pageNav
 ************/
 #subjectAdder {
 	position: relative;
-	padding: 20px 0;
-	margin: 5px 0;
+	/*padding: 20px 0;
+	margin: 5px 0;*/
 }
 
 #subjectAdderSection {
