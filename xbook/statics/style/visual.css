@@ -213,6 +213,10 @@ a:focus {
 	font-weight: 600;
 }
 
+#statisticsLabel {
+	padding: 5px 5px 1px 5px;
+}
+
 #nPlanned{
     background-color: #993434;
 }
@@ -230,7 +234,7 @@ a:focus {
 }
 
 #nSocialPlanned{
-    background-color: #D15555;`
+    background-color: #D15555;
 }
 
 #nSocialStudying{
@@ -540,8 +544,6 @@ ul.pageNav
 ************/
 #subjectAdder {
 	position: relative;
-	/*padding: 20px 0;
-	margin: 5px 0;*/
 }
 
 #subjectAdderSection {

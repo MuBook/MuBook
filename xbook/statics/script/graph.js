@@ -271,14 +271,14 @@ function makeRestoreButton() {
 
 function showStatistics(d) {
     var statistic_items = document.querySelectorAll(".statisticsItem");
-    var data = [d.num_planned, d.num_studying, d.num_completed, d.num_bookmarked];
+    var data = [d.num_completed, d.num_studying, d.num_planned, d.num_bookmarked];
     for (var i = 0; i < statistic_items.length; ++i) {
         statistic_items[i].innerHTML = data[i] + "<br>" + stat_text[i];
     }
 
     var social_statistic_items = document.querySelectorAll(".socialStatisticsItem");
-    var social_data = [d.num_friends_planned, d.num_friends_studying,
-                       d.num_friends_completed, d.num_friends_bookmarked];
+    var social_data = [d.num_friends_completed, d.num_friends_studying,
+                       d.num_friends_planned, d.num_friends_bookmarked];
 
     for (i = 0; i < social_statistic_items.length; ++i) {
         social_statistic_items[i].innerHTML = social_data[i] + "<br>" + stat_text[i];
