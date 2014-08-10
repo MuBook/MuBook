@@ -3,6 +3,11 @@ var mubook = angular.module("mubook", ["ngRoute"]);
 mubook.config(["$routeProvider",
   function($routeProvider) {
     $routeProvider
+      .when("/profile/:username/visualize", {
+        title: " - µBook",
+        templateUrl: "/template",
+        controller: "UserCtrl"
+      })
       .when("/:reqType/:university/:subjectCode", {
         title: " - µBook",
         templateUrl: "/template",
@@ -16,16 +21,28 @@ mubook.config(["$routeProvider",
 
 mubook.run(["$location", "$rootScope", function($location, $rootScope) {
   $rootScope.$on("$routeChangeSuccess", function(event, current) {
-    if (!current.params.subjectCode) { return; }
-    $rootScope.pageTitle = current.params.subjectCode.toUpperCase() + current.$$route.title;
+    if (!!current.params.subjectCode) {
+      $rootScope.pageTitle = current.params.subjectCode.toUpperCase() + current.$$route.title;
+    } else if (!!current.params.username) {
+      $rootScope.pageTitle = current.params.username + current.$$route.title;
+    }
   });
 }]);
 
 mubook.run(["$location", "Global", "$rootScope", function($location, Global, $rootScope) {
   $rootScope.replacePath = function replacePath(code) {
     Global.code = code;
+    Global.selected = code;
     $location.path(Global.reqType + "/melbourne/" + code);
   };
+
+  $rootScope.setSelected = function setSelected(code) {
+    Global.selected = code || Global.code;
+  }
+
+  $rootScope.getSelected = function getSelected() {
+    return Global.selected;
+  }
 }]);
 
 mubook.run(["$window", "PopupControl", function($window, PopupControl) {
@@ -45,7 +62,23 @@ mubook.factory("Subjects", function($http) {
 mubook.factory("Global", function() {
   return {
     code: "COMP30018",
-    reqType: "prereq"
+    reqType: "prereq",
+    selected: "COMP30018",
+    semesters:
+    [
+      "Summer",
+      "Semester 1",
+      "Winter",
+      "Semester 2",
+      "Other"
+    ],
+    states:
+    [
+      "Planned",
+      "Studying",
+      "Completed",
+      "Bookmarked"
+    ]
   };
 });
 
@@ -189,6 +222,7 @@ mubook.controller("GraphCtrl", function GraphCtrl($scope, $routeParams, $locatio
   }
 
   Global.code = status.code;
+  Global.selected = Global.code;
   Global.reqType = status.reqType;
 
   loadTree(status.reqType, $routeParams.subjectCode);
@@ -199,8 +233,6 @@ mubook.controller("SidePaneCtrl", function SidePaneCtrl($scope) {
 });
 
 mubook.controller("LegendCtrl", function LegendCtrl($scope, PopupControl) {
-  legendInit();
-
   $scope.$legend = $("#legend");
   $scope.$legendGraph = $("#legendGraph").hide();
 
@@ -298,6 +330,125 @@ mubook.controller("FeedbackCtrl", function FeedbackCtrl($scope, $http, $timeout,
       $scope.toggleForm();
     });
   };
+});
+
+mubook.controller("UserCtrl", function UserCtrl($scope, $timeout, $location, $routeParams, Global) {
+  $scope.visualizeUserGraph = function(username) {
+    $location.path("/profile/" + username + "/visualize");
+  }
+
+  if (!$routeParams.username) {
+    return;
+  }
+  visualizeGraph("ajax/profile/" + $routeParams.username);
+});
+
+mubook.controller("SubjectAddCtrl", function SubjectAddCtrl($scope, $timeout, Global, PopupControl) {
+  $scope.semesters = Global.semesters;
+  $scope.states = Global.states;
+
+  $scope.$year = $("#subjectAdderYear");
+  $scope.$semester = $("#subjectAdderSemester");
+  $scope.$state = $("#subjectAdderState");
+  $scope.$addBtn = $("#subjectAdderConfirmBtn")
+  $scope.$toggleBtn = $("#subjectAdderAddBtn");
+  $scope.$addForm = $("#subjectAdderForm")
+
+  $scope.togglePopup = PopupControl.register("addSubject", {
+    scope: $scope,
+    standalone: true,
+    onOpen: function() {
+      $scope.$toggleBtn
+      .animate({
+        left: "+=500"
+      }, 1000)
+      .hide(0);
+
+      $scope.resetForm();
+    },
+
+    onClose: function() {
+      $scope.$toggleBtn
+      .show(0)
+      .animate({
+        left: "50%"
+      }, 1000);
+    }
+  });
+
+  $scope.isVisible = PopupControl.visibilityOf("addSubject");
+
+  $scope.isValidYear = function() {
+    return !($scope.subjectAdderForm.subjectYear.$error.min || $scope.subjectAdderForm.subjectYear.$error.max);
+  }
+
+  $scope.isValidSemester = function() {
+    return !!$scope.subjectAdderForm.subjectSemester.$viewValue;
+  }
+
+  $scope.isValidState = function() {
+    return !!$scope.subjectAdderForm.subjectState.$viewValue;
+  }
+
+  $scope.disableForm = function() {
+    $scope.$year.prop('disabled', true);
+    $scope.$semester.prop('disabled', true);
+    $scope.$state.prop('disabled', true);
+    $scope.$addBtn.prop('disabled', true);
+  }
+
+  $scope.enableForm = function() {
+    $scope.$year.prop('disabled', false);
+    $scope.$semester.prop('disabled', false);
+    $scope.$state.prop('disabled', false);
+    $scope.$addBtn.prop('disabled', false);
+  }
+
+  $scope.resetForm = function() {
+    $scope.year = '';
+    $scope.semester = '';
+    $scope.state = '';
+  }
+
+  $scope.addSubject = function(e) {
+    if (!$scope.isValidYear()) {
+      $scope.$year.focus();
+      return;
+    } else if (!$scope.isValidSemester()) {
+      $scope.$semester.focus();
+      return;
+    } else if (!$scope.isValidState()) {
+      $scope.$state.focus();
+      return;
+    }
+
+    $scope.disableForm();
+
+    payload = {
+      subject: Global.selected,
+      year: $scope.year,
+      semester: $scope.semester,
+      state: $scope.state
+    }
+
+    $.ajax({
+      headers: { "X-CSRFToken": docCookies.getItem("csrftoken") },
+      type: 'POST',
+      url: 'profile/selected_subjects/add/',
+      data: payload
+    })
+    .done(function(message) {
+      alert(message);
+    })
+    .fail(function(message) {
+      console.warn("Fail: " + message);
+    })
+    .always(function() {
+      $scope.enableForm();
+    });
+    $scope.resetForm();
+    $scope.togglePopup();
+  }
 });
 
 function loadTree(type, code) {

@@ -4,7 +4,6 @@
 html, body {
 	padding: 0;
 	margin: 0;
-	overflow: hidden;
 }
 
 body {
@@ -151,22 +150,26 @@ a:focus {
 }
 
 /************
-* =TopBar
+* =Header
 *************/
-#topBar {
-	background-color: #38f;
-	position: relative;
-	height: 50px;
+
+/* navbar */
+.navbar-static-top {
+    background-color: #38f;
+    border: 0;
 }
 
-#brand {
-	color: #fff;
-	font-family: 'Russo One', sans-serif;
-	line-height: 50px;
+/* title */
+.navbar-static-top .navbar-brand {
+    color: #fff;
+    font-family: 'Russo One', sans-serif;
 	font-size: 24px;
-	width: 160px;
-	text-align: center;
 }
+
+#username:hover {
+	cursor: pointer;
+}
+
 
 /************
 * =SidePane
@@ -184,6 +187,47 @@ a:focus {
 	width: 25%;
 }
 
+.subjectMeta {
+	background-color: #00A0B0;
+	color: #fff;
+	font-weight: 600;
+	font-size: 24px;
+	padding: 5px;
+}
+
+.statisticsList {
+    width: 100%;
+    display: table;
+    table-layout: fixed;
+    padding: 0;
+}
+
+.statisticsList li {
+    display: table-cell;
+    text-align: center
+}
+
+#statisticsInfo {
+	color: #fff;
+	font-weight: 600;
+}
+
+#nPlanned, #nSocialStudying{
+    background-color: #BAE563;
+}
+
+#nBookmarked, #nSocialPlanned{
+    background-color: #4ECDC4;
+}
+
+#nCompleted, #nSocialCompleted{
+    background-color: #556270;
+}
+
+#nStudying, #nSocialBookmarked{
+    background-color: #FF6B6B;
+}
+
 #selectedSubject {
 	background-color: #194480;
 	color: white;
@@ -191,7 +235,7 @@ a:focus {
 }
 
 #selectedName {
-	font-weight: 300;
+	font-weight: 600;
 	padding: 5px 10px;
 	margin-bottom: 0;
 }
@@ -211,7 +255,7 @@ a:focus {
 	text-align: center;
 	padding: 5px;
 	font-size: 24px;
-	font-weight: 500;
+	font-weight: 600;
 	color: #FFF;
 	background: #2666BF;
 }
@@ -230,6 +274,21 @@ a:focus {
 .SetDescription {
 	font-weight: bold;
 	margin: 10px 0;
+}
+
+ul.pageNav
+{
+    list-style-type: none;
+}
+
+#subjectAction {
+	margin: 5px 0;
+}
+
+.sidePaneBtnWrapper {
+	position: relative;
+	height: 34px;
+	margin: 5px 0;
 }
 
 /************
@@ -327,21 +386,23 @@ a:focus {
 /***********
 * =Header Right
 ************/
-#header-right {
-	position: absolute;
-	right: 0;
-	top: 0;
-	height: 50px;
+#username {
+    background-color: #38f;
+	font-size: 20px;
+    color: #fff;
+}
+
+.login {
+    font-size: 14px;
+    background-color: #38f;
+    color: #fff;
 }
 
 #feedback-button {
 	color: #fff;
+    background-color: #38f;
 	cursor: pointer;
-	display: block;
-	font: 20px 'Open Sans', sans-serif;
-	line-height: 50px;
-	text-align: center;
-	width: 100px;
+    font-size: 18px;
 }
 
 #feedback-form {
@@ -454,4 +515,30 @@ a:focus {
 	right: 5px;
 	padding: 1px;
 	cursor: pointer;
+}
+
+/***********
+* =Subject Adder
+************/
+#subjectAdder {
+	position: relative;
+	padding: 20px 0;
+	margin: 5px 0;
+}
+
+#subjectAdderSection {
+	margin-top: 5px;
+	padding: 10px;
+	top: 27px;
+}
+
+#subjectAdderAddBtn {
+	position: absolute;
+	left: 50%;
+	top: 0;
+	margin-left: -46px;
+}
+
+.error-label {
+	margin-top: 7px;
 }

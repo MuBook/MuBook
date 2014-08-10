@@ -1,8 +1,6 @@
 from django.conf.urls import patterns, url
 
 urlpatterns = patterns('xbook.ajax',
-	url(r'^(?P<json>.*?\.json)$', 'views.ajaxJSON'),
-
 	url(r'^u-(?P<uni>.*?)/prereq/(?P<code>.*?)$', 'views.subject'),
 	url(r'^p/u-(?P<uni>.*?)/prereq/(?P<code>.*?)$', 'views.subject', { 'pretty': True }),
 
@@ -11,4 +9,7 @@ urlpatterns = patterns('xbook.ajax',
 
 	url(r'^u-(?P<uni>.*?)/subjectlist/?$', 'views.subjectList'),
 	url(r'^p/u-(?P<uni>.*?)/subjectlist/?$', 'views.subjectList', {'pretty': True}),
+
+    url(r'profile/(?P<username>.*?)/?$', 'views.getUserSubject'),
+    url(r'^profile/(?P<username>.*?)/?$', 'views.getUserSubject', {'pretty': True}),
 )
