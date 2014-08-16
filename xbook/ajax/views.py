@@ -6,6 +6,7 @@ from allauth.socialaccount.models import SocialToken
 from django.http import HttpResponse
 from django.core.exceptions import ObjectDoesNotExist
 from django.views.decorators.cache import cache_page
+from django.contrib.auth.models import User
 from xbook.ajax.models import Subject, SubjectPrereq
 from xbook.front.models import UserSubject
 from facepy import GraphAPI
@@ -206,8 +207,17 @@ def attach_statistics(nodeinfo, subj):
 
 @authenticate_user
 def getUserSubject(request, username, pretty=False):
-    current_user = request.user
-    user_subjects = current_user.user_subject.all()
+    selected_user = None
+
+    try:
+        selected_user = User.objects.filter(username=username)[0]
+    except:
+        return Ajax(
+            ajaxCallback(request, json.dumps({})),
+            content_type='application/json'
+        )
+
+    user_subjects = selected_user.user_subject.all()
 
     graph = { "nodes": [], "links": [] }
 
@@ -216,7 +226,7 @@ def getUserSubject(request, username, pretty=False):
     nodes = graph['nodes']
     links = graph['links']
 
-    friends = get_friends(current_user)
+    friends = get_friends(selected_user)
     parent_index, code_index = -1, { user_subjects[0].subject.code: 0 }
     for user_subject in user_subjects:
         subj = user_subject.subject
