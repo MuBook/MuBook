@@ -1,3 +1,6 @@
+{% load account %}
+{% load url from future %}
+
 <!DOCTYPE html>
 <html lang="en" ng-app="mubook">
 <head>
@@ -64,17 +67,54 @@
                     </ul>
                 </li>
             {% else %}
-                <li id="header-right" ng-controller="LoginCtrl" popup>
+                <li id="login-popup" ng-controller="LoginCtrl" popup>
                     <a id="login-button" class="login" ng-click="toggleForm($event)">Log in</a>
 
-                    <form id="login-form" class="form-horizontal" role="form" ng-show="isVisible()" ng-cloak>
-                        {#                    {% csrf_token %}#}
-                        {#                    <input id="login-username" class="login-input" maxlength="30" ng-model="login-name" placeholder="Username"#}
-                        {#                           type="text"/>{{ form.login.errors }}<br>#}
-                        {#                    <input id="login-password"  class="login-input" ng-model="login-password" placeholder="Password" type="password" /><br>#}
-                        {##}
-                        {#                    <button id="login-submit" class="btn btn-default" type="submit">Sign In</button>#}
-                    </form>
+                    <div id="login-signup" role="form" ng-show="isVisible()" ng-cloak>
+                        <div id="login-group">
+                            <div id="signup-label">New user?</div>
+                            <form id="signup-form" method="POST" action="{% url 'account_signup' %}">
+                                {% csrf_token %}
+                                {{ form.non_field_errors }}
+                                <input id="signup-username" class="form-control" maxlength="30" name="username"
+                                       placeholder="Username" type="text">
+                                <input id="signup-password" name="password1" class="form-control" placeholder="Password"
+                                       type="password">
+                                <input id="signup-password2" name="password2" class="form-control"
+                                       placeholder="Password" type="password">
+                                <input id="signup-email" name="email" type="email" class="form-control"
+                                       placeholder="email@address.com"> {{ form.email.errors }}
+                                <button class="btn btn-default" type="submit">Sign Up</button>
+                            </form>
+                        </div>
+                        <div id="signup-group">
+                            <a href="/accounts/facebook/login/"><div class="fb"></div></a>
+                            <div id="login-label">Or sign in directly</div>
+                            {% include "socialaccount/snippets/login_extra.html" %}
+
+                            <form id="login-form" method="POST" action="{% url 'account_login' %}">
+                                {% csrf_token %}
+                                {{ form.non_field_errors }}
+                                <input id="login-username" class="form-control" maxlength="30" name="login"
+                                       placeholder="Username"
+                                       type="text"/>{{ form.login.errors }}
+                                <input id="login-password" class="form-control" name="password" placeholder="Password"
+                                       type="password"/>{{ form.password.errors }}
+
+                                <div class="remember-forgot-section">
+                                    <input id="remember" name="remember" type="checkbox"/>
+                                    <label for="remember">Remember Me</label>
+                                    <a class="forgot"
+                                       href="{% url 'account_reset_password' %}">Forgot Password?</a>
+                                </div>
+                                {% if redirect_field_value %}
+                                    <input type="hidden" name="{{ redirect_field_name }}"
+                                           value="{{ redirect_field_value }}"/>
+                                {% endif %}
+                                <button class="btn btn-default" type="submit">Sign In</button>
+                            </form>
+                        </div>
+                    </div>
                 </li>
             {% endif %}
 
