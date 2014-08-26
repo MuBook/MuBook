@@ -332,6 +332,22 @@ mubook.controller("FeedbackCtrl", function FeedbackCtrl($scope, $http, $timeout,
   };
 });
 
+mubook.controller("LoginCtrl", function LoginCtrl($scope, $http, $timeout, Global, PopupControl) {
+  $scope.toggleForm = PopupControl.register("login",
+    {
+      scope: $scope,
+      onOpen: function() {
+        $timeout(function() {
+//            alert("Blah");
+        });
+      }
+    }
+  );
+
+  $scope.isVisible = PopupControl.visibilityOf("login");
+});
+
+
 mubook.controller("UserCtrl", function UserCtrl($scope, $timeout, $location, $routeParams, Global) {
   $scope.visualizeUserGraph = function(username) {
     $location.path("/profile/" + username + "/visualize");

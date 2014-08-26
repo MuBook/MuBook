@@ -400,11 +400,83 @@ ul.pageNav
     color: #fff;
 }
 
+#login-button {
+    color: #fff;
+    background-color: #38f;
+    cursor: pointer;
+    font-size: 18px;
+}
+
+#login-signup {
+    border-color: rgba(0, 0, 0, .15);
+    border-radius: 0 0 4px 4px;
+    box-shadow: 0 4px 6px 2px rgba(0, 0, 0, .10);
+    background-color: #194480;
+    position: fixed;
+    top: 50px;
+    right: 100px;
+    height: auto;
+    width: 500px;
+    padding: 15px 15px 0 15px;
+    color: #fff;
+}
+
+.remember-forgot-section {
+    width: 94%;
+    text-align: left;
+    margin: 8px auto;
+    font-size: 10px;
+    padding-top: 5px;
+}
+
+.forgot {
+    float: right;
+    margin-top: 2px;
+}
+
+#login-form, #signup-form {
+    margin-bottom: 15px;
+}
+
+#login-group {
+    float: left;
+}
+
+#signup-group {
+    float: right;
+}
+
+.fb {
+    background: url('/static/img/fb_200.png') no-repeat center top;
+    box-shadow: 2px 2px 8px rgba(0, 0, 0, .7);
+    border-radius: 5px;
+    width: 203px;
+    height: 34px;
+    overflow: hidden;
+}
+
 #feedback-button {
 	color: #fff;
     background-color: #38f;
 	cursor: pointer;
     font-size: 18px;
+}
+
+.form-control {
+    margin-bottom: 5px;
+}
+
+#login-label {
+    font-weight: bold;
+    float: right;
+    padding-bottom: 12px;
+    padding-top: 7px;
+    padding-right: 30px;
+}
+
+#signup-label {
+    font-weight: bold;
+    margin-bottom: 14px;
 }
 
 #feedback-form {
