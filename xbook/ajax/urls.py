@@ -10,6 +10,6 @@ urlpatterns = patterns('xbook.ajax',
 	url(r'^u-(?P<uni>.*?)/subjectlist/?$', 'views.subjectList'),
 	url(r'^p/u-(?P<uni>.*?)/subjectlist/?$', 'views.subjectList', {'pretty': True}),
 
-    url(r'profile/(?P<username>.*?)/?$', 'views.getUserSubject'),
-    url(r'^profile/(?P<username>.*?)/?$', 'views.getUserSubject', {'pretty': True}),
+    url(r'profile/(?P<username>.*?)/?$', 'views.get_user_subject'),
+    url(r'^profile/(?P<username>.*?)/?$', 'views.get_user_subject', {'pretty': True}),
 )

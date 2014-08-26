@@ -93,6 +93,19 @@ def get_friends(user):
     return friends
 
 
+def attach_user_info(nodeinfo, subj, user):
+    try:
+        user_subject = UserSubject.objects.filter(user=user, subject=subj)[0]
+        nodeinfo.update({
+            "has_completed": True,
+            "year_completed": user_subject.year,
+            "semester_completed": user_subject.semester,
+            "state": user_subject.state,
+        })
+    except:
+        nodeinfo.update({"has_completed": False})
+
+
 def subject_graph(user, code, prereq=True):
     graph = { "nodes": [], "links": [] }
     subjQueue = deque()
@@ -132,9 +145,10 @@ def subject_graph(user, code, prereq=True):
             "objectives": subj.objectives,
             "assessment": subj.assessment,
             "prereq": subj.prerequisite,
-            "coreq": subj.corequisite,
+            "coreq": subj.corequisite
         }
 
+        attach_user_info(nodeinfo, subj, user)
         attach_statistics(nodeinfo, subj)
         attach_social_statistics(friends, nodeinfo, subj)
         nodes.append(nodeinfo)
@@ -206,7 +220,7 @@ def attach_statistics(nodeinfo, subj):
 
 
 @authenticate_user
-def getUserSubject(request, username, pretty=False):
+def get_user_subject(request, username, pretty=False):
     selected_user = None
 
     try:
@@ -232,21 +246,22 @@ def getUserSubject(request, username, pretty=False):
         subj = user_subject.subject
 
         nodeinfo = {
-            "code": user_subject.subject.code,
-            "name": user_subject.subject.name,
-            "url": user_subject.subject.link,
+            "code": subj.code,
+            "name": subj.name,
+            "url": subj.link,
             "root": parent_index == -1 and True or False,
-            "credit": str(user_subject.subject.credit),
-            "commence_date": user_subject.subject.commence_date,
-            "time_commitment": user_subject.subject.time_commitment,
-            "overview": user_subject.subject.overview,
-            "objectives": user_subject.subject.objectives,
-            "assessment": user_subject.subject.assessment,
-            "prereq": user_subject.subject.prerequisite,
-            "coreq": user_subject.subject.corequisite,
+            "credit": str(subj.credit),
+            "commence_date": subj.commence_date,
+            "time_commitment": subj.time_commitment,
+            "overview": subj.overview,
+            "objectives": subj.objectives,
+            "assessment": subj.assessment,
+            "prereq": subj.prerequisite,
+            "coreq": subj.corequisite,
+            "has_completed": True,
             "year_completed": user_subject.year,
             "semester_completed": user_subject.semester,
-            "state": user_subject.state,
+            "state": user_subject.state
         }
 
         attach_statistics(nodeinfo, subj)
@@ -254,7 +269,7 @@ def getUserSubject(request, username, pretty=False):
         nodes.append(nodeinfo)
 
         parent_index += 1
-        relations = SubjectPrereq.objects.filter(**{ "subject__code": user_subject.subject.code })
+        relations = SubjectPrereq.objects.filter(**{ "subject__code": subj.code })
 
         for relation in relations:
             compare_index = 0

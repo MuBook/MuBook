@@ -56,6 +56,7 @@ a:focus {
 	overflow: hidden;
 	padding: 0;
 	border-left: 1px solid #aaa;
+	z-index: 0;
 }
 
 #graph {
@@ -185,6 +186,7 @@ a:focus {
 	overflow: auto;
 	overflow-x: hidden;
 	width: 25%;
+	z-index: 1;
 }
 
 .subjectMeta {
@@ -518,7 +520,7 @@ ul.pageNav
 }
 
 /***********
-* =Subject Adder
+* =Subject Action
 ************/
 #subjectAdder {
 	position: relative;
@@ -539,6 +541,40 @@ ul.pageNav
 	margin-left: -46px;
 }
 
+#subjectAdderDelBtn {
+	position: absolute;
+	left: 50%;
+	top: 0;
+	margin-left: -60px;
+}
+
 .error-label {
 	margin-top: 7px;
+}
+
+#subjDelConfirm {
+	position: fixed;
+	width: 400px;
+	left: 50%;
+	top: 25%;
+	margin-left: -200px;
+	box-shadow: 0 4px 6px 2px rgba(0, 0, 0, .10);
+	padding: 20px 40px;
+	background: #fff;
+}
+
+#subjDelConfirm #confirmDelSubj {
+	margin-top: 20px;
+}
+
+#subjDelConfirm .close-popup {
+	position: absolute;
+	right: 0;
+	top: 0;
+	margin: 5px 20px;
+	font-size: 24px;
+}
+
+#subjDelConfirm .close-popup:hover {
+	cursor: pointer;
 }

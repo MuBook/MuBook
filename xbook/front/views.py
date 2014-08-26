@@ -18,6 +18,9 @@ INDEX_PATH = os.path.join(
     'index.html'
 )
 
+
+# Comment out the following line for testing index.html
+@cache_page(60 * 60 * 24)
 @csrf_protect
 def index(request):
     is_social = request.user.is_authenticated() and request.user.socialaccount_set.count() > 0
@@ -78,3 +81,20 @@ def add_subject(request):
 
     return HttpResponse("Success")
 
+
+def delete_subject(request, subject):
+    if not request.user.is_authenticated():
+        return HttpResponse("You can only delete subject if you are logged in.")
+
+    user = request.user
+    subject = Subject.objects.get(code=subject)
+    user_subject = None
+
+    try:
+        user_subject = UserSubject.objects.filter(user=user, subject=subject)[0]
+    except:
+        return HttpResponse("Sorry, you have not stared this subject")
+
+    user_subject.delete()
+
+    return HttpResponse("Successfully deleted subject")

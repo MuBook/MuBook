@@ -15,6 +15,7 @@ urlpatterns += patterns('xbook.front.views',
     url(r'^ajax/', include('xbook.ajax.urls')),
 
     url(r'^profile/selected_subjects/add/$', 'add_subject'),
+    url(r'^profile/selected_subjects/delete/(?P<subject>.*?)/$', 'delete_subject'),
     url(r'^profile/(?P<username>.*?)/$', 'user_profile', name='user_profile'),
 
     # Uncomment the next line to enable the admin:

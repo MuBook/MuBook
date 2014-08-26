@@ -376,7 +376,16 @@ mubook.controller("SubjectAddCtrl", function SubjectAddCtrl($scope, $timeout, Gl
     }
   });
 
+  $scope.toggleDelPopup = PopupControl.register("delSubject", {
+    scope: $scope,
+    onOpen: function() {
+      $scope.delSubjCode = Global.selected;
+    }
+  });
+
   $scope.isVisible = PopupControl.visibilityOf("addSubject");
+
+  $scope.isDelVisible = PopupControl.visibilityOf("delSubject");
 
   $scope.isValidYear = function() {
     return !($scope.subjectAdderForm.subjectYear.$error.min || $scope.subjectAdderForm.subjectYear.$error.max);
@@ -439,6 +448,7 @@ mubook.controller("SubjectAddCtrl", function SubjectAddCtrl($scope, $timeout, Gl
     })
     .done(function(message) {
       alert(message);
+      location.reload();
     })
     .fail(function(message) {
       console.warn("Fail: " + message);
@@ -448,6 +458,25 @@ mubook.controller("SubjectAddCtrl", function SubjectAddCtrl($scope, $timeout, Gl
     });
     $scope.resetForm();
     $scope.togglePopup();
+  }
+
+  $scope.deleteSubject = function(e) {
+    var url = 'profile/selected_subjects/delete/' + Global.selected + '/';
+    $.ajax({
+      headers: { "X-CSRFToken": docCookies.getItem("csrftoken") },
+      type: 'POST',
+      url: url
+    })
+    .done(function(message) {
+      alert(message);
+      location.reload();
+    })
+    .fail(function(message) {
+      console.warn("Fail: " + message);
+    })
+    .always(function() {
+      $scope.toggleDelPopup(e);
+    });
   }
 });
 

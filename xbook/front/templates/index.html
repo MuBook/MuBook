@@ -36,6 +36,7 @@
             <h4 class="subjectMeta">Actions</h4>
             <div class="sidePaneBtnWrapper">
                 <button id="subjectAdderAddBtn" class="btn btn-primary" type="button" ng-click="togglePopup($event)">Add Subject</button>
+                <button id="subjectAdderDelBtn" class="btn btn-warning" type="button" ng-click="toggleDelPopup($event)">Remove Subject</button>
             </div>
             <div id="subjectAdderSection" ng-show="isVisible()" ng-submit="addSubject($event)">
                 <form name="subjectAdderForm" id="subjectAdderForm" class="form-horizontal" role="form">
@@ -78,6 +79,12 @@
                         <button class="col-sm-3 btn btn-default" ng-click="togglePopup($event)" type="button">Cancel</button>
                     </div>
                 </form>
+            </div>
+            <div id="subjDelConfirm" ng-show="isDelVisible()">
+                <h2>Are you sure you want to remove</h2>
+                <h2><b ng-bind="delSubjCode"></b></h2>
+                <i class="close-popup glyphicon glyphicon-remove" ng-click="toggleDelPopup($event)"></i>
+                <button id="confirmDelSubj" class="btn btn-danger" type="button" ng-click="deleteSubject($event)">Remove</button>
             </div>
         </div>
         {% endif %}
