@@ -241,7 +241,7 @@ def get_user_subject(request, username, pretty=False):
     links = graph['links']
 
     friends = get_friends(selected_user)
-    parent_index, code_index = -1, { user_subjects[0].subject.code: 0 }
+    parent_index = -1
     for user_subject in user_subjects:
         subj = user_subject.subject
 

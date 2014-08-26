@@ -9,6 +9,8 @@ var visualizeGraph = (function () {
   return function (url) {
     d3.json(url, function (error, data) {
       var isPrereq = angular.element($("#typeSwitcher")).scope().prereq();
+      var $graphScope = angular.element($("#graphContainer")).scope();
+
       var graph = new Graph({
         nodeData: data,
         name: "graphSVG",
@@ -17,7 +19,10 @@ var visualizeGraph = (function () {
       });
       graph.makeGraph();
       graph.renderGraph();
+
+      $graphScope.setSelected(data.nodes[0].code);
       showNodeDetails(data.nodes[0], graph.selectedName, graph.selectedCode);
+
       graph.centerGraph(isPrereq);
       graph.addPanZoom(SCALE_RANGE);
       graph.nodes.on("click", function(d) {

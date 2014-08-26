@@ -343,7 +343,7 @@ mubook.controller("UserCtrl", function UserCtrl($scope, $timeout, $location, $ro
   visualizeGraph("ajax/profile/" + $routeParams.username);
 });
 
-mubook.controller("SubjectAddCtrl", function SubjectAddCtrl($scope, $timeout, Global, PopupControl) {
+mubook.controller("SubjectAddCtrl", function SubjectAddCtrl($scope, $timeout, $route, Global, PopupControl) {
   $scope.semesters = Global.semesters;
   $scope.states = Global.states;
 
@@ -448,7 +448,7 @@ mubook.controller("SubjectAddCtrl", function SubjectAddCtrl($scope, $timeout, Gl
     })
     .done(function(message) {
       alert(message);
-      location.reload();
+      $route.reload();
     })
     .fail(function(message) {
       console.warn("Fail: " + message);
@@ -469,7 +469,7 @@ mubook.controller("SubjectAddCtrl", function SubjectAddCtrl($scope, $timeout, Gl
     })
     .done(function(message) {
       alert(message);
-      location.reload();
+      $route.reload();
     })
     .fail(function(message) {
       console.warn("Fail: " + message);
