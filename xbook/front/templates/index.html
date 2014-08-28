@@ -12,11 +12,9 @@
         {% if user.is_authenticated %}
         <div id="subjectAdder" ng-controller="SubjectAddCtrl" popup ng-cloak>
             <div class="sidePaneBtnWrapper">
-                <div class="subjectActions">
-                    <button id="subjectAdderAddBtn" class="btn btn-primary" type="button" ng-cloak ng-click="togglePopup($event)">Add Subject</button>
-                    <button id="subjectAdderDelBtn" class="btn btn-warning" type="button" ng-cloak ng-click="toggleDelPopup($event)">Remove Subject</button>
-                </div>
-                <div id="typeSwitcher" class="graphActions" ng-controller="GraphTypeCtrl">
+                <button id="subjectAdderAddBtn" class="btn btn-primary" type="button" ng-cloak ng-click="togglePopup($event)">Add Subject</button>
+                <button id="subjectAdderDelBtn" class="btn btn-warning" type="button" ng-cloak ng-click="toggleDelPopup($event)">Remove Subject</button>
+                <div id="typeSwitcher" class="graphActions btn-group" ng-controller="GraphTypeCtrl">
                     <span class="btn btn-default" ng-class="{active: prereq()}" ng-cloak ng-click="toPre()">Prerequisites</span>
                     <span class="btn btn-default" ng-class="{active: !prereq()}" ng-cloak ng-click="toPost()">Postrequisites</span>
                 </div>

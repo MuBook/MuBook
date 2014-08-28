@@ -310,11 +310,21 @@ ul.pageNav
 }
 
 .sidePaneBtnWrapper {
-  position: relative;
-  height: 34px;
-  margin: 10px 0;
+  margin: 10px 15px;
+  text-align: left;
 }
 
+.graphActions {
+    margin: 10px 0;
+    padding-left: 30px;
+}
+
+@media (max-width: 1730px) {
+    .sidePaneBtnWrapper {
+      margin: 10px 15px;
+      text-align: center;
+    }
+}
 /************
 * =Search
 *************/
