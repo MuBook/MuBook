@@ -372,23 +372,8 @@ mubook.controller("SubjectAddCtrl", function SubjectAddCtrl($scope, $timeout, $r
 
   $scope.togglePopup = PopupControl.register("addSubject", {
     scope: $scope,
-    standalone: true,
     onOpen: function() {
-      $scope.$toggleBtn
-      .animate({
-        left: "+=500"
-      }, 1000)
-      .hide(0);
-
       $scope.resetForm();
-    },
-
-    onClose: function() {
-      $scope.$toggleBtn
-      .show(0)
-      .animate({
-        left: "50%"
-      }, 1000);
     }
   });
 
@@ -402,6 +387,10 @@ mubook.controller("SubjectAddCtrl", function SubjectAddCtrl($scope, $timeout, $r
   $scope.isVisible = PopupControl.visibilityOf("addSubject");
 
   $scope.isDelVisible = PopupControl.visibilityOf("delSubject");
+
+  $scope.selected = function() {
+    return Global.selected;
+  }
 
   $scope.isValidYear = function() {
     return !($scope.subjectAdderForm.subjectYear.$error.min || $scope.subjectAdderForm.subjectYear.$error.max);

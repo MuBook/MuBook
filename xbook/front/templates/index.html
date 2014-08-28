@@ -16,6 +16,7 @@
                 <button id="subjectAdderDelBtn" class="btn btn-warning" type="button" ng-click="toggleDelPopup($event)">Remove Subject</button>
             </div>
             <div id="subjectAdderSection" ng-show="isVisible()" ng-submit="addSubject($event)">
+                <h2>Adding <span ng-bind="selected()"></span></h2>
                 <form name="subjectAdderForm" id="subjectAdderForm" class="form-horizontal" role="form">
                     {% csrf_token %}
                     <div class="form-group">
