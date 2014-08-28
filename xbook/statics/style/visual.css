@@ -312,7 +312,7 @@ ul.pageNav
 .sidePaneBtnWrapper {
   position: relative;
   height: 34px;
-  margin: 5px 0;
+  margin: 10px 0;
 }
 
 /************
@@ -553,11 +553,6 @@ ul.pageNav
 /***********
 * =TypeSwitcher
 ************/
-#typeSwitcher {
-  position: fixed;
-  right: 20px;
-  bottom: 20px;
-}
 
 /***********
 * =PrerequisitesDetailTable
@@ -630,20 +625,6 @@ ul.pageNav
   background: #fff;
   box-shadow: 0 4px 6px 2px rgba(0, 0, 0, .10);
   border-radius: 5px;
-}
-
-#subjectAdderAddBtn {
-  position: absolute;
-  left: 50%;
-  top: 0;
-  margin-left: -46px;
-}
-
-#subjectAdderDelBtn {
-  position: absolute;
-  left: 50%;
-  top: 0;
-  margin-left: -60px;
 }
 
 .error-label {
