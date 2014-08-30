@@ -208,7 +208,8 @@ a:focus {
     text-align: center
 }
 
-#statisticsInfo, #socialStatisticsInfo {
+#statisticsInfo,
+#socialStatisticsInfo {
 	color: #fff;
 	font-weight: 600;
 }
@@ -217,35 +218,35 @@ a:focus {
 	padding: 5px 5px 1px 5px;
 }
 
-#nPlanned{
+#nPlanned {
     background-color: #993434;
 }
 
-#nStudying{
+#nStudying {
     background-color: #3083B1;
 }
 
-#nCompleted{
+#nCompleted {
     background-color: #41923A;
 }
 
-#nBookmarked{
+#nBookmarked {
     background-color: #343A41;
 }
 
-#nSocialPlanned{
+#nSocialPlanned {
     background-color: #D15555;
 }
 
-#nSocialStudying{
+#nSocialStudying {
     background-color: #5AADDB;
 }
 
-#nSocialCompleted{
+#nSocialCompleted {
     background-color: #6DC765;
 }
 
-#nSocialBookmarked{
+#nSocialBookmarked {
     background-color: #556270;
 }
 
