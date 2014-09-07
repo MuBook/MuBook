@@ -1,0 +1,31 @@
+{% extends "base.html" %}
+
+{% load url from future %}
+
+{% block additional-css %}
+    <link rel="stylesheet" href="/static/style/legal.css">
+{% endblock %}
+
+{% block body %}
+    <section id="legal">
+        <nav class="legal-nav" role="banner">
+            <div class="legal-nav-content">
+                <ul>
+                    <li class="{{ bold.contact_us }}">
+                        <a href={% url 'contact_us' %}>Contact Us</a>
+                    </li>
+                    <li class="{{ bold.legal_tos }}">
+                        <a href={% url 'legal_tos' %}>Terms of Service</a>
+                    </li>
+                    <li class="{{ bold.legal_pp }}">
+                        <a href={% url 'legal_pp' %}>Privacy Policy</a>
+                    </li>
+                </ul>
+            </div>
+        </nav>
+        <div class="legal-body">
+            {% block content %}
+            {% endblock %}
+        </div>
+    </section>
+{% endblock %}
