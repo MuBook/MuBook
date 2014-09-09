@@ -1,7 +1,7 @@
 var DELETE  = 0,
     RESTORE = 1;
 
-var stat_text = ["Completed", "Studying", "Planned", "Bookmarked"];
+var statText = ["Completed", "Studying", "Planned", "Bookmarked"];
 function Graph(config) {
   config = config || {};
 
@@ -272,18 +272,18 @@ function makeRestoreButton() {
 }
 
 function showStatistics(d) {
-    var statistic_items = document.querySelectorAll(".statisticsItem");
+    var statisticItems = document.querySelectorAll(".statisticsItem");
     var data = [d.num_completed, d.num_studying, d.num_planned, d.num_bookmarked];
-    for (var i = 0; i < statistic_items.length; ++i) {
-        statistic_items[i].innerHTML = data[i] + "<br>" + stat_text[i];
+    for (var i = 0; i < statisticItems.length; ++i) {
+        statisticItems[i].innerHTML = data[i] + "<br>" + statText[i];
     }
 
-    var social_statistic_items = document.querySelectorAll(".socialStatisticsItem");
-    var social_data = [d.num_friends_completed, d.num_friends_studying,
+    var socialStatisticItems = document.querySelectorAll(".socialStatisticsItem");
+    var socialData = [d.num_friends_completed, d.num_friends_studying,
                        d.num_friends_planned, d.num_friends_bookmarked];
 
-    for (i = 0; i < social_statistic_items.length; ++i) {
-        social_statistic_items[i].innerHTML = social_data[i] + "<br>" + stat_text[i];
+    for (i = 0; i < socialStatisticItems.length; ++i) {
+        socialStatisticItems[i].innerHTML = socialData[i] + "<br>" + statText[i];
     }
 }
 

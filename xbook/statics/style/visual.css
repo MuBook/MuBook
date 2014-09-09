@@ -251,7 +251,6 @@ a:focus {
   background-color: #556270;
 }
 
-
 #selectedSubject {
   background-color: #194480;
   color: white;
@@ -315,15 +314,15 @@ ul.pageNav
 }
 
 .graphActions {
-    margin: 10px 0;
-    padding-left: 30px;
+  margin: 10px 0;
+  padding-left: 30px;
 }
 
 @media (max-width: 1730px) {
-    .sidePaneBtnWrapper {
-      margin: 10px 15px;
-      text-align: center;
-    }
+  .sidePaneBtnWrapper {
+    margin: 10px 15px;
+    text-align: center;
+  }
 }
 /************
 * =Search

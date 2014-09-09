@@ -1,7 +1,9 @@
 var mubook = angular.module("mubook", ["ngRoute"]);
 
-mubook.config(["$routeProvider",
-  function($routeProvider) {
+mubook.config(["$routeProvider", "$locationProvider",
+  function($routeProvider, $locationProvider) {
+    $locationProvider.html5Mode(true);
+    
     $routeProvider
       .when("/profile/:username/visualize", {
         title: " - µBook",
