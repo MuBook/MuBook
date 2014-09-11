@@ -13,7 +13,7 @@
         <div id="subjectAdder" ng-controller="SubjectAddCtrl" popup ng-cloak>
             <div class="sidePaneBtnWrapper">
                 <button id="subjectAdderAddBtn" class="btn btn-primary" type="button" ng-cloak ng-click="togglePopup($event)">Add Subject</button>
-                <button id="subjectAdderDelBtn" class="btn btn-warning" type="button" ng-cloak ng-click="toggleDelPopup($event)">Remove Subject</button>
+                <button id="subjectAdderDelBtn" class="btn btn-danger" type="button" ng-cloak ng-click="toggleDelPopup($event)">Remove Subject</button>
                 <div id="typeSwitcher" class="graphActions btn-group" ng-controller="GraphTypeCtrl">
                     <span class="btn btn-default" ng-class="{active: prereq()}" ng-cloak ng-click="toPre()">Prerequisites</span>
                     <span class="btn btn-default" ng-class="{active: !prereq()}" ng-cloak ng-click="toPost()">Postrequisites</span>
@@ -63,10 +63,12 @@
                 </form>
             </div>
             <div id="subjDelConfirm" ng-show="isDelVisible()">
-                <h2>Are you sure you want to remove</h2>
-                <h2><b ng-bind="delSubjCode"></b></h2>
+                <br>
+                <p>Are you sure you want to remove</p>
+                <p><b ng-bind="delSubjCode"></b></p>
                 <i class="close-popup glyphicon glyphicon-remove" ng-click="toggleDelPopup($event)"></i>
-                <button id="confirmDelSubj" class="btn btn-danger" type="button" ng-click="deleteSubject($event)">Remove</button>
+                <button class="btn btn-danger" type="button" ng-click="deleteSubject($event)">Remove</button>
+                <button class="btn btn-default" type="button" ng-click="toggleDelPopup($event)">Cancel</button>
             </div>
         </div>
         {% endif %}
@@ -74,7 +76,7 @@
 
         <div id="statistics">
             <h4 class="subjectMeta">Status</h4>
-            <h4 class="statisticsLabel">All Students</h4>
+            <h5 class="statisticsLabel">All Students</h4>
             <ul id="statisticsInfo" class="statisticsList">
                 <li class="statisticsItem" id="nCompleted"></li>
                 <li class="statisticsItem" id="nStudying"></li>
@@ -82,7 +84,7 @@
                 <li class="statisticsItem" id="nBookmarked"></li>
             </ul>
             {% if is_social %}
-            <h4 class="statisticsLabel">Friends</h4>
+            <h5 class="statisticsLabel">Friends</h4>
             <ul id="socialStatisticsInfo" class="statisticsList">
                 <li class="socialStatisticsItem" id="nSocialCompleted"></li>
                 <li class="socialStatisticsItem" id="nSocialStudying"></li>

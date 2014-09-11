@@ -203,6 +203,7 @@ a:focus {
   display: table;
   table-layout: fixed;
   padding: 0;
+  margin-bottom: 5px;
 }
 
 .statisticsList li {
@@ -215,8 +216,10 @@ a:focus {
   font-weight: 600;
 }
 
-#statisticsLabel {
-  padding: 5px 5px 1px 5px;
+.statisticsLabel {
+  font-size: 18px;
+  margin-top: 5px;
+  margin-bottom: 1px;
 }
 
 #nPlanned{
@@ -651,16 +654,12 @@ ul.pageNav
   background: #fff;
 }
 
-#subjDelConfirm #confirmDelSubj {
-  margin-top: 20px;
-}
-
 #subjDelConfirm .close-popup {
   position: absolute;
   right: 0;
   top: 0;
-  margin: 5px 20px;
-  font-size: 24px;
+  margin: 10px 10px;
+  font-size: 16px;
 }
 
 #subjDelConfirm .close-popup:hover {
