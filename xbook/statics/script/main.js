@@ -76,9 +76,9 @@ mubook.factory("Global", function() {
     ],
     states:
     [
-      "Planned",
-      "Studying",
       "Completed",
+      "Studying",
+      "Planned",
       "Bookmarked"
     ]
   };
@@ -421,9 +421,10 @@ mubook.controller("SubjectAddCtrl", function SubjectAddCtrl($scope, $timeout, $r
   }
 
   $scope.resetForm = function() {
-    $scope.year = '';
-    $scope.semester = '';
-    $scope.state = '';
+    // Prefill with current semester details
+    $scope.model_year = 2014;
+    $scope.model_semester = $scope.semesters[3];
+    $scope.model_state = $scope.states[1];
   }
 
   $scope.addSubject = function(e) {
@@ -442,9 +443,9 @@ mubook.controller("SubjectAddCtrl", function SubjectAddCtrl($scope, $timeout, $r
 
     payload = {
       subject: Global.selected,
-      year: $scope.year,
-      semester: $scope.semester,
-      state: $scope.state
+      year: $scope.model_year,
+      semester: $scope.model_semester,
+      state: $scope.model_state
     }
 
     $.ajax({
