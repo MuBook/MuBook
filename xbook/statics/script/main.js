@@ -5,7 +5,7 @@ mubook.config(["$routeProvider", "$locationProvider",
     $locationProvider.html5Mode(true);
     
     $routeProvider
-      .when("/profile/:username/visualize", {
+      .when("/profile/:username", {
         title: " - µBook",
         templateUrl: "/template",
         controller: "UserCtrl"
@@ -352,7 +352,7 @@ mubook.controller("LoginCtrl", function LoginCtrl($scope, $http, $timeout, Globa
 
 mubook.controller("UserCtrl", function UserCtrl($scope, $timeout, $location, $routeParams, Global) {
   $scope.visualizeUserGraph = function(username) {
-    $location.path("/profile/" + username + "/visualize");
+    $location.path("/profile/" + username);
   }
 
   if (!$routeParams.username) {

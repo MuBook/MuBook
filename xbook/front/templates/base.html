@@ -58,15 +58,14 @@
                         {% endif %}
                         <span class="caret"></span></a>
                     <ul class="dropdown-menu" role="menu">
-                        <li><a href={% url 'user_profile' user.username %}>Your Profile</a></li>
                         {% if request.path != "/"  %}
-                        <li><a href="/#/profile/{{ request.user.username }}/visualize" ng-controller="UserCtrl"
-                                ng-click="visualizeUserGraph('{{ request.user.username }}')">My Subject Graph</a></li>
+                        <li><a href="/profile/{{ request.user.username }}" ng-controller="UserCtrl"
+                                ng-click="visualizeUserGraph('{{ request.user.username }}')">Profile</a></li>
                         {% else %}
                             <li><a href ng-controller="UserCtrl"
-                                ng-click="visualizeUserGraph('{{ request.user.username }}')">My Subject Graph</a></li>
+                                ng-click="visualizeUserGraph('{{ request.user.username }}')">Profile</a></li>
                         {% endif %}
-                        <li><a href={% url 'account_logout' %}>Log out</a></li>
+                        <li><a href={% url 'account_logout' %}>Sign out</a></li>
                     </ul>
                 </li>
             {% else %}
