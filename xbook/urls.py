@@ -26,6 +26,8 @@ urlpatterns += patterns('xbook.front.views',
     # url(r'^admin/doc/', include('django.contrib.admindocs.urls')),
 
     url(r'^feedback$', 'send_feedback'),
+    
+    url(r'(?:prereq|postreq)/.*', 'index'),
 
     url(r'^(.*?)$', 'error404'),
 )
