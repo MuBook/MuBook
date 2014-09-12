@@ -422,9 +422,9 @@ mubook.controller("SubjectAddCtrl", function SubjectAddCtrl($scope, $timeout, $r
 
   $scope.resetForm = function() {
     // Prefill with current semester details
-    $scope.model_year = 2014;
-    $scope.model_semester = $scope.semesters[3];
-    $scope.model_state = $scope.states[1];
+    $scope.modelYear = (new Date).getFullYear();
+    $scope.modelSemester = $scope.semesters[3];
+    $scope.modelState = $scope.states[1];
   }
 
   $scope.addSubject = function(e) {
@@ -443,9 +443,9 @@ mubook.controller("SubjectAddCtrl", function SubjectAddCtrl($scope, $timeout, $r
 
     payload = {
       subject: Global.selected,
-      year: $scope.model_year,
-      semester: $scope.model_semester,
-      state: $scope.model_state
+      year: $scope.modelYear,
+      semester: $scope.modelSemester,
+      state: $scope.modelState
     }
 
     $.ajax({
