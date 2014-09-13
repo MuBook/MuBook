@@ -34,6 +34,34 @@ a:focus {
 }
 
 /************
+* =shared utils
+*************/
+
+.space-up-10 {
+  margin-top: 10px;
+}
+
+.space-up-20 {
+  margin-top: 20px;
+}
+
+.space-down-10 {
+  margin-bottom: 10px;
+}
+
+.space-down-20 {
+  margin-bottom: 20px;
+}
+
+.space-vertical-10 {
+  margin: 10px 0;
+}
+
+.space-vertical-20 {
+  margin: 20px 0;
+}
+
+/************
 * =Effects
 *************/
 .center {
@@ -470,14 +498,6 @@ ul.pageNav
 
 #login-form, #signup-form {
   margin-bottom: 15px;
-}
-
-#login-group {
-  float: left;
-}
-
-#signup-group {
-  float: right;
 }
 
 .fb {
