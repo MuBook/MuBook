@@ -14,10 +14,6 @@
             <div class="sidePaneBtnWrapper">
                 <button id="subjectAdderAddBtn" class="btn btn-primary" type="button" ng-cloak ng-click="togglePopup($event)">Add Subject</button>
                 <button id="subjectAdderDelBtn" class="btn btn-danger" type="button" ng-cloak ng-click="toggleDelPopup($event)">Remove Subject</button>
-                <div id="typeSwitcher" class="graphActions btn-group" ng-controller="GraphTypeCtrl">
-                    <span class="btn btn-default" ng-class="{active: prereq()}" ng-cloak ng-click="toPre()">Prerequisites</span>
-                    <span class="btn btn-default" ng-class="{active: !prereq()}" ng-cloak ng-click="toPost()">Postrequisites</span>
-                </div>
             </div>
             <div id="subjectAdderSection" ng-show="isVisible()" ng-submit="addSubject($event)">
                 <h2>Adding <span ng-bind="selected()"></span></h2>
@@ -67,6 +63,10 @@
             </div>
         </div>
         {% endif %}
+        <div id="typeSwitcher" class="graphActions btn-group" ng-controller="GraphTypeCtrl">
+            <span class="btn btn-default" ng-class="{active: prereq()}" ng-cloak ng-click="toPre()">Prerequisites</span>
+            <span class="btn btn-default" ng-class="{active: !prereq()}" ng-cloak ng-click="toPost()">Postrequisites</span>
+        </div>
 
 
         <div id="statistics">
