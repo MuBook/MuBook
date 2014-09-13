@@ -59,8 +59,7 @@
                 </form>
             </div>
             <div id="subjDelConfirm" ng-show="isDelVisible()">
-                <br>
-                <p>Are you sure you want to remove</p>
+                <p class="space-up-10">Are you sure you want to remove</p>
                 <p><b ng-bind="delSubjCode"></b></p>
                 <i class="close-popup glyphicon glyphicon-remove" ng-click="toggleDelPopup($event)"></i>
                 <button class="btn btn-danger" type="button" ng-click="deleteSubject($event)">Remove</button>
