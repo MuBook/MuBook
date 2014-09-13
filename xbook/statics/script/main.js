@@ -5,7 +5,7 @@ mubook.config(["$routeProvider", "$locationProvider",
     $locationProvider.html5Mode(true);
     
     $routeProvider
-      .when("/profile/:username/visualize", {
+      .when("/profile/:username", {
         title: " - µBook",
         templateUrl: "/template",
         controller: "UserCtrl"
@@ -76,9 +76,9 @@ mubook.factory("Global", function() {
     ],
     states:
     [
-      "Planned",
-      "Studying",
       "Completed",
+      "Studying",
+      "Planned",
       "Bookmarked"
     ]
   };
@@ -352,7 +352,7 @@ mubook.controller("LoginCtrl", function LoginCtrl($scope, $http, $timeout, Globa
 
 mubook.controller("UserCtrl", function UserCtrl($scope, $timeout, $location, $routeParams, Global) {
   $scope.visualizeUserGraph = function(username) {
-    $location.path("/profile/" + username + "/visualize");
+    $location.path("/profile/" + username);
   }
 
   if (!$routeParams.username) {
@@ -421,9 +421,10 @@ mubook.controller("SubjectAddCtrl", function SubjectAddCtrl($scope, $timeout, $r
   }
 
   $scope.resetForm = function() {
-    $scope.year = '';
-    $scope.semester = '';
-    $scope.state = '';
+    // Prefill with current semester details
+    $scope.modelYear = (new Date).getFullYear();
+    $scope.modelSemester = $scope.semesters[3];
+    $scope.modelState = $scope.states[1];
   }
 
   $scope.addSubject = function(e) {
@@ -442,9 +443,9 @@ mubook.controller("SubjectAddCtrl", function SubjectAddCtrl($scope, $timeout, $r
 
     payload = {
       subject: Global.selected,
-      year: $scope.year,
-      semester: $scope.semester,
-      state: $scope.state
+      year: $scope.modelYear,
+      semester: $scope.modelSemester,
+      state: $scope.modelState
     }
 
     $.ajax({

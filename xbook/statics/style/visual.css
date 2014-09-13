@@ -34,6 +34,34 @@ a:focus {
 }
 
 /************
+* =shared utils
+*************/
+
+.space-up-10 {
+  margin-top: 10px;
+}
+
+.space-up-20 {
+  margin-top: 20px;
+}
+
+.space-down-10 {
+  margin-bottom: 10px;
+}
+
+.space-down-20 {
+  margin-bottom: 20px;
+}
+
+.space-vertical-10 {
+  margin: 10px 0;
+}
+
+.space-vertical-20 {
+  margin: 20px 0;
+}
+
+/************
 * =Effects
 *************/
 .center {
@@ -203,6 +231,7 @@ a:focus {
   display: table;
   table-layout: fixed;
   padding: 0;
+  margin-bottom: 5px;
 }
 
 .statisticsList li {
@@ -215,8 +244,10 @@ a:focus {
   font-weight: 600;
 }
 
-#statisticsLabel {
-  padding: 5px 5px 1px 5px;
+.statisticsLabel {
+  font-size: 18px;
+  margin-top: 5px;
+  margin-bottom: 1px;
 }
 
 #nPlanned{
@@ -469,14 +500,6 @@ ul.pageNav
   margin-bottom: 15px;
 }
 
-#login-group {
-  float: left;
-}
-
-#signup-group {
-  float: right;
-}
-
 .fb {
   background: url('/static/img/fb_200.png') no-repeat center top;
   box-shadow: 2px 2px 8px rgba(0, 0, 0, .7);
@@ -651,16 +674,12 @@ ul.pageNav
   background: #fff;
 }
 
-#subjDelConfirm #confirmDelSubj {
-  margin-top: 20px;
-}
-
 #subjDelConfirm .close-popup {
   position: absolute;
   right: 0;
   top: 0;
-  margin: 5px 20px;
-  font-size: 24px;
+  margin: 10px 10px;
+  font-size: 16px;
 }
 
 #subjDelConfirm .close-popup:hover {

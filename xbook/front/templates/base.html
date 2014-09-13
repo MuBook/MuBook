@@ -58,15 +58,14 @@
                         {% endif %}
                         <span class="caret"></span></a>
                     <ul class="dropdown-menu" role="menu">
-                        <li><a href={% url 'user_profile' user.username %}>Your Profile</a></li>
                         {% if request.path != "/"  %}
-                        <li><a href="/#/profile/{{ request.user.username }}/visualize" ng-controller="UserCtrl"
-                                ng-click="visualizeUserGraph('{{ request.user.username }}')">My Subject Graph</a></li>
+                        <li><a href="/profile/{{ request.user.username }}" ng-controller="UserCtrl"
+                                ng-click="visualizeUserGraph('{{ request.user.username }}')">Profile</a></li>
                         {% else %}
                             <li><a href ng-controller="UserCtrl"
-                                ng-click="visualizeUserGraph('{{ request.user.username }}')">My Subject Graph</a></li>
+                                ng-click="visualizeUserGraph('{{ request.user.username }}')">Profile</a></li>
                         {% endif %}
-                        <li><a href={% url 'account_logout' %}>Log out</a></li>
+                        <li><a href={% url 'account_logout' %}>Sign out</a></li>
                     </ul>
                 </li>
             {% else %}
@@ -74,7 +73,7 @@
                     <a id="login-button" class="login" ng-click="toggleForm($event)">Log in</a>
 
                     <div id="login-signup" role="form" ng-show="isVisible()" ng-cloak>
-                        <div id="login-group">
+                        <div id="login-group" class="pull-left">
                             <div id="signup-label">New user?</div>
                             <form id="signup-form" method="POST" action="{% url 'account_signup' %}">
                                 {% csrf_token %}
@@ -90,7 +89,7 @@
                                 <button class="btn btn-default" type="submit">Sign Up</button>
                             </form>
                         </div>
-                        <div id="signup-group">
+                        <div id="signup-group" class="pull-right">
                             <a href="/accounts/facebook/login/"><div class="fb"></div></a>
                             <div id="login-label">Or sign in directly</div>
                             {% include "socialaccount/snippets/login_extra.html" %}
