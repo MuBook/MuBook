@@ -73,7 +73,7 @@
                     <a id="login-button" class="login" ng-click="toggleForm($event)">Log in</a>
 
                     <div id="login-signup" role="form" ng-show="isVisible()" ng-cloak>
-                        <div id="login-group">
+                        <div id="login-group" class="pull-left">
                             <div id="signup-label">New user?</div>
                             <form id="signup-form" method="POST" action="{% url 'account_signup' %}">
                                 {% csrf_token %}
@@ -89,7 +89,7 @@
                                 <button class="btn btn-default" type="submit">Sign Up</button>
                             </form>
                         </div>
-                        <div id="signup-group">
+                        <div id="signup-group" class="pull-right">
                             <a href="/accounts/facebook/login/"><div class="fb"></div></a>
                             <div id="login-label">Or sign in directly</div>
                             {% include "socialaccount/snippets/login_extra.html" %}
