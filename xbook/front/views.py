@@ -92,12 +92,11 @@ def delete_subject(request, subject):
 
     user = request.user
     subject = Subject.objects.get(code=subject)
-    user_subject = None
 
-    try:
-        user_subject = UserSubject.objects.filter(user=user, subject=subject)[0]
-    except:
+    if not len(UserSubject.objects.filter(user=user, subject=subject)):
         return HttpResponse("Sorry, you have not stared this subject")
+
+    user_subject = UserSubject.objects.filter(user=user, subject=subject)[0]
 
     user_subject.delete()
 

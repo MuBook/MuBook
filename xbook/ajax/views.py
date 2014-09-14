@@ -94,7 +94,10 @@ def get_friends(user):
 
 
 def attach_user_info(nodeinfo, subj, user):
-    try:
+    if not user.is_authenticated() or \
+        not len(UserSubject.objects.filter(user=user, subject=subj)):
+        nodeinfo.update({"has_completed": False})
+    else:
         user_subject = UserSubject.objects.filter(user=user, subject=subj)[0]
         nodeinfo.update({
             "has_completed": True,
@@ -102,8 +105,7 @@ def attach_user_info(nodeinfo, subj, user):
             "semester_completed": user_subject.semester,
             "state": user_subject.state,
         })
-    except:
-        nodeinfo.update({"has_completed": False})
+
 
 
 def subject_graph(user, code, prereq=True):
@@ -221,16 +223,13 @@ def attach_statistics(nodeinfo, subj):
 
 @authenticate_user
 def get_user_subject(request, username, pretty=False):
-    selected_user = None
-
-    try:
-        selected_user = User.objects.filter(username=username)[0]
-    except:
+    if not len(User.objects.filter(username=username)):
         return Ajax(
             ajaxCallback(request, json.dumps({})),
             content_type='application/json'
         )
 
+    selected_user = User.objects.filter(username=username)[0]
     user_subjects = selected_user.user_subject.all()
 
     graph = { "nodes": [], "links": [] }
