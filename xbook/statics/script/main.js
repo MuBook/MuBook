@@ -58,7 +58,7 @@ mubook.run(["$window", "PopupControl", function($window, PopupControl) {
 }]);
 
 mubook.factory("Subjects", function($http) {
-  return $http.get("ajax/u-melbourne/subjectlist");
+  return $http.get("/ajax/u-melbourne/subjectlist");
 });
 
 mubook.factory("Global", function() {
@@ -351,7 +351,7 @@ mubook.controller("UserCtrl", function UserCtrl($scope, $timeout, $location, $ro
   if (!$routeParams.username) {
     return;
   }
-  visualizeGraph("ajax/profile/" + $routeParams.username);
+  visualizeGraph("/ajax/profile/" + $routeParams.username);
 });
 
 mubook.controller("SubjectAddCtrl", function SubjectAddCtrl($scope, $timeout, $route, Global, PopupControl) {
@@ -482,7 +482,7 @@ mubook.controller("SubjectAddCtrl", function SubjectAddCtrl($scope, $timeout, $r
 });
 
 function loadTree(type, code) {
-  url = "ajax/u-melbourne/" + type + "/" + code;
+  url = "/ajax/u-melbourne/" + type + "/" + code;
   visualizeGraph(url);
   docCookies.setItem("subjCode", code);
 }

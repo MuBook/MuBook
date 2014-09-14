@@ -6,7 +6,7 @@ from django.core.mail import send_mail
 from django.views.decorators.http import require_POST
 from django.views.decorators.cache import cache_page
 from django.views.decorators.csrf import csrf_protect
-from django.shortcuts import render_to_response, render
+from django.shortcuts import render_to_response, render, redirect
 from django.template import RequestContext
 from django.contrib.auth.models import User
 from xbook.ajax.models import Subject
@@ -23,10 +23,14 @@ PRIVACY_POLICY = 2
 TERMS_SERVICE = 3
 
 
+def index(request):
+    return redirect('/explorer/')
+
+
 # Comment out the following line for testing index.html
 @cache_page(60 * 60 * 24)
 @csrf_protect
-def index(request):
+def explorer(request):
     is_social = request.user.is_authenticated() and request.user.socialaccount_set.count() > 0
     return render(request, "index.html", {'is_social': is_social})
 

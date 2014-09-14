@@ -12,6 +12,7 @@ urlpatterns = patterns('',
 
 urlpatterns += patterns('xbook.front.views',
     url(r'^$', 'index', name='home'),
+    url(r'^explorer/$', 'explorer', name='explorer'),
     url(r'^ajax/', include('xbook.ajax.urls')),
 
     url(r'^profile/selected_subjects/add/$', 'add_subject'),
