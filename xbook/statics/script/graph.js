@@ -319,7 +319,7 @@ var subjActionSync = (function() {
       $subjectAddBtn.removeClass("hidden");
       $subjectRemoveBtn.addClass("hidden");
     }
-  }
+  };
 })();
 
 Array.prototype.findIndex = function(tester) {

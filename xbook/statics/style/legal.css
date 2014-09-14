@@ -35,11 +35,12 @@
 .legal-nav ul {
     padding: 10px 15px;
     margin: 0;
+    text-align: left;
 }
 
 .legal-nav li {
     list-style: none;
-    float: left;
+    display: inline-block;
     margin-right: 45px;
     font-size: 14px;
     line-height: 1.43em;
@@ -48,12 +49,6 @@
 .legal-nav a:hover {
     color: #fff;
     text-decoration: underline;
-}
-
-.legal-nav ul:after {
-    clear: both;
-    content: "";
-    display: block;
 }
 
 .legal-nav-content .active {

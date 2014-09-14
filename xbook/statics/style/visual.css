@@ -686,12 +686,12 @@ ul.pageNav
   cursor: pointer;
 }
 
-#subjectAdderSection h2 {
+#subjectAdderSection .add-heading {
   padding: 5px 0 10px;
   border-bottom: #ccc 1px solid;
   margin-bottom: 15px;
 }
 
-#subjectAdderSection h2 span {
+#subjectAdderSection .add-heading .add-heading-subj {
   font-weight: 600;
 }

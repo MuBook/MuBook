@@ -3,7 +3,7 @@ var mubook = angular.module("mubook", ["ngRoute"]);
 mubook.config(["$routeProvider", "$locationProvider",
   function($routeProvider, $locationProvider) {
     $locationProvider.html5Mode(true);
-    
+
     $routeProvider
       .when("/profile/:username", {
         title: " - µBook",
@@ -302,7 +302,7 @@ mubook.controller("FeedbackCtrl", function FeedbackCtrl($scope, $http, $timeout,
         $("#feedback-message").focus();
       });
       return;
-    }
+    };
 
     var data = {
       record: {
@@ -336,14 +336,7 @@ mubook.controller("FeedbackCtrl", function FeedbackCtrl($scope, $http, $timeout,
 
 mubook.controller("LoginCtrl", function LoginCtrl($scope, $http, $timeout, Global, PopupControl) {
   $scope.toggleForm = PopupControl.register("login",
-    {
-      scope: $scope,
-      onOpen: function() {
-        $timeout(function() {
-//            alert("Blah");
-        });
-      }
-    }
+    { scope: $scope }
   );
 
   $scope.isVisible = PopupControl.visibilityOf("login");
@@ -353,7 +346,7 @@ mubook.controller("LoginCtrl", function LoginCtrl($scope, $http, $timeout, Globa
 mubook.controller("UserCtrl", function UserCtrl($scope, $timeout, $location, $routeParams, Global) {
   $scope.visualizeUserGraph = function(username) {
     $location.path("/profile/" + username);
-  }
+  };
 
   if (!$routeParams.username) {
     return;
@@ -392,40 +385,40 @@ mubook.controller("SubjectAddCtrl", function SubjectAddCtrl($scope, $timeout, $r
 
   $scope.selected = function() {
     return Global.selected;
-  }
+  };
 
   $scope.isValidYear = function() {
     return !($scope.subjectAdderForm.subjectYear.$error.min || $scope.subjectAdderForm.subjectYear.$error.max);
-  }
+  };
 
   $scope.isValidSemester = function() {
     return !!$scope.subjectAdderForm.subjectSemester.$viewValue;
-  }
+  };
 
   $scope.isValidState = function() {
     return !!$scope.subjectAdderForm.subjectState.$viewValue;
-  }
+  };
 
   $scope.disableForm = function() {
     $scope.$year.prop('disabled', true);
     $scope.$semester.prop('disabled', true);
     $scope.$state.prop('disabled', true);
     $scope.$addBtn.prop('disabled', true);
-  }
+  };
 
   $scope.enableForm = function() {
     $scope.$year.prop('disabled', false);
     $scope.$semester.prop('disabled', false);
     $scope.$state.prop('disabled', false);
     $scope.$addBtn.prop('disabled', false);
-  }
+  };
 
   $scope.resetForm = function() {
     // Prefill with current semester details
     $scope.modelYear = (new Date).getFullYear();
     $scope.modelSemester = $scope.semesters[3];
     $scope.modelState = $scope.states[1];
-  }
+  };
 
   $scope.addSubject = function(e) {
     if (!$scope.isValidYear()) {
@@ -446,7 +439,7 @@ mubook.controller("SubjectAddCtrl", function SubjectAddCtrl($scope, $timeout, $r
       year: $scope.modelYear,
       semester: $scope.modelSemester,
       state: $scope.modelState
-    }
+    };
 
     $.ajax({
       headers: { "X-CSRFToken": docCookies.getItem("csrftoken") },
@@ -466,7 +459,7 @@ mubook.controller("SubjectAddCtrl", function SubjectAddCtrl($scope, $timeout, $r
     });
     $scope.resetForm();
     $scope.togglePopup();
-  }
+  };
 
   $scope.deleteSubject = function(e) {
     var url = 'profile/selected_subjects/delete/' + Global.selected + '/';
@@ -485,7 +478,7 @@ mubook.controller("SubjectAddCtrl", function SubjectAddCtrl($scope, $timeout, $r
     .always(function() {
       $scope.toggleDelPopup(e);
     });
-  }
+  };
 });
 
 function loadTree(type, code) {
