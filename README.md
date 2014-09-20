@@ -3,7 +3,7 @@
 ## Things you need to have
 
 * Python 2.7
-* Django 1.5.1
+* Django 1.6.0+
 * Postgres DB
 * Maybe: things mentioned in `requirements.txt`
 
