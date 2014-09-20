@@ -250,6 +250,14 @@ a:focus {
   margin-bottom: 1px;
 }
 
+.socialStatisticsItem a {
+    text-decoration: underline;
+}
+
+.socialStatisticsItem a:hover {
+    cursor: pointer;
+}
+
 #nPlanned{
   background-color: #993434;
 }
@@ -280,6 +288,11 @@ a:focus {
 
 #nSocialBookmarked{
   background-color: #556270;
+}
+
+ul.friendsInfo
+{
+    list-style-type: none;
 }
 
 #selectedSubject {

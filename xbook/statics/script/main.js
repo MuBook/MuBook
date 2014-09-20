@@ -481,6 +481,20 @@ mubook.controller("SubjectAddCtrl", function SubjectAddCtrl($scope, $timeout, $r
   };
 });
 
+mubook.controller("SocialCtrl", function SocialCtrl($scope, PopupControl) {
+    $scope.togglePopupCompleted = PopupControl.register("togglePopupCompleted", { scope: $scope });
+    $scope.togglePopupPlanned = PopupControl.register("togglePopupPlanned", { scope: $scope });
+    $scope.togglePopupStudying = PopupControl.register("togglePopupStudying", { scope: $scope });
+    $scope.togglePopupBookmarked = PopupControl.register("togglePopupBookmarked", { scope: $scope });
+
+    $scope.isVisibleCompleted = PopupControl.visibilityOf("togglePopupCompleted");
+    $scope.isVisiblePlanned = PopupControl.visibilityOf("togglePopupPlanned");
+    $scope.isVisibleStudying = PopupControl.visibilityOf("togglePopupStudying");
+    $scope.isVisibleBookmarked = PopupControl.visibilityOf("togglePopupBookmarked");
+
+});
+
+
 function loadTree(type, code) {
   url = "/ajax/u-melbourne/" + type + "/" + code;
   visualizeGraph(url);

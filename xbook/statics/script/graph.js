@@ -1,7 +1,6 @@
 var DELETE  = 0,
     RESTORE = 1;
 
-var statText = ["Completed", "Studying", "Planned", "Bookmarked"];
 function Graph(config) {
   config = config || {};
 
@@ -271,7 +270,22 @@ function makeRestoreButton() {
   return restoreBtn;
 }
 
+function insertFriendInfo(elemId, data) {
+    var friendsInfoList = document.getElementById(elemId);
+    for (var i = 0; i < data.length; ++i) {
+        var friendInfo = document.createElement('li');
+        friendInfo.setAttribute("class", "friendInfo");
+        var friendLink = document.createElement('a');
+        friendLink.setAttribute("href", data[i].fb_url);
+        var friendname = document.createTextNode(data[i].fullname);
+        friendLink.appendChild(friendname);
+        friendInfo.appendChild(friendLink);
+        friendsInfoList.appendChild(friendInfo);
+    }
+}
+
 function showStatistics(d) {
+    var statText = ["Completed", "Studying", "Planned", "Bookmarked"];
     var statisticItems = document.querySelectorAll(".statisticsItem");
     var data = [d.num_completed, d.num_studying, d.num_planned, d.num_bookmarked];
     for (var i = 0; i < statisticItems.length; ++i) {
@@ -279,12 +293,25 @@ function showStatistics(d) {
     }
 
     var socialStatisticItems = document.querySelectorAll(".socialStatisticsItem");
-    var socialData = [d.num_friends_completed, d.num_friends_studying,
-                       d.num_friends_planned, d.num_friends_bookmarked];
+    var socialData = [d.friends_info_completed, d.friends_info_studying,
+                      d.friends_info_planned, d.friends_info_bookmarked];
 
     for (i = 0; i < socialStatisticItems.length; ++i) {
-        socialStatisticItems[i].innerHTML = socialData[i] + "<br>" + statText[i];
+        var socialCount = document.createElement('a');
+        socialCount.innerHTML = socialData[i].length;
+        var statTextNode = document.createTextNode(statText[i]);
+        var sepLine = document.createElement('br');
+
+        socialStatisticItems[i].innerHTML = '';
+        socialStatisticItems[i].appendChild(socialCount);
+        socialStatisticItems[i].appendChild(sepLine);
+        socialStatisticItems[i].appendChild(statTextNode);
     }
+
+    insertFriendInfo('friendsInfoCompleted', d.friends_info_completed);
+    insertFriendInfo('friendsInfoStudying', d.friends_info_studying);
+    insertFriendInfo('friendsInfoPlanned', d.friends_info_planned);
+    insertFriendInfo('friendsInfoBookmarked', d.friends_info_bookmarked);
 }
 
 function showNodeDetails(d, selectedName, selectedCode) {

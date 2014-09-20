@@ -1,8 +1,8 @@
 import json
-import sys
 
 from collections import deque
 from allauth.socialaccount.models import SocialToken
+from allauth.socialaccount.models import SocialAccount
 from django.http import HttpResponse
 from django.core.exceptions import ObjectDoesNotExist
 from django.views.decorators.cache import cache_page
@@ -54,28 +54,39 @@ def Ajax(*args, **kwargs):
     return resp
 
 
+# return uid of users who mark 'subject' as 'state'
+def subject_state_uids(subj, state):
+    return map((lambda x: x.user.socialaccount_set.all()[0].uid),
+               filter((lambda x: x.user.socialaccount_set.count() > 0),
+                      UserSubject.objects.filter(subject=subj, state=state)))
+
+
+def get_friends_info(local_friends_uids, subj, state):
+    friends_info = []
+    for uid in local_friends_uids:
+        if uid in subject_state_uids(subj, state):
+            social_account = SocialAccount.objects.filter(uid=uid)[0]
+            user = social_account.user
+            friends_info.append({'fullname': user.get_full_name(),
+                                 'avatar_url': social_account.get_avatar_url(),
+                                 'fb_url': social_account.get_profile_url()})
+    return friends_info
+
+
 def social_statistics(friends, subj):
-    uids_from_provider = map((lambda x: x.get('id')), friends)
-    user_subjects_planned = UserSubject.objects.filter(subject=subj, state=PLANNED)
-    user_subjects_studying = UserSubject.objects.filter(subject=subj, state=STUDYING)
-    user_subjects_completed = UserSubject.objects.filter(subject=subj, state=COMPLETED)
-    user_subjects_bookmarked = UserSubject.objects.filter(subject=subj, state=BOOKMARKED)
-    social_user_subjects_planned = filter((lambda x: x.user.socialaccount_set.count() > 0), user_subjects_planned)
-    social_user_subjects_studying = filter((lambda x: x.user.socialaccount_set.count() > 0), user_subjects_studying)
-    social_user_subjects_completed = filter((lambda x: x.user.socialaccount_set.count() > 0), user_subjects_completed)
-    social_user_subjects_bookmarked = filter((lambda x: x.user.socialaccount_set.count() > 0), user_subjects_bookmarked)
-    local_uids = map((lambda x: x.user.socialaccount_set.all()[0].uid), social_user_subjects_planned)
-    local_uids2 = map((lambda x: x.user.socialaccount_set.all()[0].uid), social_user_subjects_studying)
-    local_uids3 = map((lambda x: x.user.socialaccount_set.all()[0].uid), social_user_subjects_completed)
-    local_uids4 = map((lambda x: x.user.socialaccount_set.all()[0].uid), social_user_subjects_bookmarked)
-    num_friends_planned = len([uid for uid in uids_from_provider if uid in local_uids])
-    num_friends_studying = len([uid for uid in uids_from_provider if uid in local_uids2])
-    num_friends_completed = len([uid for uid in uids_from_provider if uid in local_uids3])
-    num_friends_bookmarked = len([uid for uid in uids_from_provider if uid in local_uids4])
-    return {'num_friends_planned': num_friends_planned,
-            'num_friends_studying': num_friends_studying,
-            'num_friends_completed': num_friends_completed,
-            'num_friends_bookmarked': num_friends_bookmarked}
+    friends_uids = map((lambda x: x.get('id')), friends)
+    local_facebook_uids = map((lambda x: x.uid), SocialAccount.objects.filter(provider='facebook'))
+    local_friends_uids = filter(lambda x: x in friends_uids, local_facebook_uids)
+
+    friends_info_planned = get_friends_info(local_friends_uids, subj, PLANNED)
+    friends_info_studying = get_friends_info(local_friends_uids, subj, STUDYING)
+    friends_info_completed = get_friends_info(local_friends_uids, subj, COMPLETED)
+    friends_info_bookmarked = get_friends_info(local_friends_uids, subj, BOOKMARKED)
+
+    return {'friends_info_planned': friends_info_planned,
+            'friends_info_studying': friends_info_studying,
+            'friends_info_completed': friends_info_completed,
+            'friends_info_bookmarked': friends_info_bookmarked}
 
 
 def attach_social_statistics(friends, nodeinfo, subj):

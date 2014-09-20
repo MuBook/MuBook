@@ -71,7 +71,7 @@
 
         <div id="statistics">
             <h4 class="subjectMeta">Status</h4>
-            <h5 class="statisticsLabel">All Students</h4>
+            <h5 class="statisticsLabel">All Students</h5>
             <ul id="statisticsInfo" class="statisticsList">
                 <li class="statisticsItem" id="nCompleted"></li>
                 <li class="statisticsItem" id="nStudying"></li>
@@ -79,13 +79,20 @@
                 <li class="statisticsItem" id="nBookmarked"></li>
             </ul>
             {% if is_social %}
-            <h5 class="statisticsLabel">Friends</h4>
-            <ul id="socialStatisticsInfo" class="statisticsList">
-                <li class="socialStatisticsItem" id="nSocialCompleted"></li>
-                <li class="socialStatisticsItem" id="nSocialStudying"></li>
-                <li class="socialStatisticsItem" id="nSocialPlanned"></li>
-                <li class="socialStatisticsItem" id="nSocialBookmarked"></li>
-            </ul>
+                <div id="socialInfo" ng-controller="SocialCtrl" popup ng-cloak>
+                    <h4 class="statisticsLabel">Friends</h4>
+                    <ul id="socialStatisticsInfo" class="statisticsList">
+                        <li class="socialStatisticsItem" id="nSocialCompleted" ng-click="togglePopupCompleted($event)"></li>
+                        <li class="socialStatisticsItem" id="nSocialStudying" ng-click="togglePopupStudying($event)"></li>
+                        <li class="socialStatisticsItem" id="nSocialPlanned" ng-click="togglePopupPlanned($event)"></li>
+                        <li class="socialStatisticsItem" id="nSocialBookmarked" ng-click="togglePopupBookmarked($event)"></li>
+                    </ul>
+
+                    <ul id="friendsInfoCompleted" class="friendsInfo" ng-show="isVisibleCompleted()"></ul>
+                    <ul id="friendsInfoStudying" class="friendsInfo" ng-show="isVisibleStudying()"></ul>
+                    <ul id="friendsInfoPlanned" class="friendsInfo" ng-show="isVisiblePlanned()"></ul>
+                    <ul id="friendsInfoBookmarked" class="friendsInfo" ng-show="isVisibleBookmarked()"></ul>
+                </div>
             {% endif %}
         </div>
 
