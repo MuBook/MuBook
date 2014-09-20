@@ -174,6 +174,8 @@ Graph.prototype.onClickHandler = function(d, graph, clickedNode, config) {
 
   var $graphScope = angular.element($("#graphContainer")).scope();
 
+  subjActionSync(d.has_completed);
+
   if (d.code != graph.prevHighlightNode) {
     $graphScope.setSelected(d.code);
     $graphScope.$apply();
@@ -286,22 +288,39 @@ function showStatistics(d) {
 }
 
 function showNodeDetails(d, selectedName, selectedCode) {
-    var detailsContainer = document.querySelectorAll(".subjectDetail");
-    data = [
-        d.credit, d.commence_date,
-        d.time_commitment, d.prereq,
-        d.assessment, d.coreq,
-        d.overview, d.objectives
-    ];
+    var detailsContainer = document.querySelectorAll(".subjectDetail"),
+        data = [
+          d.credit, d.commence_date,
+          d.time_commitment, d.prereq,
+          d.assessment, d.coreq,
+          d.overview, d.objectives
+        ];
 
     selectedName.innerHTML = d.name;
     selectedCode.innerHTML = d.code;
+
+    subjActionSync(d.has_completed);
 
     showStatistics(d);
     for (var i = 0; i < detailsContainer.length; ++i) {
         detailsContainer[i].innerHTML = data[i];
     }
 }
+
+var subjActionSync = (function() {
+  var $subjectAddBtn = $("#subjectAdderAddBtn"),
+      $subjectRemoveBtn = $("#subjectAdderDelBtn");
+
+  return function(hasCompleted) {
+    if (hasCompleted) {
+      $subjectAddBtn.addClass("hidden");
+      $subjectRemoveBtn.removeClass("hidden");
+    } else {
+      $subjectAddBtn.removeClass("hidden");
+      $subjectRemoveBtn.addClass("hidden");
+    }
+  };
+})();
 
 Array.prototype.findIndex = function(tester) {
   switch(typeof tester) {

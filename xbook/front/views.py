@@ -6,7 +6,7 @@ from django.core.mail import send_mail
 from django.views.decorators.http import require_POST
 from django.views.decorators.cache import cache_page
 from django.views.decorators.csrf import csrf_protect
-from django.shortcuts import render_to_response, render
+from django.shortcuts import render_to_response, render, redirect
 from django.template import RequestContext
 from django.contrib.auth.models import User
 from xbook.ajax.models import Subject
@@ -18,8 +18,19 @@ INDEX_PATH = os.path.join(
     'index.html'
 )
 
-@csrf_protect
+CONTACT_US = 1
+PRIVACY_POLICY = 2
+TERMS_SERVICE = 3
+
+
 def index(request):
+    return redirect('/explorer/')
+
+
+# Comment out the following line for testing index.html
+@cache_page(60 * 60 * 24)
+@csrf_protect
+def explorer(request):
     is_social = request.user.is_authenticated() and request.user.socialaccount_set.count() > 0
     return render(request, "index.html", {'is_social': is_social})
 
@@ -78,3 +89,56 @@ def add_subject(request):
 
     return HttpResponse("Success")
 
+
+def delete_subject(request, subject):
+    if not request.user.is_authenticated():
+        return HttpResponse("You can only delete subject if you are logged in.")
+
+    user = request.user
+    subject = Subject.objects.get(code=subject)
+
+    if not len(UserSubject.objects.filter(user=user, subject=subject)):
+        return HttpResponse("Sorry, you have not stared this subject")
+
+    user_subject = UserSubject.objects.filter(user=user, subject=subject)[0]
+
+    user_subject.delete()
+
+    return HttpResponse("Successfully deleted subject")
+
+def contact_us(request):
+    bold = make_bold(CONTACT_US)
+    context = RequestContext(request, {
+        "bold": bold
+    })
+    return render_to_response("legal_contactus.html", context)
+
+def legal_tos(request):
+    bold = make_bold(TERMS_SERVICE)
+    context = RequestContext(request, {
+        "bold": bold
+    })
+    return render_to_response("legal_tos.html", context)
+
+def legal_pp(request):
+    bold = make_bold(PRIVACY_POLICY)
+    context = RequestContext(request, {
+        "bold": bold
+    })
+    return render_to_response("legal_pp.html", context)
+
+def make_bold(page):
+    cu = ""
+    pp = ""
+    ts = ""
+    if page == CONTACT_US:
+        cu = "active"
+    elif page == PRIVACY_POLICY:
+        pp = "active"
+    elif page == TERMS_SERVICE:
+        ts = "active"
+    return {
+        "contact_us": cu,
+        "legal_pp": pp,
+        "legal_tos": ts
+    }

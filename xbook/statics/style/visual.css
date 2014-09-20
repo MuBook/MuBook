@@ -2,151 +2,180 @@
 * =General tags
 *************/
 html, body {
-	padding: 0;
-	margin: 0;
+  padding: 0;
+  margin: 0;
 }
 
 body {
-	position: relative;
-	min-width: 800px;
-	font-family: "Open Sans", sans-serif;
+  position: relative;
+  min-width: 800px;
+  font-family: "Open Sans", sans-serif;
 }
 
 h1, h2, h3, h4, h5 {
-	margin: 0;
-	font-family: "Open Sans", sans-serif;
+  margin: 0;
+  font-family: "Open Sans", sans-serif;
 }
 
 a {
-	text-decoration: none;
-	color: inherit;
-	transition: color 0.3s;
+  text-decoration: none;
+  color: inherit;
+  transition: color 0.3s;
 }
 
 a:hover {
-	color: #38f;
-	text-decoration: none;
+  color: #38f;
+  text-decoration: none;
 }
 
 a:focus {
-	outline: none;
-	text-decoration: none;
+  outline: none;
+  text-decoration: none;
+}
+
+/************
+* =shared utils
+*************/
+
+.space-up-10 {
+  margin-top: 10px;
+}
+
+.space-up-20 {
+  margin-top: 20px;
+}
+
+.space-down-10 {
+  margin-bottom: 10px;
+}
+
+.space-down-20 {
+  margin-bottom: 20px;
+}
+
+.space-vertical-10 {
+  margin: 10px 0;
+}
+
+.space-vertical-20 {
+  margin: 20px 0;
 }
 
 /************
 * =Effects
 *************/
 .center {
-	margin: auto;
+  margin: auto;
 }
 
 .hidden {
-	display: none;
+  display: none;
 }
 
 /************
 * =Graph related
 *************/
 #graphContainer {
-	position: fixed;
-	right: 0;
-	top: 50px;
-	bottom: 0;
-	width: 75%;
-	overflow: hidden;
-	padding: 0;
-	border-left: 1px solid #aaa;
+  position: fixed;
+  right: 0;
+  top: 50px;
+  bottom: 0;
+  width: 75%;
+  overflow: hidden;
+  padding: 0;
+  border-left: 1px solid #aaa;
+  z-index: 0;
 }
 
 #graph {
-	width: 100%;
-	height: 100%;
-	background-color: #FAFAFA;
+  width: 100%;
+  height: 100%;
+  background-color: #FAFAFA;
 }
 
 #graphSVG {
-	width: 100%;
-	height: 100%;
+  width: 100%;
+  height: 100%;
 }
 
 .node {
-	cursor: pointer;
-	z-index: 200;
+  cursor: pointer;
+  z-index: 200;
 }
 
 .node rect {
-	fill: #F9F9F9;
-	stroke: #38f;
-	stroke-width: 1.5px;
-	font: 15px sans-serif;
-	opacity: 0.2;
-	transition: all 0.3s;
+  fill: #F9F9F9;
+  stroke: #38f;
+  stroke-width: 1.5px;
+  font: 15px sans-serif;
+  opacity: 0.2;
+  transition: all 0.3s;
 }
 
 .selected rect {
-	fill: #2666c0 !important;
-	stroke: #2666c0;
-	transition: all 0.3s;
+  fill: #2666c0 !important;
+  stroke: #2666c0;
+  transition: all 0.3s;
 }
 
 .node:hover rect {
-	fill: #38f;
+  fill: #38f;
 }
 
 .info {
-	display: none;
+  display: none;
 }
 
 .node:hover .info {
-	display: block;
+  display: block;
 }
 
 .selected .button-text {
-	fill: #fff;
+  fill: #fff;
 }
 
 .node text {
-	fill: #CCC;
+  fill: #CCC;
 }
 
 .node:hover .button-text {
-	fill: white;
+  fill: white;
 }
 
 #arrowhead,
 #legendArrowhead {
-	fill: #888 !important;
+  fill: #888 !important;
 }
 
 .edgePath {
-	fill: none;
-	stroke: #888;
-	stroke-width: 1.5px;
-	opacity: 0.2;
-	transition: all 0.3s;
+  fill: none;
+  stroke: #888;
+  stroke-width: 1.5px;
+  opacity: 0.2;
+  transition: all 0.3s;
 }
 
 .edgePath:hover {
-	stroke-width: 2.5px;
+  stroke-width: 2.5px;
 }
 
 .visible rect {
-	opacity: 1;
+  opacity: 1;
 }
 
 .visible text {
-	fill: #222;
+  fill: #222;
 }
 
 .deleted rect, .deleted text {
-	display: none;
+  display: none;
 }
 
 #restoreBtn {
-	position: absolute;
-	bottom: 10px;
-	left: 10px;
-	opacity: 0.8;
+  position: absolute;
+  bottom: 10px;
+  left: 10px;
+  opacity: 0.8;
 }
 
 /************
@@ -155,19 +184,19 @@ a:focus {
 
 /* navbar */
 .navbar-static-top {
-    background-color: #38f;
-    border: 0;
+  background-color: #38f;
+  border: 0;
 }
 
 /* title */
 .navbar-static-top .navbar-brand {
-    color: #fff;
-    font-family: 'Russo One', sans-serif;
-	font-size: 24px;
+  color: #fff;
+  font-family: 'Russo One', sans-serif;
+  font-size: 24px;
 }
 
 #username:hover {
-	cursor: pointer;
+  cursor: pointer;
 }
 
 
@@ -175,316 +204,387 @@ a:focus {
 * =SidePane
 *************/
 #sidePane {
-	position: fixed;
-	top: 50px;
-	left: 0;
-	bottom: 0;
-	background-color: #F9F9F9;
-	color: #555;
-	text-align: center;
-	overflow: auto;
-	overflow-x: hidden;
-	width: 25%;
+  position: fixed;
+  top: 50px;
+  left: 0;
+  bottom: 0;
+  background-color: #F9F9F9;
+  color: #555;
+  text-align: center;
+  overflow: auto;
+  overflow-x: hidden;
+  width: 25%;
+  z-index: 1;
 }
 
 .subjectMeta {
-	text-align: center;
-	padding: 5px;
-	font-size: 24px;
-	font-weight: 600;
-	color: #FFF;
-	background: #2666BF;
+  text-align: center;
+  padding: 5px;
+  font-size: 24px;
+  font-weight: 600;
+  color: #FFF;
+  background: #2666BF;
 }
 
 .statisticsList {
-    width: 100%;
-    display: table;
-    table-layout: fixed;
-    padding: 0;
+  width: 100%;
+  display: table;
+  table-layout: fixed;
+  padding: 0;
+  margin-bottom: 5px;
 }
 
 .statisticsList li {
-    display: table-cell;
-    text-align: center
+  display: table-cell;
+  text-align: center
 }
 
-#statisticsInfo,
-#socialStatisticsInfo {
-	color: #fff;
-	font-weight: 600;
+#statisticsInfo, #socialStatisticsInfo {
+  color: #fff;
+  font-weight: 600;
 }
 
-#statisticsLabel {
-	padding: 5px 5px 1px 5px;
+.statisticsLabel {
+  font-size: 18px;
+  margin-top: 5px;
+  margin-bottom: 1px;
 }
 
-#nPlanned {
-    background-color: #993434;
+#nPlanned{
+  background-color: #993434;
 }
 
-#nStudying {
-    background-color: #3083B1;
+#nStudying{
+  background-color: #3083B1;
 }
 
-#nCompleted {
-    background-color: #41923A;
+#nCompleted{
+  background-color: #41923A;
 }
 
-#nBookmarked {
-    background-color: #343A41;
+#nBookmarked{
+  background-color: #343A41;
 }
 
-#nSocialPlanned {
-    background-color: #D15555;
+#nSocialPlanned{
+  background-color: #D15555;
 }
 
-#nSocialStudying {
-    background-color: #5AADDB;
+#nSocialStudying{
+  background-color: #5AADDB;
 }
 
-#nSocialCompleted {
-    background-color: #6DC765;
+#nSocialCompleted{
+  background-color: #6DC765;
 }
 
-#nSocialBookmarked {
-    background-color: #556270;
+#nSocialBookmarked{
+  background-color: #556270;
 }
-
 
 #selectedSubject {
-	background-color: #194480;
-	color: white;
-	padding: 30px 0;
+  background-color: #194480;
+  color: white;
+  padding: 30px 0;
 }
 
 #selectedName {
-	font-weight: 600;
-	padding: 5px 10px;
-	margin-bottom: 0;
+  font-weight: 600;
+  padding: 5px 10px;
+  margin-bottom: 0;
 }
 
 #selectedCode {
-	font-weight: 700;
-	padding: 5px 10px;
-	font-family: "Ubuntu", sans-serif;
+  font-weight: 700;
+  padding: 5px 10px;
+  font-family: "Ubuntu", sans-serif;
 }
 
 .SubjectTable .row {
-	border-bottom: 1px dotted #000;
-	margin: 0;
+  border-bottom: 1px dotted #000;
+  margin: 0;
 }
 
 .subjectDetailHeading {
-	text-align: center;
-	padding: 5px;
-	font-size: 24px;
-	font-weight: 600;
-	color: #FFF;
-	background: #2666BF;
+  text-align: center;
+  padding: 5px;
+  font-size: 24px;
+  font-weight: 600;
+  color: #FFF;
+  background: #2666BF;
 }
 
 .subjectDetail {
-	text-align: left;
-	padding: 20px;
-	margin: 0;
+  text-align: left;
+  padding: 20px;
+  margin: 0;
 }
 
 .subjectDetail ul,
 .subjectDetail ol {
-	padding-left: 20px;
+  padding-left: 20px;
 }
 
 .SetDescription {
-	font-weight: bold;
-	margin: 10px 0;
+  font-weight: bold;
+  margin: 10px 0;
 }
 
 ul.pageNav
 {
-    list-style-type: none;
+  list-style-type: none;
 }
 
 #subjectAction {
-	margin: 5px 0;
+  margin: 5px 0;
 }
 
 .sidePaneBtnWrapper {
-	position: relative;
-	height: 34px;
-	margin: 5px 0;
+  margin: 10px 15px;
+  text-align: center;
 }
 
+.graphActions {
+  margin: 10px 0;
+  padding-left: 30px;
+}
+
+@media (max-width: 1730px) {
+  .sidePaneBtnWrapper {
+    margin: 10px 15px;
+    text-align: center;
+  }
+}
 /************
 * =Search
 *************/
 #search {
-	width: 450px;
-	height: 50px;
-	position: fixed;
-	top: 0;
-	left: 0;
-	right: 0;
-	margin: auto;
+  width: 450px;
+  height: 50px;
+  position: fixed;
+  top: 0;
+  left: 0;
+  right: 0;
+  margin: auto;
 }
 
 #searchInput, #searchBtn {
-	height: 30px;
-	margin-top: 10px;
-	vertical-align: bottom;
-	float: left;
-	border: 1px #E1E1E1;
+  height: 30px;
+  margin-top: 10px;
+  vertical-align: bottom;
+  float: left;
+  border: 1px #E1E1E1;
 }
 
 #searchInput {
-	width: 420px;
-	border-bottom-left-radius: 4px;
-	border-top-left-radius: 4px;
-	border-right-width: 0;
-	text-indent: 5px;
+  width: 420px;
+  border-bottom-left-radius: 4px;
+  border-top-left-radius: 4px;
+  border-right-width: 0;
+  text-indent: 5px;
 }
 
 #searchBtn {
-	width: 30px;
-	padding: 0;
-	border-radius: 0;
-	border-bottom-right-radius: 4px;
-	border-top-right-radius: 4px;
-	border-left-width: 0;
+  width: 30px;
+  padding: 0;
+  border-radius: 0;
+  border-bottom-right-radius: 4px;
+  border-top-right-radius: 4px;
+  border-left-width: 0;
 }
 
 #searchBtn:hover {
-	background-color: white;
+  background-color: white;
 }
 
 #searchResult {
-	border: 1px solid #ccc;
-	border-color: rgba(0, 0, 0, .15);
-	border-radius: 4px;
-	box-shadow: 0 4px 6px 2px rgba(0, 0, 0, .10);
-	background-color: white;
-	position: fixed;
-	width: 450px;
-	max-height: 600px;
-	top: 40px;
-	right: 0;
-	left: 0;
-	color: #333;
-	overflow-y: auto;
-	margin: auto;
+  border: 1px solid #ccc;
+  border-color: rgba(0, 0, 0, .15);
+  border-radius: 4px;
+  box-shadow: 0 4px 6px 2px rgba(0, 0, 0, .10);
+  background-color: white;
+  position: fixed;
+  width: 450px;
+  max-height: 600px;
+  top: 40px;
+  right: 0;
+  left: 0;
+  color: #333;
+  overflow-y: auto;
+  margin: auto;
 }
 
 #searchResult table {
-	width: 100%;
-	border-collapse: collapse;
+  width: 100%;
+  border-collapse: collapse;
 }
 
 #searchResult tr {
-	height: 25px;
-	cursor: pointer;
+  height: 25px;
+  cursor: pointer;
 }
 
 #searchResult .highlight {
-	color: white;
-	background-color: #194480;
+  color: white;
+  background-color: #194480;
 }
 
 #searchResult tr:hover {
-	color: white;
-	background-color: #194480;
+  color: white;
+  background-color: #194480;
 }
 
 #searchResult td {
-	text-align: center;
+  text-align: center;
 }
 
 #cover {
-	position: fixed;
-	top: 0;
-	bottom: 0;
-	left: 0;
-	right: 0;
-	cursor: pointer;
+  position: fixed;
+  top: 0;
+  bottom: 0;
+  left: 0;
+  right: 0;
+  cursor: pointer;
 }
 
 /***********
 * =Header Right
 ************/
 #username {
-    background-color: #38f;
-	font-size: 20px;
-    color: #fff;
+  background-color: #38f;
+  font-size: 20px;
+  color: #fff;
 }
 
 .login {
-    font-size: 14px;
-    background-color: #38f;
-    color: #fff;
+  font-size: 14px;
+  background-color: #38f;
+  color: #fff;
+}
+
+#login-button {
+  color: #fff;
+  background-color: #38f;
+  cursor: pointer;
+  font-size: 18px;
+}
+
+#login-signup {
+  border-color: rgba(0, 0, 0, .15);
+  border-radius: 0 0 4px 4px;
+  box-shadow: 0 4px 6px 2px rgba(0, 0, 0, .10);
+  background-color: #194480;
+  position: fixed;
+  top: 50px;
+  right: 100px;
+  height: auto;
+  width: 500px;
+  padding: 15px 15px 0 15px;
+  color: #fff;
+}
+
+.remember-forgot-section {
+  width: 94%;
+  text-align: left;
+  margin: 8px auto;
+  font-size: 10px;
+  padding-top: 5px;
+}
+
+.forgot {
+  float: right;
+  margin-top: 2px;
+}
+
+#login-form, #signup-form {
+  margin-bottom: 15px;
+}
+
+.fb {
+  background: url('/static/img/fb_200.png') no-repeat center top;
+  box-shadow: 2px 2px 8px rgba(0, 0, 0, .7);
+  border-radius: 5px;
+  width: 203px;
+  height: 34px;
+  overflow: hidden;
 }
 
 #feedback-button {
-	color: #fff;
-    background-color: #38f;
-	cursor: pointer;
-    font-size: 18px;
+  color: #fff;
+  background-color: #38f;
+  cursor: pointer;
+  font-size: 18px;
+}
+
+.form-control {
+  margin-bottom: 5px;
+}
+
+#login-label {
+  font-weight: bold;
+  float: right;
+  padding-bottom: 12px;
+  padding-top: 7px;
+  padding-right: 30px;
+}
+
+#signup-label {
+  font-weight: bold;
+  margin-bottom: 14px;
 }
 
 #feedback-form {
-	border-color: rgba(0, 0, 0, .15);
-	border-top-right-radius: 0;
-	border-top-left-radius: 0;
-	border-bottom-right-radius: 4px;
-	border-bottom-left-radius: 4px;
-	box-shadow: 0 4px 6px 2px rgba(0, 0, 0, .10);
-	background-color: #194480;
-	position: fixed;
-	top: 50px;
-	right: 0;
-	height: auto;
-	width: 500px;
-	padding: 15px 15px 0 15px;
-	color: #fff;
+  border-color: rgba(0, 0, 0, .15);
+  border-top-right-radius: 0;
+  border-top-left-radius: 0;
+  border-bottom-right-radius: 4px;
+  border-bottom-left-radius: 4px;
+  box-shadow: 0 4px 6px 2px rgba(0, 0, 0, .10);
+  background-color: #194480;
+  position: fixed;
+  top: 50px;
+  right: 0;
+  height: auto;
+  width: 500px;
+  padding: 15px 15px 0 15px;
+  color: #fff;
 }
 
 #feedback-message {
-	resize: vertical;
-	height: 150px;
+  resize: vertical;
+  height: 150px;
 }
 
 .share-button {
-	display: block;
-	padding: 0 20px;
-	height: 50px;
-	line-height: 50px;
-	color: #fff;
-	font-size: 1.8rem;
-	font-family: 'Russo One', sans-serif;
+  display: block;
+  padding: 0 20px;
+  height: 50px;
+  line-height: 50px;
+  color: #fff;
+  font-size: 1.8rem;
+  font-family: 'Russo One', sans-serif;
 }
 
 .share-button:hover {
-	color: #fff;
-	text-shadow: 0 0 7px #000;
+  color: #fff;
+  text-shadow: 0 0 7px #000;
 }
 
 #share-facebook {
-	background-color: #6680BE;
+  background-color: #6680BE;
 }
 
 #share-twitter {
-	background-color: #6FC6FF;
+  background-color: #6FC6FF;
 }
 
 #share-google {
-	background-color: #ED6250;
+  background-color: #ED6250;
 }
 
 /***********
 * =TypeSwitcher
 ************/
-#typeSwitcher {
-	position: fixed;
-	right: 20px;
-	bottom: 20px;
-}
 
 /***********
 * =PrerequisitesDetailTable
@@ -492,74 +592,106 @@ ul.pageNav
 .row > .SubjectTitle,
 .row > .SubjectSemester,
 .row > .SubjectPoints {
-	float: left;
+  float: left;
 }
 
 .SubjectTitle {
-	width: 40%;
+  width: 40%;
 }
 
 .SubjectSemester {
-	width: 45%;
+  width: 45%;
 }
 
 .SubjectPoints {
-	width: 15%;
+  width: 15%;
 }
 
 .header {
-	background-color: #eee;
-	font-weight: bold;
+  background-color: #eee;
+  font-weight: bold;
 }
 
 /***********
 * =Graph Legend
 ************/
 #legend {
-	right: 10px;
-	top: 60px;
-	width: 25px;
-	height: 25px;
-	position: fixed;
-	background-color: rgba(200, 200, 200, 0.7);
-	border-radius: 5px;
+  right: 10px;
+  top: 60px;
+  width: 25px;
+  height: 25px;
+  position: fixed;
+  background-color: rgba(200, 200, 200, 0.7);
+  border-radius: 5px;
 }
 
 #graphLegendSVG {
-	position: absolute;
-	top: 5px;
-	left: 5px;
+  position: absolute;
+  top: 5px;
+  left: 5px;
 }
 
 #legendOpenIcon,
 #legendCloseIcon {
-	position: absolute;
-	top: 5px;
-	right: 5px;
-	padding: 1px;
-	cursor: pointer;
+  position: absolute;
+  top: 5px;
+  right: 5px;
+  padding: 1px;
+  cursor: pointer;
 }
 
 /***********
-* =Subject Adder
+* =Subject Action
 ************/
 #subjectAdder {
-	position: relative;
+  position: relative;
 }
 
 #subjectAdderSection {
-	margin-top: 5px;
-	padding: 10px;
-	top: 27px;
-}
-
-#subjectAdderAddBtn {
-	position: absolute;
-	left: 50%;
-	top: 0;
-	margin-left: -46px;
+  position: fixed;
+  left: 50%;
+  margin-left: -320px;
+  padding: 10px;
+  top: 25%;
+  width: 640px;
+  background: #fff;
+  box-shadow: 0 4px 6px 2px rgba(0, 0, 0, .10);
+  border-radius: 5px;
 }
 
 .error-label {
-	margin-top: 7px;
+  margin-top: 7px;
+}
+
+#subjDelConfirm {
+  position: fixed;
+  width: 400px;
+  left: 50%;
+  top: 25%;
+  margin-left: -200px;
+  box-shadow: 0 4px 6px 2px rgba(0, 0, 0, .10);
+  padding: 20px 40px;
+  background: #fff;
+}
+
+#subjDelConfirm .close-popup {
+  position: absolute;
+  right: 0;
+  top: 0;
+  margin: 10px 10px;
+  font-size: 16px;
+}
+
+#subjDelConfirm .close-popup:hover {
+  cursor: pointer;
+}
+
+#subjectAdderSection .add-heading {
+  padding: 5px 0 10px;
+  border-bottom: #ccc 1px solid;
+  margin-bottom: 15px;
+}
+
+#subjectAdderSection .add-heading .add-heading-subj {
+  font-weight: 600;
 }
