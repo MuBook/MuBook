@@ -3,14 +3,14 @@ from django.conf.urls import patterns, include, url
 # Uncomment the next two lines to enable the admin:
 from django.contrib import admin
 from django.contrib.auth.views import logout
-from django.views.generic.simple import redirect_to
+from django.views.generic import RedirectView
 admin.autodiscover()
 
 urlpatterns = patterns('',
     url(r'^accounts/logout/$', logout, {'next_page': '/'}),
     url(r'^accounts/', include('allauth.urls')),
     
-    url(r'^(?P<path>(?:prereq|postreq)/.*)', redirect_to, { 'url': '/explorer/%(path)' }),
+    url(r'^(?P<path>(?:prereq|postreq)/.*)', RedirectView.as_view(url='/explorer/%(path)')),
 )
 
 urlpatterns += patterns('xbook.front.views',
