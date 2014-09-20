@@ -268,7 +268,7 @@ def get_user_subject(request, username, pretty=False):
         nodes.append(nodeinfo)
 
         parent_index += 1
-        relations = SubjectPrereq.objects.filter(**{ "subject__code": subj.code })
+        relations = SubjectPrereq.objects.filter(subject__code=subj.code)
 
         for relation in relations:
             compare_index = 0
