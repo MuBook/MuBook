@@ -3,16 +3,19 @@ from django.conf.urls import patterns, include, url
 # Uncomment the next two lines to enable the admin:
 from django.contrib import admin
 from django.contrib.auth.views import logout
+from django.views.generic.simple import redirect_to
 admin.autodiscover()
 
 urlpatterns = patterns('',
     url(r'^accounts/logout/$', logout, {'next_page': '/'}),
     url(r'^accounts/', include('allauth.urls')),
+    
+    url(r'^(?P<path>(?:prereq|postreq)/.*)', redirect_to, { 'url': '/explorer/%(path)' }),
 )
 
 urlpatterns += patterns('xbook.front.views',
     url(r'^$', 'index', name='home'),
-    url(r'^explorer/.*$', 'explorer', name='explorer'),
+    url(r'^explorer/', 'explorer', name='explorer'),
     url(r'^ajax/', include('xbook.ajax.urls')),
 
     url(r'^profile/selected_subjects/add/$', 'add_subject'),
@@ -32,8 +35,6 @@ urlpatterns += patterns('xbook.front.views',
     # url(r'^admin/doc/', include('django.contrib.admindocs.urls')),
 
     url(r'^feedback$', 'send_feedback'),
-    
-    url(r'(?:prereq|postreq)/.*', 'index'),
 
     url(r'^(.*?)$', 'error404'),
 )
