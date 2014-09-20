@@ -444,7 +444,7 @@ mubook.controller("SubjectAddCtrl", function SubjectAddCtrl($scope, $timeout, $r
     $.ajax({
       headers: { "X-CSRFToken": docCookies.getItem("csrftoken") },
       type: 'POST',
-      url: 'profile/selected_subjects/add/',
+      url: '/profile/selected_subjects/add/',
       data: payload
     })
     .done(function(message) {
@@ -462,7 +462,7 @@ mubook.controller("SubjectAddCtrl", function SubjectAddCtrl($scope, $timeout, $r
   };
 
   $scope.deleteSubject = function(e) {
-    var url = 'profile/selected_subjects/delete/' + Global.selected + '/';
+    var url = '/profile/selected_subjects/delete/' + Global.selected + '/';
     $.ajax({
       headers: { "X-CSRFToken": docCookies.getItem("csrftoken") },
       type: 'POST',
