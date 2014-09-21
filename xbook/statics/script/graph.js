@@ -308,10 +308,12 @@ function showStatistics(d) {
         socialStatisticItems[i].appendChild(statTextNode);
     }
 
-    insertFriendInfo('friendsInfoCompleted', d.friends_info_completed);
-    insertFriendInfo('friendsInfoStudying', d.friends_info_studying);
-    insertFriendInfo('friendsInfoPlanned', d.friends_info_planned);
-    insertFriendInfo('friendsInfoBookmarked', d.friends_info_bookmarked);
+    if (socialStatisticItems.length > 0) {
+        insertFriendInfo('friendsInfoCompleted', d.friends_info_completed);
+        insertFriendInfo('friendsInfoStudying', d.friends_info_studying);
+        insertFriendInfo('friendsInfoPlanned', d.friends_info_planned);
+        insertFriendInfo('friendsInfoBookmarked', d.friends_info_bookmarked);
+    }
 }
 
 function showNodeDetails(d, selectedName, selectedCode) {
