@@ -278,6 +278,10 @@ mubook.controller("GraphTypeCtrl", function GraphTypeCtrl($scope, $location, Glo
   $scope.prereq = function prereq() {
     return Global.reqType == "prereq";
   };
+
+  $scope.onGraphPage = function() {
+    return $location.path().search("^/(prereq|postreq)/") != -1;
+  }
 });
 
 mubook.controller("FeedbackCtrl", function FeedbackCtrl($scope, $http, $timeout, Global, PopupControl) {
