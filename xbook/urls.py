@@ -9,7 +9,7 @@ admin.autodiscover()
 urlpatterns = patterns('',
     url(r'^accounts/logout/$', logout, {'next_page': '/'}),
     url(r'^accounts/', include('allauth.urls')),
-    
+
     url(r'^(?P<path>(?:prereq|postreq)/.*)', RedirectView.as_view(url='/explorer/%(path)s')),
 )
 
@@ -22,7 +22,7 @@ urlpatterns += patterns('xbook.front.views',
     url(r'^profile/selected_subjects/delete/(?P<subject>.*?)/$', 'delete_subject'),
     url(r'^profile/(?P<username>.*?)/$', 'user_profile', name='user_profile'),
 
-    url(r'^contact_us/$', 'contact_us', name='contact_us'),
+    url(r'^contact-us/$', 'contact_us', name='contact_us'),
     url(r'^legal/termsofservice$', 'legal_tos', name='legal_tos'),
     url(r'^legal/privacypolicy$', 'legal_pp', name='legal_pp'),
 
