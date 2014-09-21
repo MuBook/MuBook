@@ -63,9 +63,11 @@
             </div>
         </div>
         {% endif %}
-        <div id="typeSwitcher" class="graphActions btn-group" ng-controller="GraphTypeCtrl">
-            <span class="btn btn-default" ng-class="{active: prereq()}" ng-cloak ng-click="toPre()">Prerequisites</span>
-            <span class="btn btn-default" ng-class="{active: !prereq()}" ng-cloak ng-click="toPost()">Postrequisites</span>
+        <div id="typeSwitcher" class="graphActions" ng-controller="GraphTypeCtrl">
+            <div ng-show="isVisible()" class="btn-group">
+                <span class="btn btn-default" ng-class="{active: prereq()}" ng-cloak ng-click="toPre()">Prerequisites</span>
+                <span class="btn btn-default" ng-class="{active: !prereq()}" ng-cloak ng-click="toPost()">Postrequisites</span>
+            </div>
         </div>
 
 
