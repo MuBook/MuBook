@@ -361,12 +361,6 @@ ul.pageNav
   margin: 10px 0;
 }
 
-@media (max-width: 1730px) {
-  .sidePaneBtnWrapper {
-    margin: 10px 15px;
-    text-align: center;
-  }
-}
 /************
 * =Search
 *************/
