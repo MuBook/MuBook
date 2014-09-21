@@ -280,6 +280,7 @@ function insertFriendInfo(elemId, data) {
         var friendname = document.createTextNode(data[i].fullname);
         friendLink.appendChild(friendname);
         friendInfo.appendChild(friendLink);
+        friendsInfoList.innerHTML = '';
         friendsInfoList.appendChild(friendInfo);
     }
 }
