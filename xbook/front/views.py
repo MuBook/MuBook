@@ -18,10 +18,6 @@ INDEX_PATH = os.path.join(
     'index.html'
 )
 
-CONTACT_US = 1
-PRIVACY_POLICY = 2
-TERMS_SERVICE = 3
-
 
 def index(request):
     return redirect('/explorer/')
@@ -106,39 +102,14 @@ def delete_subject(request, subject):
 
     return HttpResponse("Successfully deleted subject")
 
+
 def contact_us(request):
-    bold = make_bold(CONTACT_US)
-    context = RequestContext(request, {
-        "bold": bold
-    })
-    return render_to_response("legal_contactus.html", context)
+    return render(request, "legal_contactus.html")
+
 
 def legal_tos(request):
-    bold = make_bold(TERMS_SERVICE)
-    context = RequestContext(request, {
-        "bold": bold
-    })
-    return render_to_response("legal_tos.html", context)
+    return render(request, "legal_tos.html")
+
 
 def legal_pp(request):
-    bold = make_bold(PRIVACY_POLICY)
-    context = RequestContext(request, {
-        "bold": bold
-    })
-    return render_to_response("legal_pp.html", context)
-
-def make_bold(page):
-    cu = ""
-    pp = ""
-    ts = ""
-    if page == CONTACT_US:
-        cu = "active"
-    elif page == PRIVACY_POLICY:
-        pp = "active"
-    elif page == TERMS_SERVICE:
-        ts = "active"
-    return {
-        "contact_us": cu,
-        "legal_pp": pp,
-        "legal_tos": ts
-    }
+    return render(request, "legal_pp.html")
