@@ -314,7 +314,7 @@ h4.socialPopupHeading {
 .socialInfoPopup {
   position: fixed;
   left: 50%;
-  margin-left: -320px;
+  margin-left: -220px;
   padding: 10px;
   top: 25%;
   width: 440px;
