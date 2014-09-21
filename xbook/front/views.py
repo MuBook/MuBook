@@ -106,39 +106,39 @@ def delete_subject(request, subject):
 
     return HttpResponse("Successfully deleted subject")
 
-def contact_us(request):
+def site_general(request):
     bold = make_bold(CONTACT_US)
     context = RequestContext(request, {
         "bold": bold
     })
-    return render_to_response("legal_contactus.html", context)
+    return render_to_response("site_general.html", context)
 
-def legal_tos(request):
+def site_tos(request):
     bold = make_bold(TERMS_SERVICE)
     context = RequestContext(request, {
         "bold": bold
     })
-    return render_to_response("legal_tos.html", context)
+    return render_to_response("site_tos.html", context)
 
-def legal_pp(request):
+def site_pp(request):
     bold = make_bold(PRIVACY_POLICY)
     context = RequestContext(request, {
         "bold": bold
     })
-    return render_to_response("legal_pp.html", context)
+    return render_to_response("site_pp.html", context)
 
 def make_bold(page):
-    cu = ""
-    pp = ""
-    ts = ""
+    general = ""
+    privacy_policy = ""
+    terms_of_service = ""
     if page == CONTACT_US:
-        cu = "active"
+        general = "active"
     elif page == PRIVACY_POLICY:
-        pp = "active"
+        privacy_policy = "active"
     elif page == TERMS_SERVICE:
-        ts = "active"
+        terms_of_service = "active"
     return {
-        "contact_us": cu,
-        "legal_pp": pp,
-        "legal_tos": ts
+        "site_general": general,
+        "site_pp": privacy_policy,
+        "site_tos": terms_of_service
     }

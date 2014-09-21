@@ -1,26 +1,26 @@
 /*
     General
  */
-#legal {
+#site {
     margin-top: -20px;
     font-family: arial, sans-serif;
 }
 
-.legal-nav,
-.legal-body {
+.site-nav,
+.site-body {
     width: 100%;
 }
 
-.legal-nav-content,
-.legal-body-content {
+.site-nav-content,
+.site-body-content {
     width: 66.66666667%;
 }
 
 /*
-    Legal Navbar
+    Site Navbar
  */
 
-.legal-nav {
+.site-nav {
     text-align: center;
     border-top: #2A83FF 1px solid;
     border-bottom: #2A83FF 1px solid;
@@ -28,17 +28,17 @@
     color: #fff;
 }
 
-.legal-nav-content {
+.site-nav-content {
     margin: auto;
 }
 
-.legal-nav ul {
+.site-nav ul {
     padding: 10px 15px;
     margin: 0;
     text-align: left;
 }
 
-.legal-nav li {
+.site-nav li {
     list-style: none;
     display: inline-block;
     margin-right: 45px;
@@ -46,28 +46,28 @@
     line-height: 1.43em;
 }
 
-.legal-nav a:hover {
+.site-nav a:hover {
     color: #fff;
     text-decoration: underline;
 }
 
-.legal-nav-content .active {
+.site-nav-content .active {
     font-weight: bold;
 }
 
 /*
     Legal Body
  */
-.legal-body-content h2 {
+.site-body-content h2 {
     padding-bottom: 20px;
 }
 
-.legal-body-content h3 {
+.site-body-content h3 {
     margin-top: 35px;
     margin-bottom: 15px;
     font-size: 20px;
 }
-.legal-body-content {
+.site-body-content {
     margin: 20px auto;
     padding: 15px;
 }

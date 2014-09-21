@@ -22,9 +22,9 @@ urlpatterns += patterns('xbook.front.views',
     url(r'^profile/selected_subjects/delete/(?P<subject>.*?)/$', 'delete_subject'),
     url(r'^profile/(?P<username>.*?)/$', 'user_profile', name='user_profile'),
 
-    url(r'^contact_us/$', 'contact_us', name='contact_us'),
-    url(r'^legal/termsofservice$', 'legal_tos', name='legal_tos'),
-    url(r'^legal/privacypolicy$', 'legal_pp', name='legal_pp'),
+    url(r'^site/general$', 'site_general', name='site_general'),
+    url(r'^site/termsofservice$', 'site_tos', name='site_tos'),
+    url(r'^site/privacypolicy$', 'site_pp', name='site_pp'),
 
     # Uncomment the next line to enable the admin:
     url(r'^admin/?', include(admin.site.urls)),
