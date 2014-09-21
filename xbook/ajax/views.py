@@ -232,7 +232,6 @@ def attach_statistics(nodeinfo, subj):
                      "num_bookmarked": num_bookmarked})
 
 
-@authenticate_user
 def get_user_subject(request, username, pretty=False):
     if not len(User.objects.filter(username=username)):
         return Ajax(
