@@ -62,7 +62,17 @@
     padding-bottom: 20px;
 }
 
+.legal-body-content h3 {
+    margin-top: 35px;
+    margin-bottom: 15px;
+    font-size: 20px;
+}
 .legal-body-content {
     margin: 20px auto;
     padding: 15px;
+}
+
+.modified {
+    font-style: italic;
+    padding: 10px 0px;
 }
