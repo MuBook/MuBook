@@ -452,7 +452,6 @@ mubook.controller("SubjectAddCtrl", function SubjectAddCtrl($scope, $timeout, $r
       data: payload
     })
     .done(function(message) {
-      alert(message);
       $route.reload();
     })
     .fail(function(message) {
@@ -473,7 +472,6 @@ mubook.controller("SubjectAddCtrl", function SubjectAddCtrl($scope, $timeout, $r
       url: url
     })
     .done(function(message) {
-      alert(message);
       $route.reload();
     })
     .fail(function(message) {
