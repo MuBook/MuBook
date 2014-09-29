@@ -1,0 +1,22 @@
+.content {
+    width: 480px;
+    margin: auto;
+    margin-top: 120px;
+    font-family: arial, sans-serif;
+}
+
+.logo {
+    font-weight: bold;
+    font-size: 36px;
+    color: #aaa;
+    text-decoration: none;
+}
+
+.logo:hover {
+    color: #aaa;
+    text-decoration: none;
+}
+
+p {
+    margin-top: 48px;
+}
