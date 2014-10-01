@@ -275,10 +275,21 @@ function insertFriendInfo(elemId, data) {
     for (var i = 0; i < data.length; ++i) {
         var friendInfo = document.createElement('li');
         friendInfo.setAttribute("class", "friendInfo");
+
+        var friendAvatar = document.createElement('a');
+        friendAvatar.href = data[i].fb_url;
+
+        var img = document.createElement('img');
+        img.src = data[i].avatar_url;
+        img.setAttribute("class", "avatar");
+
         var friendLink = document.createElement('a');
-        friendLink.setAttribute("href", data[i].fb_url);
+        friendLink.href = data[i].fb_url;
         var friendname = document.createTextNode(data[i].fullname);
+
         friendLink.appendChild(friendname);
+        friendAvatar.appendChild(img)
+        friendInfo.appendChild(friendAvatar);
         friendInfo.appendChild(friendLink);
         friendsInfoList.innerHTML = '';
         friendsInfoList.appendChild(friendInfo);
