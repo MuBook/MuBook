@@ -272,6 +272,8 @@ function makeRestoreButton() {
 
 function insertFriendInfo(elemId, data) {
     var friendsInfoList = document.getElementById(elemId);
+    friendsInfoList.innerHTML = '';
+
     for (var i = 0; i < data.length; ++i) {
         var friendInfo = document.createElement('li');
         friendInfo.setAttribute("class", "friendInfo");
@@ -291,7 +293,6 @@ function insertFriendInfo(elemId, data) {
         friendAvatar.appendChild(img)
         friendInfo.appendChild(friendAvatar);
         friendInfo.appendChild(friendLink);
-        friendsInfoList.innerHTML = '';
         friendsInfoList.appendChild(friendInfo);
     }
 }
