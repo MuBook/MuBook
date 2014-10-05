@@ -69,7 +69,8 @@ def get_friends_info(local_friends_uids, subj, state):
             user = social_account.user
             friends_info.append({'fullname': user.get_full_name(),
                                  'avatar_url': social_account.get_avatar_url(),
-                                 'fb_url': social_account.get_profile_url()})
+                                 'fb_url': social_account.get_profile_url(),
+                                 'username': user.username})
     return friends_info
 
 

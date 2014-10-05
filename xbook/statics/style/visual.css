@@ -294,13 +294,39 @@ ul.friendsInfo
 {
     list-style-type: none;
     padding-left: 0;
+    padding-top: 14px;
+    text-align: left;
+    margin: 0;
+}
+
+a.profileLink {
+    float: right;
+    font-size: 13px;
+    margin-top: 15.5px;
+}
+
+h4.socialPopupHeading {
+    text-align: left;
+    font-size: 14px;
+    color: #141823;
+}
+
+.socialInfoPopup {
+  position: fixed;
+  left: 50%;
+  margin-left: -320px;
+  padding: 10px;
+  top: 25%;
+  width: 440px;
+  background: #fff;
+  box-shadow: 0 4px 6px 2px rgba(0, 0, 0, .10);
+  border-radius: 5px;
 }
 
 .avatar {
-    width: 40px;
-    height: 40px;
+    width: 50px;
+    height: 50px;
     margin-right: 8px;
-    border: 1px solid rgba(0, 0, 0, .10);
 }
 
 #selectedSubject {
