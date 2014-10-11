@@ -215,7 +215,7 @@ mubook.controller("GraphCtrl", function GraphCtrl($scope, $routeParams, $locatio
         $selectedCode = $("#selectedCode");
 
     if (!hasData) {
-      $selectedName.text("404. Page does not exist");
+      $selectedName.text("Oops!");
       $selectedCode.text("The subject " + $routeParams.subjectCode + " does not exist.");
     }
   };
@@ -367,7 +367,7 @@ mubook.controller("UserCtrl", function UserCtrl($scope, $timeout, $location, $ro
         $selectedCode = $("#selectedCode");
 
     if (!hasData) {
-      $selectedName.text("404. Page does not exist");
+      $selectedName.text("Oops!");
       $selectedCode.text("The user " + $routeParams.username + " does not exist.");
     }
   }
