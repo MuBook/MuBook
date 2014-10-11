@@ -90,10 +90,22 @@
                         <li class="socialStatisticsItem" id="nSocialBookmarked" ng-click="togglePopupBookmarked($event)"></li>
                     </ul>
 
-                    <ul id="friendsInfoCompleted" class="friendsInfo" ng-show="isVisibleCompleted()"></ul>
-                    <ul id="friendsInfoStudying" class="friendsInfo" ng-show="isVisibleStudying()"></ul>
-                    <ul id="friendsInfoPlanned" class="friendsInfo" ng-show="isVisiblePlanned()"></ul>
-                    <ul id="friendsInfoBookmarked" class="friendsInfo" ng-show="isVisibleBookmarked()"></ul>
+                    <div id="socialCompleted" class="socialInfoPopup" ng-show="isVisibleCompleted()">
+                        <h4 class="socialPopupHeading">Friends completed this subject</h4>
+                        <ul id="friendsInfoCompleted" class="friendsInfo"></ul>
+                    </div>
+                    <div id="socialStudying" class="socialInfoPopup" ng-show="isVisibleStudying()">
+                        <h4 class="socialPopupHeading">Friends studying this subject</h4>
+                        <ul id="friendsInfoStudying" class="friendsInfo"></ul>
+                    </div>
+                    <div id="socialPlanned" class="socialInfoPopup" ng-show="isVisiblePlanned()">
+                        <h4 class="socialPopupHeading">Friends planned this subject</h4>
+                        <ul id="friendsInfoPlanned" class="friendsInfo"></ul>
+                    </div>
+                    <div id="socialBookmarked" class="socialInfoPopup" ng-show="isVisibleBookmarked()">
+                        <h4 class="socialPopupHeading">Friends bookmarked this subject</h4>
+                        <ul id="friendsInfoBookmarked" class="friendsInfo"></ul>
+                    </div>
                 </div>
             {% endif %}
         </div>

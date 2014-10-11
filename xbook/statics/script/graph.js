@@ -271,28 +271,40 @@ function makeRestoreButton() {
 }
 
 function insertFriendInfo(elemId, data) {
-    var friendsInfoList = document.getElementById(elemId);
+    var socialPopup = $(elemId);
+    socialPopup.empty();
+
     for (var i = 0; i < data.length; ++i) {
-        var friendInfo = document.createElement('li');
-        friendInfo.setAttribute("class", "friendInfo");
+        var socialInfo = $("<li class=\"socialInfo\"></li>");
 
-        var friendAvatar = document.createElement('a');
-        friendAvatar.href = data[i].fb_url;
+        var friendAvatar = $("<a/>", {
+            href: data[i].fb_url,
+            target: "_blank"
+        });
 
-        var img = document.createElement('img');
-        img.src = data[i].avatar_url;
-        img.setAttribute("class", "avatar");
+        var mubookProfileLink = $("<a/>", {
+            href: "/explorer/profile/" + data[i].username,
+            target: "_blank",
+            html: "Mubook Profile",
+            class: "profileLink"
+        });
 
-        var friendLink = document.createElement('a');
-        friendLink.href = data[i].fb_url;
-        var friendname = document.createTextNode(data[i].fullname);
+        var img = $("<img>", {
+            src: data[i].avatar_url,
+            class: "avatar"
+        });
 
-        friendLink.appendChild(friendname);
-        friendAvatar.appendChild(img)
-        friendInfo.appendChild(friendAvatar);
-        friendInfo.appendChild(friendLink);
-        friendsInfoList.innerHTML = '';
-        friendsInfoList.appendChild(friendInfo);
+        var friendLink = $("<a/>", {
+            href: data[i].fb_url,
+            target: "_blank",
+            html: data[i].fullname
+        });
+
+        friendAvatar.append(img);
+        socialInfo.append(friendAvatar);
+        socialInfo.append(friendLink);
+        socialInfo.append(mubookProfileLink);
+        socialPopup.append(socialInfo);
     }
 }
 
@@ -321,10 +333,10 @@ function showStatistics(d) {
     }
 
     if (socialStatisticItems.length > 0) {
-        insertFriendInfo('friendsInfoCompleted', d.friends_info_completed);
-        insertFriendInfo('friendsInfoStudying', d.friends_info_studying);
-        insertFriendInfo('friendsInfoPlanned', d.friends_info_planned);
-        insertFriendInfo('friendsInfoBookmarked', d.friends_info_bookmarked);
+        insertFriendInfo('#friendsInfoCompleted', d.friends_info_completed);
+        insertFriendInfo('#friendsInfoStudying', d.friends_info_studying);
+        insertFriendInfo('#friendsInfoPlanned', d.friends_info_planned);
+        insertFriendInfo('#friendsInfoBookmarked', d.friends_info_bookmarked);
     }
 }
 
