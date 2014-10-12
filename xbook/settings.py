@@ -3,6 +3,8 @@ import os
 
 import dj_database_url
 
+from getenv import env
+
 DEBUG = True
 TEMPLATE_DEBUG = DEBUG
 
@@ -16,7 +18,7 @@ ALLOWED_HOSTS = ['*']
 
 # Static asset configuration
 path = os.path
-BASE_DIR = os.path.dirname(os.path.abspath(__file__))
+BASE_DIR = path.dirname(path.abspath(__file__))
 
 DATABASES = {
     'default': {
@@ -24,14 +26,26 @@ DATABASES = {
         'NAME': 'xbook',                 # Or path to database file if using sqlite3.
 
         # The following settings are not used with sqlite3:
-        'USER': 'postgres',
-        'PASSWORD': 'pochen',
+        'USER': env('DB_USER'),
+        'PASSWORD': env('DB_PASSWORD'),
         'HOST': '',                      # Empty for localhost through domain sockets or '127.0.0.1' for localhost through TCP.
         'PORT': '',                      # Set to empty string for default.
     }
 }
-# Comment out the following line to run locally
-DATABASES['default'] = dj_database_url.config()
+
+# Environment dependent settings
+# ENV == 'production' on production server
+# ENV == 'testing' on testing server
+ENV = env('MUBOOK_RUNTIME_ENV', None)
+if ENV:
+    DATABASES['default'] = dj_database_url.config()
+else:
+    # Disable cache on local so you don't have to comment out cache decorators any more
+    CACHES = {
+        'default': {
+            'BACKEND': 'django.core.cache.backends.dummy.DummyCache',
+        }
+    }
 
 # Absolute path to the directory static files should be collected to.
 # Don't put anything in this directory yourself; store your static files
