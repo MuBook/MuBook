@@ -16,23 +16,14 @@
 	- DB_NAME: your db name in postgres
 	- DUMP_NAME: the file name of the dump file, in this case, `xdb`
 	- [download xdb.dump](https://s3-ap-southeast-2.amazonaws.com/pochen-temp/xdb.dump)
-* MANDATORY: Comment out this line in `settings.py` in the django project folder
-	- this line is for Heroku server
-	- so uncomment this line before you add/commit
-
-```python
-DATABASES['default'] = dj_database_url.config()
+* MANDATORY: create a .env file in the django project folder (`/xbook`) like below
+```
+DB_USER=your_postgres_username
+DB_PASSWORD=your_postgres_password
 ```
 
-* TRICK: `index.html` is cached
-	- if changes are made, they are not shown until you restart server
-	- when testing locally, look into `front/views.py -> index`
-	- I have comments there saying what to do
-	- don't forget to change it back, like `settings.py`
+* CACHE TRICK: should now be gone with the environment aware settings
 
-
-* Change db setting in `settings.py` to match your environment
-	- `DATABASE`, NAME, USER, PASSWORD
 * run this command `python manage.py runserver`
 	- then open browser, go to http://127.0.0.1:8000/
 
