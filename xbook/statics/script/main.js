@@ -210,6 +210,16 @@ mubook.controller("UICtrl", function UICtrl($scope, Global) {
 });
 
 mubook.controller("GraphCtrl", function GraphCtrl($scope, $routeParams, $location, Global) {
+  $scope.successCallback = function(hasData) {
+    var $selectedName = $("#selectedName"),
+        $selectedCode = $("#selectedCode");
+
+    if (!hasData) {
+      $selectedName.text("404. Page does not exist");
+      $selectedCode.text("The subject " + $routeParams.subjectCode + " does not exist.");
+    }
+  };
+
   var status = { code: $routeParams.subjectCode };
 
   switch ($routeParams.reqType) {
@@ -227,7 +237,7 @@ mubook.controller("GraphCtrl", function GraphCtrl($scope, $routeParams, $locatio
   Global.selected = Global.code;
   Global.reqType = status.reqType;
 
-  loadTree(status.reqType, $routeParams.subjectCode);
+  loadTree(status.reqType, $routeParams.subjectCode, $scope.successCallback);
 });
 
 mubook.controller("SidePaneCtrl", function SidePaneCtrl($scope) {
@@ -352,10 +362,20 @@ mubook.controller("UserCtrl", function UserCtrl($scope, $timeout, $location, $ro
     $location.path("/profile/" + username);
   };
 
+  $scope.successCallback = function(hasData) {
+    var $selectedName = $("#selectedName"),
+        $selectedCode = $("#selectedCode");
+
+    if (!hasData) {
+      $selectedName.text("404. Page does not exist");
+      $selectedCode.text("The user " + $routeParams.username + " does not exist.");
+    }
+  }
+
   if (!$routeParams.username) {
     return;
   }
-  visualizeGraph("/ajax/profile/" + $routeParams.username);
+  visualizeGraph("/ajax/profile/" + $routeParams.username, $scope.successCallback);
 });
 
 mubook.controller("SubjectAddCtrl", function SubjectAddCtrl($scope, $timeout, $route, Global, PopupControl) {
@@ -499,9 +519,9 @@ mubook.controller("SocialCtrl", function SocialCtrl($scope, PopupControl) {
 });
 
 
-function loadTree(type, code) {
+function loadTree(type, code, callback) {
   url = "/ajax/u-melbourne/" + type + "/" + code;
-  visualizeGraph(url);
+  visualizeGraph(url, callback);
   docCookies.setItem("subjCode", code);
 }
 

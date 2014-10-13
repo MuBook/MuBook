@@ -233,16 +233,16 @@ def attach_statistics(nodeinfo, subj):
 
 
 def get_user_subject(request, username, pretty=False):
+    graph = { "nodes": [], "links": [] }
+
     if not len(User.objects.filter(username=username)):
         return Ajax(
-            ajaxCallback(request, json.dumps({})),
+            ajaxCallback(request, json.dumps(graph)),
             content_type='application/json'
         )
 
     selected_user = User.objects.filter(username=username)[0]
     user_subjects = selected_user.user_subject.all()
-
-    graph = { "nodes": [], "links": [] }
 
     add_link = lambda source, target: {"source": source, "target": target}
 

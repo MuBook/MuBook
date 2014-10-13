@@ -341,6 +341,9 @@ var subjActionSync = (function() {
   var $subjectAddBtn = $("#subjectAdderAddBtn"),
       $subjectRemoveBtn = $("#subjectAdderDelBtn");
 
+  $subjectAddBtn.addClass("hidden");
+  $subjectRemoveBtn.addClass("hidden");
+
   return function(hasCompleted) {
     if (hasCompleted) {
       $subjectAddBtn.addClass("hidden");
