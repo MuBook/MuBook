@@ -36,9 +36,7 @@ def explorer(request):
 
 
 def error404(request, path):
-    message = request.META.get('REMOTE_ADDR') + '/' + \
-              path + " is not a valid path!"
-    return HttpResponse(message)
+    return render(request, "404.html")
 
 
 def ngView(request):
