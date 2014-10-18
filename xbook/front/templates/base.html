@@ -41,7 +41,7 @@
 </head>
 
 <body>
-<nav class="navbar navbar-static-top" role="navigation" ng-controller="UICtrl">
+<nav class="navbar navbar-static-top" ng-controller="UICtrl">
     <div class="container-fluid">
         <a class="navbar-brand" href="/">µBook</a>
         {% block search-bar %}
@@ -57,7 +57,7 @@
                             {{ request.user.username }}
                         {% endif %}
                         <span class="caret"></span></a>
-                    <ul class="dropdown-menu" role="menu">
+                    <ul class="dropdown-menu">
                         {% if request.path != "/explorer/"  %}
                         <li><a href="/explorer/profile/{{ request.user.username }}" ng-controller="UserCtrl"
                                 ng-click="visualizeUserGraph('{{ request.user.username }}')">Profile</a></li>
@@ -72,7 +72,7 @@
                 <li id="login-popup" ng-controller="LoginCtrl" popup>
                     <a id="login-button" class="login" ng-click="toggleForm($event)">Log in</a>
 
-                    <div id="login-signup" role="form" ng-show="isVisible()" ng-cloak>
+                    <div id="login-signup" ng-show="isVisible()" ng-cloak>
                         <div id="login-group" class="pull-left">
                             <div id="signup-label">New user?</div>
                             <form id="signup-form" method="POST" action="{% url 'account_signup' %}">
@@ -132,7 +132,7 @@
             <li id="header-right" ng-controller="FeedbackCtrl" popup>
                 <a id="feedback-button" ng-click="toggleForm($event)">Contact</a>
 
-                <form id="feedback-form" class="form-horizontal" role="form" ng-show="isVisible()" ng-cloak
+                <form id="feedback-form" class="form-horizontal" ng-show="isVisible()" ng-cloak
                       ng-submit="sendFeedback($event)">
                     {% csrf_token %}
                     <div class="form-group">

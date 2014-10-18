@@ -17,7 +17,7 @@
             </div>
             <div id="subjectAdderSection" ng-show="isVisible()" ng-submit="addSubject($event)">
                 <h2 class="add-heading">Adding <span class="add-heading-subj" ng-bind="selected()"></span></h2>
-                <form name="subjectAdderForm" id="subjectAdderForm" class="form-horizontal" role="form">
+                <form name="subjectAdderForm" id="subjectAdderForm" class="form-horizontal">
                     {% csrf_token %}
                     <div class="form-group">
                         <label for="subjectAdderYear" class="col-sm-4 control-label">Year</label>
