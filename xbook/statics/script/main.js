@@ -1,7 +1,7 @@
-var mubook = angular.module("mubook", ["ngRoute"]);
+var mubook = angular.module("mubook", ["ngRoute", "ngCookies"]);
 
-mubook.config(["$routeProvider", "$locationProvider",
-  function($routeProvider, $locationProvider) {
+mubook.config(["$routeProvider", "$locationProvider", "$cookies",
+  function($routeProvider, $locationProvider, $cookies) {
     $locationProvider.html5Mode(true);
 
     $routeProvider
@@ -16,7 +16,7 @@ mubook.config(["$routeProvider", "$locationProvider",
         controller: "GraphCtrl"
       })
       .otherwise({
-        redirectTo: "/prereq/melbourne/" + (docCookies.getItem("subjCode") || "COMP30018")
+        redirectTo: "/prereq/melbourne/" + ($cookies.subjCode || "COMP30018")
       });
   }
 ]);
@@ -61,8 +61,15 @@ mubook.factory("Subjects", function($http) {
   return $http.get("/ajax/u-melbourne/subjectlist");
 });
 
-mubook.factory("Global", function() {
+mubook.factory("Global", function($cookies) {
+  var loadTree = function(type, code, fail) {
+    url = "/ajax/u-melbourne/" + type + "/" + code;
+    visualizeGraph(url, fail);
+    $cookies.subjCode = code;
+  };
+
   return {
+    loadTree: loadTree,
     code: "COMP30018",
     reqType: "prereq",
     selected: "COMP30018",
@@ -205,21 +212,11 @@ mubook.controller("SearchCtrl", function SearchCtrl($scope, $timeout, Subjects, 
   });
 });
 
-mubook.controller("UICtrl", function UICtrl($scope, Global) {
-  Global.code = docCookies.getItem("subjCode");
+mubook.controller("UICtrl", function UICtrl($scope, $cookies, Global) {
+  Global.code = $cookies.subjCode;
 });
 
 mubook.controller("GraphCtrl", function GraphCtrl($scope, $routeParams, $location, Global) {
-  $scope.successCallback = function(hasData) {
-    var $selectedName = $("#selectedName"),
-        $selectedCode = $("#selectedCode");
-
-    if (!hasData) {
-      $selectedName.text("Oops!");
-      $selectedCode.text("The subject " + $routeParams.subjectCode + " does not exist.");
-    }
-  };
-
   var status = { code: $routeParams.subjectCode };
 
   switch ($routeParams.reqType) {
@@ -233,18 +230,13 @@ mubook.controller("GraphCtrl", function GraphCtrl($scope, $routeParams, $locatio
       $location.path("/prereq/melbourne/COMP30018");
   }
 
-  Global.code = status.code;
-  Global.selected = Global.code;
+  Global.selected = Global.code = status.code;
   Global.reqType = status.reqType;
 
-  loadTree(status.reqType, $routeParams.subjectCode, $scope.successCallback);
+  Global.loadTree(status.reqType, $routeParams.subjectCode, fail.bind(null, "subject", $routeParams.subjectCode));
 });
 
-mubook.controller("SidePaneCtrl", function SidePaneCtrl($scope) {
-
-});
-
-mubook.controller("LegendCtrl", function LegendCtrl($scope, PopupControl) {
+mubook.controller("LegendCtrl", function LegendCtrl($scope, $cookies, PopupControl) {
   $scope.$legend = $("#legend");
   $scope.$legendGraph = $("#legendGraph").hide();
 
@@ -266,12 +258,12 @@ mubook.controller("LegendCtrl", function LegendCtrl($scope, PopupControl) {
         $scope.$openIcon.delay(500).fadeIn();
         $scope.$legendGraph.fadeOut(500);
         $scope.$legend.delay(500).animate({height: "25px"}, 500).animate({width: "25px"}, 500);
-        docCookies.setItem("legendSeen", true);
+        $cookies.legendSeen = true;
       }
     }
   );
 
-  if (!docCookies.getItem("legendSeen")) { $scope.toggleLegend(); }
+  if (!$cookies.legendSeen) { $scope.toggleLegend(); }
 });
 
 mubook.controller("GraphTypeCtrl", function GraphTypeCtrl($scope, $location, Global) {
@@ -362,23 +354,14 @@ mubook.controller("UserCtrl", function UserCtrl($scope, $timeout, $location, $ro
     $location.path("/profile/" + username);
   };
 
-  $scope.successCallback = function(hasData) {
-    var $selectedName = $("#selectedName"),
-        $selectedCode = $("#selectedCode");
-
-    if (!hasData) {
-      $selectedName.text("Oops!");
-      $selectedCode.text("The user " + $routeParams.username + " does not exist.");
-    }
-  }
-
   if (!$routeParams.username) {
     return;
   }
-  visualizeGraph("/ajax/profile/" + $routeParams.username, $scope.successCallback);
+  visualizeGraph("/ajax/profile/" + $routeParams.username, fail.bind(null, "user", $routeParams.username));
 });
 
-mubook.controller("SubjectAddCtrl", function SubjectAddCtrl($scope, $timeout, $route, Global, PopupControl) {
+mubook.controller("SubjectAddCtrl",
+function SubjectAddCtrl($scope, $timeout, $route, $cookies, Global, PopupControl) {
   $scope.semesters = Global.semesters;
   $scope.states = Global.states;
 
@@ -466,7 +449,7 @@ mubook.controller("SubjectAddCtrl", function SubjectAddCtrl($scope, $timeout, $r
     };
 
     $.ajax({
-      headers: { "X-CSRFToken": docCookies.getItem("csrftoken") },
+      headers: { "X-CSRFToken": $cookies.csrftoken },
       type: 'POST',
       url: '/profile/selected_subjects/add/',
       data: payload
@@ -487,7 +470,7 @@ mubook.controller("SubjectAddCtrl", function SubjectAddCtrl($scope, $timeout, $r
   $scope.deleteSubject = function(e) {
     var url = '/profile/selected_subjects/delete/' + Global.selected + '/';
     $.ajax({
-      headers: { "X-CSRFToken": docCookies.getItem("csrftoken") },
+      headers: { "X-CSRFToken": $cookies.csrftoken },
       type: 'POST',
       url: url
     })
@@ -504,60 +487,19 @@ mubook.controller("SubjectAddCtrl", function SubjectAddCtrl($scope, $timeout, $r
 });
 
 mubook.controller("SocialCtrl", function SocialCtrl($scope, PopupControl) {
-    $scope.togglePopupCompleted = PopupControl.register("togglePopupCompleted", { scope: $scope });
-    $scope.togglePopupPlanned = PopupControl.register("togglePopupPlanned", { scope: $scope });
-    $scope.togglePopupStudying = PopupControl.register("togglePopupStudying", { scope: $scope });
-    $scope.togglePopupBookmarked = PopupControl.register("togglePopupBookmarked", { scope: $scope });
+  $scope.togglePopupCompleted = PopupControl.register("togglePopupCompleted", { scope: $scope });
+  $scope.togglePopupPlanned = PopupControl.register("togglePopupPlanned", { scope: $scope });
+  $scope.togglePopupStudying = PopupControl.register("togglePopupStudying", { scope: $scope });
+  $scope.togglePopupBookmarked = PopupControl.register("togglePopupBookmarked", { scope: $scope });
 
-    $scope.isVisibleCompleted = PopupControl.visibilityOf("togglePopupCompleted");
-    $scope.isVisiblePlanned = PopupControl.visibilityOf("togglePopupPlanned");
-    $scope.isVisibleStudying = PopupControl.visibilityOf("togglePopupStudying");
-    $scope.isVisibleBookmarked = PopupControl.visibilityOf("togglePopupBookmarked");
-
+  $scope.isVisibleCompleted = PopupControl.visibilityOf("togglePopupCompleted");
+  $scope.isVisiblePlanned = PopupControl.visibilityOf("togglePopupPlanned");
+  $scope.isVisibleStudying = PopupControl.visibilityOf("togglePopupStudying");
+  $scope.isVisibleBookmarked = PopupControl.visibilityOf("togglePopupBookmarked");
 });
 
-
-function loadTree(type, code, callback) {
-  url = "/ajax/u-melbourne/" + type + "/" + code;
-  visualizeGraph(url, callback);
-  docCookies.setItem("subjCode", code);
-}
-
-// credit: https://developer.mozilla.org/en-US/docs/Web/API/document.cookie
-var docCookies = {
-  getItem: function(sKey) {
-    return decodeURIComponent(document.cookie.replace(new RegExp("(?:(?:^|.*;)\\s*" + encodeURIComponent(sKey).replace(/[\-\.\+\*]/g, "\\$&") + "\\s*\\=\\s*([^;]*).*$)|^.*$"), "$1")) || null;
-  },
-  setItem: function(sKey, sValue, vEnd, sPath, sDomain, bSecure) {
-    if (!sKey || /^(?:expires|max\-age|path|domain|secure)$/i.test(sKey)) { return false; }
-    var sExpires = "";
-    if (vEnd) {
-      switch (vEnd.constructor) {
-      case Number:
-        sExpires = vEnd === Infinity ? "; expires=Fri, 31 Dec 9999 23:59:59 GMT" : "; max-age=" + vEnd;
-        break;
-      case String:
-        sExpires = "; expires=" + vEnd;
-        break;
-      case Date:
-        sExpires = "; expires=" + vEnd.toUTCString();
-        break;
-      }
-    }
-    document.cookie = encodeURIComponent(sKey) + "=" + encodeURIComponent(sValue) + sExpires + (sDomain ? "; domain=" + sDomain : "") + (sPath ? "; path=" + sPath : "") + (bSecure ? "; secure" : "");
-    return true;
-  },
-  removeItem: function(sKey, sPath, sDomain) {
-    if (!sKey || !this.hasItem(sKey)) { return false; }
-    document.cookie = encodeURIComponent(sKey) + "=; expires=Thu, 01 Jan 1970 00:00:00 GMT" + ( sDomain ? "; domain=" + sDomain : "") + ( sPath ? "; path=" + sPath : "");
-    return true;
-  },
-  hasItem: function(sKey) {
-    return (new RegExp("(?:^|;\\s*)" + encodeURIComponent(sKey).replace(/[\-\.\+\*]/g, "\\$&") + "\\s*\\=")).test(document.cookie);
-  },
-  keys: /* optional method: you can safely remove it! */ function() {
-    var aKeys = document.cookie.replace(/((?:^|\s*;)[^\=]+)(?=;|$)|^\s*|\s*(?:\=[^;]*)?(?:\1|$)/g, "").split(/\s*(?:\=[^;]*)?;\s*/);
-    for (var nIdx = 0; nIdx < aKeys.length; nIdx++) { aKeys[nIdx] = decodeURIComponent(aKeys[nIdx]); }
-    return aKeys;
-  }
+var fail = function(type, name) {
+  $("#selectedName").text("Oops!");
+  $("#selectedCode").text("The " + type + " " + $routeParams.subjectCode + " does not exist.");
 };
+

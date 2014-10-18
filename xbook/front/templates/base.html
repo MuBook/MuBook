@@ -22,6 +22,7 @@
   <script src="//ajax.googleapis.com/ajax/libs/jquery/2.1.1/jquery.min.js"></script>
   <script src="//ajax.googleapis.com/ajax/libs/angularjs/1.2.26/angular.min.js"></script>
   <script src="//ajax.googleapis.com/ajax/libs/angularjs/1.2.26/angular-route.min.js"></script>
+  <script src="//ajax.googleapis.com/ajax/libs/angularjs/1.2.26/angular-cookies.min.js"></script>
   <script src="//netdna.bootstrapcdn.com/bootstrap/3.1.1/js/bootstrap.min.js"></script>
   <script type="text/javascript">
     var _gaq = _gaq || [];
@@ -39,89 +40,89 @@
 </head>
 
 <body>
-<nav class="navbar navbar-static-top container-fluid" ng-controller="UICtrl">
+<nav class="navbar navbar-static-top" ng-controller="UICtrl">
   <a class="navbar-brand" href="/">µBook</a>
   {% block search-bar %}{% endblock %}
 
-  <ul class="nav navbar-nav navbar-right">
+  <ul class="nav navbar-nav">
     {% if user.is_authenticated %}
-    <li class="dropdown">
-      <a id="username" class="dropdown-toggle" data-toggle="dropdown">
-      {% if request.user.first_name or request.user.last_name %}
-        {{ request.user.first_name }} {{ request.user.last_name }}
-      {% else %}
-        {{ request.user.username }}
-      {% endif %}
-      <span class="caret"></span></a>
-      <ul class="dropdown-menu">
-      {% if request.path != "/explorer/"  %}
-      <li><a href="/explorer/profile/{{ request.user.username }}" ng-controller="UserCtrl"
-        ng-click="visualizeUserGraph('{{ request.user.username }}')">Profile</a></li>
-      {% else %}
-        <li><a href ng-controller="UserCtrl"
-        ng-click="visualizeUserGraph('{{ request.user.username }}')">Profile</a></li>
-      {% endif %}
-      <li><a href={% url 'account_logout' %}>Sign out</a></li>
-      </ul>
-    </li>
-    {% else %}
-    <li id="login-popup" ng-controller="LoginCtrl" popup>
-      <a id="login-button" class="login" ng-click="toggleForm($event)">Log in</a>
-
-      <div id="login-signup" ng-show="isVisible()" ng-cloak>
-      <div id="login-group" class="pull-left">
-        <h5 id="signup-label">New user?</h5>
-        <form id="signup-form" method="POST" action="{% url 'account_signup' %}">
-        {% csrf_token %}
-        {{ form.non_field_errors }}
-        <input id="signup-username" class="form-control" maxlength="30" name="username"
-           placeholder="Username" type="text">
-        <input id="signup-password" name="password1" class="form-control" placeholder="Password"
-           type="password">
-        <input id="signup-password2" name="password2" class="form-control"
-           placeholder="Password" type="password">
-        <input id="signup-email" name="email" type="email" class="form-control"
-           placeholder="email@address.com"> {{ form.email.errors }}
-        <button class="btn btn-default" type="submit">Sign Up</button>
-        </form>
-      </div>
-      <div id="signup-group" class="pull-right">
-        <a href="/accounts/facebook/login/"><div class="fb"></div></a>
-        <div id="login-label">Or sign in directly</div>
-        {% include "socialaccount/snippets/login_extra.html" %}
-
-        <form id="login-form" method="POST" action="{% url 'account_login' %}">
-          {% csrf_token %}
-          {{ form.non_field_errors }}
-          <input id="login-username" class="form-control" maxlength="30" name="login"
-            placeholder="Username" type="text"/>{{ form.login.errors }}
-          <input id="login-password" class="form-control" name="password" placeholder="Password"
-             type="password"/>{{ form.password.errors }}
-
-          <div class="remember-forgot-section">
-            <input id="remember" name="remember" type="checkbox"/>
-            <label for="remember">Remember Me</label>
-            <a class="forgot"
-             href="{% url 'account_reset_password' %}">Forgot Password?</a>
-          </div>
-          {% if redirect_field_value %}
-            <input type="hidden" name="{{ redirect_field_name }}"
-               value="{{ redirect_field_value }}"/>
+      <li class="dropdown">
+        <a id="username" class="dropdown-toggle" data-toggle="dropdown">
+        {% if request.user.first_name or request.user.last_name %}
+          {{ request.user.first_name }} {{ request.user.last_name }}
+        {% else %}
+          {{ request.user.username }}
+        {% endif %}
+        <span class="caret"></span></a>
+        <ul class="dropdown-menu">
+          {% if request.path != "/explorer/"  %}
+            <li><a href="/explorer/profile/{{ request.user.username }}" ng-controller="UserCtrl"
+                  ng-click="visualizeUserGraph('{{ request.user.username }}')">Profile</a></li>
+          {% else %}
+            <li><a href ng-controller="UserCtrl"
+                  ng-click="visualizeUserGraph('{{ request.user.username }}')">Profile</a></li>
           {% endif %}
-          <button class="btn btn-default" type="submit">Sign In</button>
-        </form>
-      </div>
-      </div>
-    </li>
+          <li><a href={% url 'account_logout' %}>Sign out</a></li>
+        </ul>
+      </li>
+    {% else %}
+      <li id="login-popup" ng-controller="LoginCtrl" popup>
+        <a id="login-button" class="login" ng-click="toggleForm($event)">Log in</a>
+
+        <div id="login-signup" ng-show="isVisible()" ng-cloak>
+          <div id="login-group" class="pull-left">
+            <h5 id="signup-label">New user?</h5>
+            <form id="signup-form" method="POST" action="{% url 'account_signup' %}">
+            {% csrf_token %}
+            {{ form.non_field_errors }}
+            <input id="signup-username" class="form-control" maxlength="30" name="username"
+               placeholder="Username" type="text">
+            <input id="signup-password" name="password1" class="form-control" placeholder="Password"
+               type="password">
+            <input id="signup-password2" name="password2" class="form-control"
+               placeholder="Password" type="password">
+            <input id="signup-email" name="email" type="email" class="form-control"
+               placeholder="email@address.com"> {{ form.email.errors }}
+            <button class="btn btn-default" type="submit">Sign Up</button>
+            </form>
+          </div>
+          <div id="signup-group" class="pull-right">
+            <a href="/accounts/facebook/login/"><div class="fb"></div></a>
+            <div id="login-label">Or sign in directly</div>
+            {% include "socialaccount/snippets/login_extra.html" %}
+
+            <form id="login-form" method="POST" action="{% url 'account_login' %}">
+              {% csrf_token %}
+              {{ form.non_field_errors }}
+              <input id="login-username" class="form-control" maxlength="30" name="login"
+                placeholder="Username" type="text"/>{{ form.login.errors }}
+              <input id="login-password" class="form-control" name="password" placeholder="Password"
+                 type="password"/>{{ form.password.errors }}
+
+              <div class="remember-forgot-section">
+                <input id="remember" name="remember" type="checkbox"/>
+                <label for="remember">Remember Me</label>
+                <a class="forgot"
+                 href="{% url 'account_reset_password' %}">Forgot Password?</a>
+              </div>
+              {% if redirect_field_value %}
+                <input type="hidden" name="{{ redirect_field_name }}"
+                   value="{{ redirect_field_value }}"/>
+              {% endif %}
+              <button class="btn btn-default" type="submit">Sign In</button>
+            </form>
+          </div>
+        </div>
+      </li>
     {% endif %}
 
     <li><a id="share-google" class="share-button" target="_blank"
-       href="https://plus.google.com/share?url=http://mubook.me">g</a></li>
+           href="https://plus.google.com/share?url=http://mubook.me">g</a></li>
     <li><a id="share-facebook" class="share-button" target="_blank"
-       href="https://www.facebook.com/sharer/sharer.php?s=100&p[title]=%C2%B5Book&p[summary]=%C2%B5Book+is+the+unofficial+Melbourne+University+subject+handbook.+Subject+selection+should+be+simple%2C+and+that's+why+%C2%B5Book+exists.&p[url]=http%3A%2F%2Fmubook.me">f</a>
+           href="https://www.facebook.com/sharer/sharer.php?s=100&p[title]=%C2%B5Book&p[summary]=%C2%B5Book+is+the+unofficial+Melbourne+University+subject+handbook.+Subject+selection+should+be+simple%2C+and+that's+why+%C2%B5Book+exists.&p[url]=http%3A%2F%2Fmubook.me">f</a>
     </li>
     <li><a id="share-twitter" class="share-button" target="_blank"
-       href="http://twitter.com/intent/tweet?url=http://mubook.me&text=%C2%B5Book+is+the+unofficial+UniMelb+subject+handbook.+Subject+selection+should+be+simple%2C+and+that's+why+%C2%B5Book+exists">t</a>
+           href="http://twitter.com/intent/tweet?url=http://mubook.me&text=%C2%B5Book+is+the+unofficial+UniMelb+subject+handbook.+Subject+selection+should+be+simple%2C+and+that's+why+%C2%B5Book+exists">t</a>
     </li>
 
     <li id="header-right" ng-controller="FeedbackCtrl" popup>
@@ -163,8 +164,7 @@
   </ul>
 </nav>
 
-{% block body %}
-{% endblock %}
+{% block body %}{% endblock %}
 
 <script src="//cdnjs.cloudflare.com/ajax/libs/d3/3.4.1/d3.min.js" charset="utf-8"></script>
 <script src="//cdn.jsdelivr.net/dagre-d3/0.2.9/dagre-d3.min.js"></script>

@@ -6,11 +6,10 @@ var visualizeGraph = (function () {
       $searchInput = $("#searchInput"),
       SCALE_RANGE  = [0.4, 2];
 
-  return function (url, callback) {
+  return function (url, fail) {
     d3.json(url, function (error, data) {
       if (data.nodes.length == 0) {
-        callback(false);
-        return;
+        return fail(false);
       }
 
       var isPrereq = angular.element($("#typeSwitcher")).scope().prereq();
