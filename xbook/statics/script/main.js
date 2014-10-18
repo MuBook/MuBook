@@ -1,10 +1,10 @@
 var mubook = angular.module("mubook", ["ngRoute", "ngCookies"]);
 
-mubook.config(["$routeProvider", "$locationProvider", "$cookies",
-  function($routeProvider, $locationProvider, $cookies) {
+mubook.config(["$routeProvider", "$locationProvider",
+  function($routeProvider, $locationProvider) {
     $locationProvider.html5Mode(true);
 
-    $routeProvider
+    mubook.$routeProvider = $routeProvider
       .when("/profile/:username", {
         title: " - µBook",
         templateUrl: "/template",
@@ -14,12 +14,15 @@ mubook.config(["$routeProvider", "$locationProvider", "$cookies",
         title: " - µBook",
         templateUrl: "/template",
         controller: "GraphCtrl"
-      })
-      .otherwise({
-        redirectTo: "/prereq/melbourne/" + ($cookies.subjCode || "COMP30018")
       });
   }
 ]);
+
+mubook.run(["$cookies", function($cookies) {
+  mubook.$routeProvider.otherwise({
+    redirectTo: "/prereq/melbourne/" + ($cookies.subjCode || "COMP30018")
+  });
+}]);
 
 mubook.run(["$location", "$rootScope", function($location, $rootScope) {
   $rootScope.$on("$routeChangeSuccess", function(event, current) {
