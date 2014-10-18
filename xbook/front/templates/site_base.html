@@ -3,29 +3,28 @@
 {% load url from future %}
 
 {% block additional-css %}
-    <link rel="stylesheet" href="/static/style/site.css">
+<link rel="stylesheet" href="/static/style/site.css">
 {% endblock %}
 
 {% block body %}
-    <section id="site">
-        <nav class="site-nav">
-            <div class="site-nav-content">
-                <ul>
-                    <li class="{{ bold.site_general }}">
-                        <a href={% url 'site_general' %}>General</a>
-                    </li>
-                    <li class="{{ bold.site_tos }}">
-                        <a href={% url 'site_tos' %}>Terms of Service</a>
-                    </li>
-                    <li class="{{ bold.site_pp }}">
-                        <a href={% url 'site_pp' %}>Privacy Policy</a>
-                    </li>
-                </ul>
-            </div>
-        </nav>
-        <div class="site-body">
-            {% block content %}
-            {% endblock %}
-        </div>
-    </section>
+<section id="site">
+<nav class="site-nav">
+  <div class="site-nav-content">
+  <ul>
+    <li class="{{ bold.site_general }}">
+    <a href={% url 'site_general' %}>General</a>
+    </li>
+    <li class="{{ bold.site_tos }}">
+    <a href={% url 'site_tos' %}>Terms of Service</a>
+    </li>
+    <li class="{{ bold.site_pp }}">
+    <a href={% url 'site_pp' %}>Privacy Policy</a>
+    </li>
+  </ul>
+  </div>
+</nav>
+<div class="site-body">
+  {% block content %}{% endblock %}
+</div>
+</section>
 {% endblock %}

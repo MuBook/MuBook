@@ -4,180 +4,167 @@
 <!DOCTYPE html>
 <html lang="en" ng-app="mubook">
 <head>
-    <meta name="google-site-verification" content="aiA43J3Zi8d1kmV1nTOAdnfJ7LvbLQJEhxuqHYLnXAE" />
-    <meta charset="UTF-8">
-    <meta name="description" content="µBook is the unofficial Melbourne University subject handbook. Subject selection should be simple, and that's why µBook exists.">
-    <meta property="og:description" content="µBook is the unofficial Melbourne University subject handbook. Subject selection should be simple, and that's why µBook exists.">
-    <meta property="og:title" content="µBook" />
-    <meta property="og:url" content="http://www.mubook.me/" />
-    <!-- <meta property="og:image" content="" /> -->
-    <base href="/explorer/">
-    <title ng-bind="pageTitle">µBook</title>
-    <link href="http://fonts.googleapis.com/css?family=Russo+One&subset=latin,latin-ext,cyrillic" rel="stylesheet" type="text/css">
-    <link href="http://fonts.googleapis.com/css?family=Open+Sans" rel="stylesheet" type="text/css">
-    <link href="http://fonts.googleapis.com/css?family=Ubuntu:700" rel="stylesheet" type="text/css">
-    <link rel="stylesheet" type="text/css" href="//netdna.bootstrapcdn.com/bootstrap/3.1.1/css/bootstrap.min.css">
-    <link rel="stylesheet" href="/static/style/visual.css">
-    {% block additional-css %}
-    {% endblock %}
+  <meta name="google-site-verification" content="aiA43J3Zi8d1kmV1nTOAdnfJ7LvbLQJEhxuqHYLnXAE" />
+  <meta charset="UTF-8">
+  <meta name="description" content="µBook is the unofficial Melbourne University subject handbook. Subject selection should be simple, and that's why µBook exists.">
+  <meta property="og:description" content="µBook is the unofficial Melbourne University subject handbook. Subject selection should be simple, and that's why µBook exists.">
+  <meta property="og:title" content="µBook" />
+  <meta property="og:url" content="http://www.mubook.me/" />
+  <base href="/explorer/">
+  <title ng-bind="pageTitle">µBook</title>
+  <link href="http://fonts.googleapis.com/css?family=Russo+One&subset=latin,latin-ext,cyrillic" rel="stylesheet" type="text/css">
+  <link href="http://fonts.googleapis.com/css?family=Open+Sans" rel="stylesheet" type="text/css">
+  <link href="http://fonts.googleapis.com/css?family=Ubuntu:700" rel="stylesheet" type="text/css">
+  <link rel="stylesheet" type="text/css" href="//netdna.bootstrapcdn.com/bootstrap/3.1.1/css/bootstrap.min.css">
+  <link rel="stylesheet" href="/static/style/visual.css">
+  {% block additional-css %}{% endblock %}
 
-    <script src="//ajax.googleapis.com/ajax/libs/jquery/1.11.0/jquery.min.js"></script>
-    <script src="//ajax.googleapis.com/ajax/libs/angularjs/1.2.12/angular.min.js"></script>
-    <script src="//ajax.googleapis.com/ajax/libs/angularjs/1.2.12/angular-route.min.js"></script>
-    <script src="//netdna.bootstrapcdn.com/bootstrap/3.1.1/js/bootstrap.min.js"></script>
-    <script type="text/javascript">
-      var _gaq = _gaq || [];
-      var pluginUrl = (('https:' == document.location.protocol) ? 'https://ssl.' : 'http://www.') + 'google-analytics.com/plugins/ga/inpage_linkid.js';
-        _gaq.push(['_require', 'inpage_linkid', pluginUrl]);
-        _gaq.push(['_setAccount', 'UA-48481908-1']);
-        _gaq.push(['_setDomainName', 'mubook.me']);
-        _gaq.push(['_trackPageview']);
-        (function() {
-            var ga = document.createElement('script'); ga.type = 'text/javascript'; ga.async = true;
-            ga.src = ('https:' == document.location.protocol ? 'https://ssl' : 'http://www') + '.google-analytics.com/ga.js';
-            var s = document.getElementsByTagName('script')[0]; s.parentNode.insertBefore(ga, s);
-        })();
-    </script>
+  <script src="//ajax.googleapis.com/ajax/libs/jquery/2.1.1/jquery.min.js"></script>
+  <script src="//ajax.googleapis.com/ajax/libs/angularjs/1.2.26/angular.min.js"></script>
+  <script src="//ajax.googleapis.com/ajax/libs/angularjs/1.2.26/angular-route.min.js"></script>
+  <script src="//netdna.bootstrapcdn.com/bootstrap/3.1.1/js/bootstrap.min.js"></script>
+  <script type="text/javascript">
+    var _gaq = _gaq || [];
+    var pluginUrl = (('https:' == document.location.protocol) ? 'https://ssl.' : 'http://www.') + 'google-analytics.com/plugins/ga/inpage_linkid.js';
+    _gaq.push(['_require', 'inpage_linkid', pluginUrl]);
+    _gaq.push(['_setAccount', 'UA-48481908-1']);
+    _gaq.push(['_setDomainName', 'mubook.me']);
+    _gaq.push(['_trackPageview']);
+    (function() {
+      var ga = document.createElement('script'); ga.type = 'text/javascript'; ga.async = true;
+      ga.src = ('https:' == document.location.protocol ? 'https://ssl' : 'http://www') + '.google-analytics.com/ga.js';
+      var s = document.getElementsByTagName('script')[0]; s.parentNode.insertBefore(ga, s);
+    })();
+  </script>
 </head>
 
 <body>
-<nav class="navbar navbar-static-top" ng-controller="UICtrl">
-    <div class="container-fluid">
-        <a class="navbar-brand" href="/">µBook</a>
-        {% block search-bar %}
-        {% endblock %}
+<nav class="navbar navbar-static-top container-fluid" ng-controller="UICtrl">
+  <a class="navbar-brand" href="/">µBook</a>
+  {% block search-bar %}{% endblock %}
 
-        <ul class="nav navbar-nav navbar-right">
-            {% if user.is_authenticated %}
-                <li class="dropdown">
-                    <a id="username" class="dropdown-toggle" data-toggle="dropdown">
-                        {% if request.user.first_name or request.user.last_name %}
-                            {{ request.user.first_name }} {{ request.user.last_name }}
-                        {% else %}
-                            {{ request.user.username }}
-                        {% endif %}
-                        <span class="caret"></span></a>
-                    <ul class="dropdown-menu">
-                        {% if request.path != "/explorer/"  %}
-                        <li><a href="/explorer/profile/{{ request.user.username }}" ng-controller="UserCtrl"
-                                ng-click="visualizeUserGraph('{{ request.user.username }}')">Profile</a></li>
-                        {% else %}
-                            <li><a href ng-controller="UserCtrl"
-                                ng-click="visualizeUserGraph('{{ request.user.username }}')">Profile</a></li>
-                        {% endif %}
-                        <li><a href={% url 'account_logout' %}>Sign out</a></li>
-                    </ul>
-                </li>
-            {% else %}
-                <li id="login-popup" ng-controller="LoginCtrl" popup>
-                    <a id="login-button" class="login" ng-click="toggleForm($event)">Log in</a>
+  <ul class="nav navbar-nav navbar-right">
+    {% if user.is_authenticated %}
+    <li class="dropdown">
+      <a id="username" class="dropdown-toggle" data-toggle="dropdown">
+      {% if request.user.first_name or request.user.last_name %}
+        {{ request.user.first_name }} {{ request.user.last_name }}
+      {% else %}
+        {{ request.user.username }}
+      {% endif %}
+      <span class="caret"></span></a>
+      <ul class="dropdown-menu">
+      {% if request.path != "/explorer/"  %}
+      <li><a href="/explorer/profile/{{ request.user.username }}" ng-controller="UserCtrl"
+        ng-click="visualizeUserGraph('{{ request.user.username }}')">Profile</a></li>
+      {% else %}
+        <li><a href ng-controller="UserCtrl"
+        ng-click="visualizeUserGraph('{{ request.user.username }}')">Profile</a></li>
+      {% endif %}
+      <li><a href={% url 'account_logout' %}>Sign out</a></li>
+      </ul>
+    </li>
+    {% else %}
+    <li id="login-popup" ng-controller="LoginCtrl" popup>
+      <a id="login-button" class="login" ng-click="toggleForm($event)">Log in</a>
 
-                    <div id="login-signup" ng-show="isVisible()" ng-cloak>
-                        <div id="login-group" class="pull-left">
-                            <div id="signup-label">New user?</div>
-                            <form id="signup-form" method="POST" action="{% url 'account_signup' %}">
-                                {% csrf_token %}
-                                {{ form.non_field_errors }}
-                                <input id="signup-username" class="form-control" maxlength="30" name="username"
-                                       placeholder="Username" type="text">
-                                <input id="signup-password" name="password1" class="form-control" placeholder="Password"
-                                       type="password">
-                                <input id="signup-password2" name="password2" class="form-control"
-                                       placeholder="Password" type="password">
-                                <input id="signup-email" name="email" type="email" class="form-control"
-                                       placeholder="email@address.com"> {{ form.email.errors }}
-                                <button class="btn btn-default" type="submit">Sign Up</button>
-                            </form>
-                        </div>
-                        <div id="signup-group" class="pull-right">
-                            <a href="/accounts/facebook/login/"><div class="fb"></div></a>
-                            <div id="login-label">Or sign in directly</div>
-                            {% include "socialaccount/snippets/login_extra.html" %}
+      <div id="login-signup" ng-show="isVisible()" ng-cloak>
+      <div id="login-group" class="pull-left">
+        <h5 id="signup-label">New user?</h5>
+        <form id="signup-form" method="POST" action="{% url 'account_signup' %}">
+        {% csrf_token %}
+        {{ form.non_field_errors }}
+        <input id="signup-username" class="form-control" maxlength="30" name="username"
+           placeholder="Username" type="text">
+        <input id="signup-password" name="password1" class="form-control" placeholder="Password"
+           type="password">
+        <input id="signup-password2" name="password2" class="form-control"
+           placeholder="Password" type="password">
+        <input id="signup-email" name="email" type="email" class="form-control"
+           placeholder="email@address.com"> {{ form.email.errors }}
+        <button class="btn btn-default" type="submit">Sign Up</button>
+        </form>
+      </div>
+      <div id="signup-group" class="pull-right">
+        <a href="/accounts/facebook/login/"><div class="fb"></div></a>
+        <div id="login-label">Or sign in directly</div>
+        {% include "socialaccount/snippets/login_extra.html" %}
 
-                            <form id="login-form" method="POST" action="{% url 'account_login' %}">
-                                {% csrf_token %}
-                                {{ form.non_field_errors }}
-                                <input id="login-username" class="form-control" maxlength="30" name="login"
-                                       placeholder="Username"
-                                       type="text"/>{{ form.login.errors }}
-                                <input id="login-password" class="form-control" name="password" placeholder="Password"
-                                       type="password"/>{{ form.password.errors }}
+        <form id="login-form" method="POST" action="{% url 'account_login' %}">
+          {% csrf_token %}
+          {{ form.non_field_errors }}
+          <input id="login-username" class="form-control" maxlength="30" name="login"
+            placeholder="Username" type="text"/>{{ form.login.errors }}
+          <input id="login-password" class="form-control" name="password" placeholder="Password"
+             type="password"/>{{ form.password.errors }}
 
-                                <div class="remember-forgot-section">
-                                    <input id="remember" name="remember" type="checkbox"/>
-                                    <label for="remember">Remember Me</label>
-                                    <a class="forgot"
-                                       href="{% url 'account_reset_password' %}">Forgot Password?</a>
-                                </div>
-                                {% if redirect_field_value %}
-                                    <input type="hidden" name="{{ redirect_field_name }}"
-                                           value="{{ redirect_field_value }}"/>
-                                {% endif %}
-                                <button class="btn btn-default" type="submit">Sign In</button>
-                            </form>
-                        </div>
-                    </div>
-                </li>
-            {% endif %}
+          <div class="remember-forgot-section">
+            <input id="remember" name="remember" type="checkbox"/>
+            <label for="remember">Remember Me</label>
+            <a class="forgot"
+             href="{% url 'account_reset_password' %}">Forgot Password?</a>
+          </div>
+          {% if redirect_field_value %}
+            <input type="hidden" name="{{ redirect_field_name }}"
+               value="{{ redirect_field_value }}"/>
+          {% endif %}
+          <button class="btn btn-default" type="submit">Sign In</button>
+        </form>
+      </div>
+      </div>
+    </li>
+    {% endif %}
 
-            <li><a id="share-google" class="share-button" target="_blank"
-                   href="https://plus.google.com/share?url=http://mubook.me">g</a></li>
-            <li><a id="share-facebook" class="share-button" target="_blank"
-                   href="https://www.facebook.com/sharer/sharer.php?s=100&p[title]=%C2%B5Book&p[summary]=%C2%B5Book+is+the+unofficial+Melbourne+University+subject+handbook.+Subject+selection+should+be+simple%2C+and+that's+why+%C2%B5Book+exists.&p[url]=http%3A%2F%2Fmubook.me">f</a>
-            </li>
-            <li><a id="share-twitter" class="share-button" target="_blank"
-                   href="http://twitter.com/intent/tweet?url=http://mubook.me&text=%C2%B5Book+is+the+unofficial+UniMelb+subject+handbook.+Subject+selection+should+be+simple%2C+and+that's+why+%C2%B5Book+exists">t</a>
-            </li>
+    <li><a id="share-google" class="share-button" target="_blank"
+       href="https://plus.google.com/share?url=http://mubook.me">g</a></li>
+    <li><a id="share-facebook" class="share-button" target="_blank"
+       href="https://www.facebook.com/sharer/sharer.php?s=100&p[title]=%C2%B5Book&p[summary]=%C2%B5Book+is+the+unofficial+Melbourne+University+subject+handbook.+Subject+selection+should+be+simple%2C+and+that's+why+%C2%B5Book+exists.&p[url]=http%3A%2F%2Fmubook.me">f</a>
+    </li>
+    <li><a id="share-twitter" class="share-button" target="_blank"
+       href="http://twitter.com/intent/tweet?url=http://mubook.me&text=%C2%B5Book+is+the+unofficial+UniMelb+subject+handbook.+Subject+selection+should+be+simple%2C+and+that's+why+%C2%B5Book+exists">t</a>
+    </li>
 
-            <li id="header-right" ng-controller="FeedbackCtrl" popup>
-                <a id="feedback-button" ng-click="toggleForm($event)">Contact</a>
+    <li id="header-right" ng-controller="FeedbackCtrl" popup>
+      <a id="feedback-button" ng-click="toggleForm($event)">Contact</a>
 
-                <form id="feedback-form" class="form-horizontal" ng-show="isVisible()" ng-cloak
-                      ng-submit="sendFeedback($event)">
-                    {% csrf_token %}
-                    <div class="form-group">
-                        <label for="feedback-name" class="col-sm-2 control-label">Name</label>
+      <form id="feedback-form" class="form-horizontal" ng-show="isVisible()" ng-cloak ng-submit="sendFeedback($event)">
+        {% csrf_token %}
+        <div class="form-group">
+          <label for="feedback-name" class="col-sm-2 control-label">Name</label>
+          <div class="col-sm-10">
+            <input type="text" class="form-control" id="feedback-name" ng-model="name"
+               placeholder="Optional">
+          </div>
+        </div>
 
-                        <div class="col-sm-10">
-                            <input type="text" class="form-control" id="feedback-name" ng-model="name"
-                                   placeholder="Optional">
-                        </div>
-                    </div>
+        <div class="form-group">
+          <label for="feedback-email" class="col-sm-2 control-label">Email</label>
+          <div class="col-sm-10">
+            <input type="email" class="form-control" id="feedback-email" ng-model="email"
+               placeholder="Enter Email">
+          </div>
+        </div>
 
-                    <div class="form-group">
-                        <label for="feedback-email" class="col-sm-2 control-label">Email</label>
+        <div class="form-group">
+          <label for="feedback-message" class="col-sm-2 control-label">Message</label>
+          <div class="col-sm-10">
+            <textarea class="form-control" id="feedback-message" ng-model="message"
+              placeholder="Ideas? Bugs? Interested to help?"></textarea>
+          </div>
+        </div>
 
-                        <div class="col-sm-10">
-                            <input type="email" class="form-control" id="feedback-email" ng-model="email"
-                                   placeholder="Enter Email">
-                        </div>
-                    </div>
-
-                    <div class="form-group">
-                        <label for="feedback-message" class="col-sm-2 control-label">Message</label>
-
-                        <div class="col-sm-10">
-                            <textarea class="form-control" id="feedback-message" ng-model="message"
-                                      placeholder="Ideas? Bugs? Interested to help?"></textarea>
-                        </div>
-                    </div>
-
-                    <div class="form-group">
-                        <div class="col-sm-offset-2 col-sm-10">
-                            <button type="submit" class="btn btn-default" id="feedback-submit">Send</button>
-                        </div>
-                    </div>
-                </form>
-            </li>
-        </ul>
-    </div>
+        <div class="form-group">
+          <div class="col-sm-offset-2 col-sm-10">
+            <button type="submit" class="btn btn-default" id="feedback-submit">Send</button>
+          </div>
+        </div>
+      </form>
+    </li>
+  </ul>
 </nav>
-
 
 {% block body %}
 {% endblock %}
-
-
 
 <script src="//cdnjs.cloudflare.com/ajax/libs/d3/3.4.1/d3.min.js" charset="utf-8"></script>
 <script src="//cdn.jsdelivr.net/dagre-d3/0.2.9/dagre-d3.min.js"></script>
