@@ -27,6 +27,18 @@ DB_PASSWORD=your_postgres_password
 * run this command `python manage.py runserver`
 	- then open browser, go to http://127.0.0.1:8000/
 
+# Admin Login
+
+## Production
+username: mubookadmin
+
+password: dawsonkhkzpo
+
+##Testing
+username: mubookadmin
+
+password: dawsonkhkzpo
+
 # How to update the database
 
 - [Heroku documentation link](https://devcenter.heroku.com/articles/heroku-postgres-import-export)
