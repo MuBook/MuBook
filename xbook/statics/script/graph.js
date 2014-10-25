@@ -284,7 +284,6 @@ function insertFriendInfo(elemId, data) {
 
         var mubookProfileLink = $("<a/>", {
             href: "/explorer/profile/" + data[i].username,
-            target: "_blank",
             html: "Mubook Profile",
             class: "profileLink"
         });
