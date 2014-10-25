@@ -75,22 +75,7 @@ mubook.factory("Global", function($cookies) {
     loadTree: loadTree,
     code: "COMP30018",
     reqType: "prereq",
-    selected: "COMP30018",
-    semesters:
-    [
-      "Summer",
-      "Semester 1",
-      "Winter",
-      "Semester 2",
-      "Other"
-    ],
-    states:
-    [
-      "Completed",
-      "Studying",
-      "Planned",
-      "Bookmarked"
-    ]
+    selected: "COMP30018"
   };
 });
 
@@ -107,60 +92,48 @@ mubook.factory("PopupControl", ["$timeout", function($timeout) {
   var popups = {},
       visiblePopups = {};
 
-  function Popup(id) {
+  function Popup() {
     this.visible = false;
     this.standalone = false;
     this.group = "default";
     this.scope = null;
   }
 
-  Popup.prototype.onOpen = function() {};
-  Popup.prototype.onClose = function() {};
-  Popup.prototype.onToggle = function() {};
-  Popup.prototype.open = function() { this.visible = true; };
-  Popup.prototype.close = function() { this.visible = false; };
+  Popup.prototype.onOpen = Popup.prototype.onClose = Popup.prototype.onToggle = function() {};
+  Popup.prototype.open = function() { this.visible = true; return this; };
+  Popup.prototype.close = function() { this.visible = false; return this; };
 
   function closeHelper(group) {
-    var popup;
-    var thePopup = popup = visiblePopups[group];
-    popup.close();
-    $timeout(function() {
-      thePopup.scope.$apply();
-    });
-    popup = undefined;
+    if (!group) { return; }
+    var popup = visiblePopups[group];
+    popup.close().scope.$applyAsync();
+    visiblePopups[group] = undefined;
   }
 
   var controller = {
     register: function(key, config) {
-      if (popups[key]) { console.warn(key + " already exists"); }
-      if (!config.scope) { console.warn("Required parameter is missing: scope"); }
+      if (popups[key]) { console.error(key + " already exists"); }
+      if (!config.scope) { console.error("Required parameter is missing: scope"); }
 
-      var popup = popups[key] = new Popup(key);
+      var popup = popups[key] = new Popup;
 
-      for (var key in config) {
-        popup[key] = config[key];
-      }
+      angular.extend(popup, config);
 
-      return function($event) {
-        var onClose = popup.visible;
-
-        if (onClose) {
-          popup.close();
-          popup.onClose($event);
+      return function(options) {
+        if (popup.visible) {
+          if (popup.onClose(options) !== false) { popup.close(); }
         } else {
-          this.closeOpened(popup.group);
+          controller.closeOpened(popup.group);
 
-          popup.open();
-          popup.onOpen($event);
+          if (popup.onOpen(options) !== false) { popup.open(); }
 
           if (!popup.standalone) {
             visiblePopups[popup.group] = popup;
           }
         }
 
-        popup.onToggle($event);
-
-      }.bind(controller);
+        popup.onToggle(options);
+      };
     },
 
     visibilityOf: function(key) {
@@ -172,10 +145,9 @@ mubook.factory("PopupControl", ["$timeout", function($timeout) {
     closeOpened: function(group) {
       if (group === undefined) {
         for (var group in visiblePopups) {
-          if (!visiblePopups[group]) { continue; }
           closeHelper(group);
         }
-      } else if (visiblePopups[group]) {
+      } else {
         closeHelper(group);
       }
     }
@@ -365,15 +337,13 @@ mubook.controller("UserCtrl", function UserCtrl($scope, $timeout, $location, $ro
 
 mubook.controller("SubjectAddCtrl",
 function SubjectAddCtrl($scope, $timeout, $route, $cookies, Global, PopupControl) {
-  $scope.semesters = Global.semesters;
-  $scope.states = Global.states;
+  $scope.semesters = ["Semester 1", "Semester 2", "Summer", "Winter", "Other"];
+  $scope.states = ["Studying", "Completed", "Planned", "Bookmarked"];
 
-  $scope.$year = $("#subjectAdderYear");
-  $scope.$semester = $("#subjectAdderSemester");
-  $scope.$state = $("#subjectAdderState");
-  $scope.$addBtn = $("#subjectAdderConfirmBtn")
-  $scope.$toggleBtn = $("#subjectAdderAddBtn");
-  $scope.$addForm = $("#subjectAdderForm")
+  var $year = $("#subjectAdderYear");
+  var $semester = $("#subjectAdderSemester");
+  var $state = $("#subjectAdderState");
+  var $addBtn = $("#subjectAdderConfirmBtn");
 
   $scope.togglePopup = PopupControl.register("addSubject", {
     scope: $scope,
@@ -409,40 +379,24 @@ function SubjectAddCtrl($scope, $timeout, $route, $cookies, Global, PopupControl
     return !!$scope.subjectAdderForm.subjectState.$viewValue;
   };
 
-  $scope.disableForm = function() {
-    $scope.$year.prop('disabled', true);
-    $scope.$semester.prop('disabled', true);
-    $scope.$state.prop('disabled', true);
-    $scope.$addBtn.prop('disabled', true);
-  };
-
-  $scope.enableForm = function() {
-    $scope.$year.prop('disabled', false);
-    $scope.$semester.prop('disabled', false);
-    $scope.$state.prop('disabled', false);
-    $scope.$addBtn.prop('disabled', false);
-  };
+  $scope.formDisabled = false;
 
   $scope.resetForm = function() {
-    // Prefill with current semester details
     $scope.modelYear = (new Date).getFullYear();
-    $scope.modelSemester = $scope.semesters[3];
-    $scope.modelState = $scope.states[1];
+    $scope.modelSemester = $scope.semesters[0];
+    $scope.modelState = $scope.states[0];
   };
 
   $scope.addSubject = function(e) {
     if (!$scope.isValidYear()) {
-      $scope.$year.focus();
-      return;
+      return $year.focus();
     } else if (!$scope.isValidSemester()) {
-      $scope.$semester.focus();
-      return;
+      return $semester.focus();
     } else if (!$scope.isValidState()) {
-      $scope.$state.focus();
-      return;
+      return $state.focus();
     }
 
-    $scope.disableForm();
+    $scope.formDisabled = true;
 
     payload = {
       subject: Global.selected,
@@ -464,7 +418,7 @@ function SubjectAddCtrl($scope, $timeout, $route, $cookies, Global, PopupControl
       console.warn("Fail: " + message);
     })
     .always(function() {
-      $scope.enableForm();
+      $scope.formDisabled = false;
     });
     $scope.resetForm();
     $scope.togglePopup();
