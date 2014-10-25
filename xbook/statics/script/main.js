@@ -52,11 +52,13 @@ mubook.run(["$location", "Global", "$rootScope", function($location, Global, $ro
 
 mubook.run(["$window", "PopupControl", function($window, PopupControl) {
   $($window).on("keyup", function(event) {
-    if (event.keyCode === 27) {
-      PopupControl.closeOpened();
+    if (event.which === 27) {
+      PopupControl.closeAll();
     }
-  }).on("click", function() {
-    PopupControl.closeOpened();
+  }).on("click", function(event) {
+    if (event.which === 1) {
+      PopupControl.closeAll();
+    }
   });
 }]);
 
@@ -106,7 +108,7 @@ mubook.factory("PopupControl", ["$timeout", function($timeout) {
   function closeHelper(group) {
     if (!group) { return; }
     var popup = visiblePopups[group];
-    popup.close().scope.$applyAsync();
+    popup && popup.close().scope.$applyAsync();
     visiblePopups[group] = undefined;
   }
 
@@ -123,7 +125,7 @@ mubook.factory("PopupControl", ["$timeout", function($timeout) {
         if (popup.visible) {
           if (popup.onClose(options) !== false) { popup.close(); }
         } else {
-          controller.closeOpened(popup.group);
+          controller.closeAll(popup.group);
 
           if (popup.onOpen(options) !== false) { popup.open(); }
 
@@ -142,7 +144,7 @@ mubook.factory("PopupControl", ["$timeout", function($timeout) {
       };
     },
 
-    closeOpened: function(group) {
+    closeAll: function(group) {
       if (group === undefined) {
         for (var group in visiblePopups) {
           closeHelper(group);
