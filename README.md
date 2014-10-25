@@ -31,10 +31,12 @@ DB_PASSWORD=your_postgres_password
 
 ## Production
 username: mubookadmin
+
 password: dawsonkhkzpo
 
 ##Testing
 username: mubookadmin
+
 password: dawsonkhkzpo
 
 # How to update the database
