@@ -43,11 +43,11 @@ mubook.run(["$location", "Global", "$rootScope", function($location, Global, $ro
 
   $rootScope.setSelected = function setSelected(code) {
     Global.selected = code || Global.code;
-  }
+  };
 
   $rootScope.getSelected = function getSelected() {
     return Global.selected;
-  }
+  };
 }]);
 
 mubook.run(["$window", "PopupControl", function($window, PopupControl) {
@@ -371,11 +371,8 @@ mubook.controller("FeedbackCtrl", function FeedbackCtrl($scope, $http, $timeout,
 });
 
 mubook.controller("LoginCtrl", function LoginCtrl($scope, $http, $timeout, Global, PopupControl) {
-  $scope.toggleForm = PopupControl.register("login",
-    { scope: $scope }
-  );
-
-  $scope.isVisible = PopupControl.visibilityOf("login");
+  $scope.toggleForm = PopupControl.register("login", { scope: $scope });
+  $scope.isVisible  = PopupControl.visibilityOf("login");
 });
 
 
