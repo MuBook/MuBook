@@ -108,7 +108,7 @@ mubook.factory("PopupControl", ["$timeout", function($timeout) {
   function closeHelper(group) {
     if (!group) { return; }
     var popup = visiblePopups[group];
-    popup && popup.close().scope.$applyAsync();
+    popup && popup.close();
     visiblePopups[group] = undefined;
   }
 
