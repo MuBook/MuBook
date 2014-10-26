@@ -81,11 +81,65 @@ mubook.factory("Global", function($cookies) {
   };
 });
 
+mubook.directive("expandable", function() {
+  return {
+    scope: {
+      widthMin: "@",
+      widthMax: "@",
+      heightMin: "@",
+      heightMax: "@"
+    },
+    restrict: "A",
+    controller: function($scope) {
+      this.toggle = function() {
+        var targetStatus = {};
+
+        if ($scope.expanded) {
+          if ($scope.widthMin) {
+            angular.extend(targetStatus, { width: $scope.widthMin });
+          }
+          if ($scope.heightMin) {
+            angular.extend(targetStatus, { height: $scope.heightMin });
+          }
+        } else {
+          if ($scope.widthMax) {
+            angular.extend(targetStatus, { width: $scope.widthMax });
+          }
+          if ($scope.heightMax) {
+            angular.extend(targetStatus, { height: $scope.heightMax });
+          }
+        }
+
+        $scope.morph(targetStatus);
+      };
+    },
+    link: function(scope, elem, attrs) {
+      scope.expanded = attrs.expanded !== undefined;
+
+      scope.morph = function(targetStatus) {
+        scope.expanded = !scope.expanded;
+        elem.css(targetStatus);
+      };
+    }
+  };
+});
+
+mubook.directive("expandableTrigger", function() {
+  return {
+    scope: false,
+    restrict: "A",
+    require: "^expandable",
+    link: function(scope, elem, attr, expandable) {
+      scope.toggle = expandable.toggle.bind(expandable);
+    }
+  };
+});
+
 mubook.directive("popup", function() {
   return {
     restrict: "A",
     link: function(scope, elem, attr) {
-      $(elem).on("click", function(event) { event.stopPropagation(); });
+      elem.on("click", function(event) { event.stopPropagation(); });
     }
   };
 });
@@ -133,8 +187,8 @@ mubook.factory("PopupControl", ["$timeout", function($timeout) {
             visiblePopups[popup.group] = popup;
           }
         }
-
         popup.onToggle(options);
+        popup.scope.$applyAsync();
       };
     },
 
@@ -214,27 +268,26 @@ mubook.controller("GraphCtrl", function GraphCtrl($scope, $routeParams, $locatio
 });
 
 mubook.controller("LegendCtrl", function LegendCtrl($scope, $cookies, PopupControl) {
-  $scope.$legend = $("#legend");
-  $scope.$legendGraph = $("#legendGraph").hide();
-
-  $scope.$openIcon = $("#legendOpenIcon");
-  $scope.$closeIcon = $("#legendCloseIcon").hide();
+  var $legend      = $("#legend"),
+      $legendGraph = $("#legendGraph").hide(),
+      $openIcon    = $("#legendOpenIcon"),
+      $closeIcon   = $("#legendCloseIcon").hide();
 
   $scope.toggleLegend = PopupControl.register("legend",
     {
       scope: $scope,
       standalone: true,
       onOpen: function() {
-        $scope.$openIcon.fadeOut();
-        $scope.$closeIcon.delay(500).fadeIn();
-        $scope.$legend.animate({width: "170px"}, 500).animate({height: "190px"}, 500);
-        $scope.$legendGraph.delay(1000).fadeIn(500);
+        $openIcon.fadeOut();
+        $closeIcon.delay(500).fadeIn();
+        $legend.animate({width: "170px"}, 500).animate({height: "190px"}, 500);
+        $legendGraph.delay(1000).fadeIn(500);
       },
       onClose: function() {
-        $scope.$closeIcon.fadeOut();
-        $scope.$openIcon.delay(500).fadeIn();
-        $scope.$legendGraph.fadeOut(500);
-        $scope.$legend.delay(500).animate({height: "25px"}, 500).animate({width: "25px"}, 500);
+        $closeIcon.fadeOut();
+        $openIcon.delay(500).fadeIn();
+        $legendGraph.fadeOut(500);
+        $legend.delay(500).animate({height: "25px"}, 500).animate({width: "25px"}, 500);
         $cookies.legendSeen = true;
       }
     }
