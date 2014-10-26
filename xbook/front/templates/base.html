@@ -62,7 +62,7 @@
             <li><a href ng-controller="UserCtrl"
                   ng-click="visualizeUserGraph('{{ request.user.username }}')">Profile</a></li>
           {% endif %}
-          <li><a href={% url 'account_logout' %}>Sign out</a></li>
+          <li><a href="{% url 'account_logout' %}">Sign out</a></li>
         </ul>
       </li>
     {% else %}
@@ -73,17 +73,17 @@
           <div id="login-group" class="pull-left">
             <h5 id="signup-label">New user?</h5>
             <form id="signup-form" method="POST" action="{% url 'account_signup' %}">
-            {% csrf_token %}
-            {{ form.non_field_errors }}
-            <input id="signup-username" class="form-control" maxlength="30" name="username"
-               placeholder="Username" type="text">
-            <input id="signup-password" name="password1" class="form-control" placeholder="Password"
-               type="password">
-            <input id="signup-password2" name="password2" class="form-control"
-               placeholder="Password" type="password">
-            <input id="signup-email" name="email" type="email" class="form-control"
-               placeholder="email@address.com"> {{ form.email.errors }}
-            <button class="btn btn-default" type="submit">Sign Up</button>
+              {% csrf_token %}
+              {{ form.non_field_errors }}
+              <input id="signup-username" class="form-control" maxlength="30" name="username"
+                  placeholder="Username" type="text">
+              <input id="signup-password" name="password1" class="form-control" placeholder="Password"
+                  type="password">
+              <input id="signup-password2" name="password2" class="form-control"
+                  placeholder="Password" type="password">
+              <input id="signup-email" name="email" type="email" class="form-control"
+                  placeholder="email@address.com"> {{ form.email.errors }}
+              <button class="btn btn-default" type="submit">Sign Up</button>
             </form>
           </div>
           <div id="signup-group" class="pull-right">
