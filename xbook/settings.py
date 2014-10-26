@@ -47,6 +47,8 @@ else:
         }
     }
 
+SESSION_COOKIE_AGE = 60 * 60 * 48
+
 # Absolute path to the directory static files should be collected to.
 # Don't put anything in this directory yourself; store your static files
 # in apps' "static/" subdirectories and in STATICFILES_DIRS.
@@ -219,7 +221,7 @@ EMAIL_BACKEND = 'django.core.mail.backends.smtp.EmailBackend'
 AUTHENTICATION_BACKENDS = (
     "django.contrib.auth.backends.ModelBackend",
     "allauth.account.auth_backends.AuthenticationBackend",
- )
+)
 
 SITE_ID = 1
 LOGIN_REDIRECT_URL = '/'
