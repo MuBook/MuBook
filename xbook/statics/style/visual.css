@@ -33,6 +33,11 @@ a:focus {
   text-decoration: none;
 }
 
+.ie-warning {
+  width: 80%;
+  margin: auto;
+}
+
 /************
 * =shared utils
 *************/
@@ -667,10 +672,6 @@ ul.pageNav
 #share-google {
   background-color: #ED6250;
 }
-
-/***********
-* =TypeSwitcher
-************/
 
 /***********
 * =PrerequisitesDetailTable

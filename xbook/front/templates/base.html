@@ -161,8 +161,14 @@
     </li>
   </ul>
 </nav>
-
+<!--[if IE]>
+<div class="alert alert-warning ie-warning">
+  Please use modern broswers like Firefox and Chrome.
+</div>
+<![endif]-->
+<!--[if !IE]><!-->
 {% block body %}{% endblock %}
 {% block page-js %}{% endblock %}
+<!--<![endif]-->
 </body>
 </html>
