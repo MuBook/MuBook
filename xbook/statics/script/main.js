@@ -120,7 +120,7 @@ mubook.directive("popup", function() {
   };
 });
 
-mubook.factory("PopupControl", ["$timeout", function($timeout) {
+mubook.factory("PopupControl", ["$rootScope", "$timeout", function($rootScope, $timeout) {
   var popups = {},
       visiblePopups = {};
 
@@ -164,7 +164,6 @@ mubook.factory("PopupControl", ["$timeout", function($timeout) {
           }
         }
         popup.onToggle(options);
-        popup.scope.$applyAsync();
       };
     },
 
@@ -182,6 +181,7 @@ mubook.factory("PopupControl", ["$timeout", function($timeout) {
       } else {
         closeHelper(group);
       }
+      $rootScope.$applyAsync();
     }
   };
 
