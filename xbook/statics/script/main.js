@@ -144,8 +144,8 @@ mubook.factory("PopupControl", ["$timeout", function($timeout) {
 
   var controller = {
     register: function(key, config) {
-      if (popups[key]) { console.error(key + " already exists"); }
-      if (!config.scope) { console.error("Required parameter is missing: scope"); }
+      if (popups[key]) { throw key + " already exists"; }
+      if (!config.scope) { throw "Required parameter is missing: scope"; }
 
       var popup = popups[key] = new Popup;
 
