@@ -54,7 +54,7 @@
           {% endif %}
           <span class="caret"></span>
         </a>
-        <ul class="dropdown" ng-show="menuVisible()">
+        <ul class="dropdown" ng-show="menuVisible()" ng-cloak>
           <a class="dropdown-item" ng-controller="UserCtrl" ng-click="visualizeUserGraph('{{ request.user.username }}')">
             <li>Profile</li>
           </a>
