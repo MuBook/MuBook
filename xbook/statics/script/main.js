@@ -219,8 +219,11 @@ mubook.controller("SearchCtrl", function SearchCtrl($scope, $timeout, Subjects, 
   });
 });
 
-mubook.controller("UICtrl", function UICtrl($scope, $cookies, Global) {
+mubook.controller("UICtrl", function UICtrl($scope, $cookies, Global, PopupControl) {
   Global.code = $cookies.subjCode;
+
+  $scope.toggleUserMenu = PopupControl.register("userMenu", { scope: $scope });
+  $scope.menuVisible = PopupControl.visibilityOf("userMenu");
 });
 
 mubook.controller("GraphCtrl", function GraphCtrl($scope, $routeParams, $location, Global) {
@@ -289,7 +292,7 @@ mubook.controller("GraphTypeCtrl", function GraphTypeCtrl($scope, $location, Glo
 
   $scope.onGraphPage = function() {
     return $location.path().search("^/(prereq|postreq)/") != -1;
-  }
+  };
 });
 
 mubook.controller("FeedbackCtrl", function FeedbackCtrl($scope, $http, $timeout, Global, PopupControl) {
