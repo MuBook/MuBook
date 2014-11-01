@@ -169,8 +169,8 @@
       {% verbatim %}
       <tr data-code="{{node.code}}" ng-click="replacePath(node.code)"
           ng-repeat="node in subjects | filter:query | limitTo: 100">
-        <td ng-bind="node.code"></td>
-        <td ng-bind="node.name"></td>
+        <td ng-bind="::node.code"></td>
+        <td ng-bind="::node.name"></td>
       </tr>
       {% endverbatim %}
     </table>
