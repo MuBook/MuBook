@@ -175,7 +175,6 @@ INSTALLED_APPS = (
     # 'django.contrib.admindocs',
     'xbook.ajax',
     'xbook.front',
-    'django.contrib.sites',
     'allauth',
     'allauth.account',
     'allauth.socialaccount',
