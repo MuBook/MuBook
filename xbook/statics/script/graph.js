@@ -173,8 +173,6 @@ Graph.prototype.onClickHandler = function(d, graph, clickedNode, config) {
 
   var $graphScope = angular.element($("#graphContainer")).scope();
 
-  subjActionSync(d.has_completed);
-
   if (d.code != graph.prevHighlightNode) {
     $graphScope.setSelected(d.code);
     $graphScope.$apply();
@@ -351,7 +349,7 @@ function showNodeDetails(d, selectedName, selectedCode) {
     selectedName.innerHTML = d.name;
     selectedCode.innerHTML = d.code;
 
-    subjActionSync(d.has_completed);
+    subjActionSync(d.isUserNode, d.has_completed);
 
     showStatistics(d);
     for (var i = 0; i < detailsContainer.length; ++i) {
@@ -366,7 +364,13 @@ var subjActionSync = (function() {
   $subjectAddBtn.addClass("hidden");
   $subjectRemoveBtn.addClass("hidden");
 
-  return function(hasCompleted) {
+  return function(isUserNode, hasCompleted) {
+    if (isUserNode) {
+      $subjectAddBtn.addClass("hidden");
+      $subjectRemoveBtn.addClass("hidden");
+      return;
+    }
+
     if (hasCompleted) {
       $subjectAddBtn.addClass("hidden");
       $subjectRemoveBtn.removeClass("hidden");

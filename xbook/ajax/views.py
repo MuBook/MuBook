@@ -228,10 +228,19 @@ def attach_userinfo_node(user):
         "assessment": "",
         "prereq": "",
         "coreq": "",
+        "isUserNode": True,
         "has_completed": False,
         "year_completed": 0,
         "semester_completed": "",
-        "state": ""
+        "state": "",
+        "num_planned": 0,
+        "num_studying": 0,
+        "num_completed": 0,
+        "num_bookmarked": 0,
+        'friends_info_planned': 0,
+        'friends_info_studying': 0,
+        'friends_info_completed': 0,
+        'friends_info_bookmarked': 0
     }
 
 
@@ -269,13 +278,10 @@ def get_user_subject(request, username, pretty=False):
             "objectives": subj.objectives,
             "assessment": subj.assessment,
             "prereq": subj.prerequisite,
-            "coreq": subj.corequisite,
-            "has_completed": True,
-            "year_completed": user_subject.year,
-            "semester_completed": user_subject.semester,
-            "state": user_subject.state
+            "coreq": subj.corequisite
         }
 
+        attach_user_info(nodeinfo, subj, selected_user)
         attach_statistics(nodeinfo, subj)
         attach_social_statistics(friends, nodeinfo, subj)
         nodes.append(nodeinfo)
