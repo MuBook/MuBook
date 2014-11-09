@@ -349,6 +349,7 @@ function showNodeDetails(d, selectedName, selectedCode) {
     selectedName.innerHTML = d.name;
     selectedCode.innerHTML = d.code;
 
+    subjectStatusInfo(d);
     subjActionSync(d.isUserNode, d.hasCompleted);
 
     showStatistics(d);
@@ -379,6 +380,42 @@ var subjActionSync = (function() {
       $subjectRemoveBtn.addClass("hidden");
     }
   };
+})();
+
+var subjectStatusInfo = (function() {
+  var $subjectStatus = $("#userSubjectStatus");
+
+  return function(nodeData) {
+    $subjectStatus.addClass("hidden");
+
+    if (!nodeData.isUserNode && nodeData.hasCompleted) {
+      var actionText = { "action": "", "preposition": "" };
+      switch (nodeData.state) {
+        case "Studying":
+          actionText.action = "are studying"
+          actionText.preposition = "in"
+          break;
+        case "Completed":
+          actionText.action = "have completed"
+          actionText.preposition = "in"
+          break;
+        case "Planned":
+          actionText.action = "are planning to do"
+          actionText.preposition = "in"
+          break;
+        case "Bookmarked":
+          actionText.action = "have bookmarked"
+          actionText.preposition = "for"
+          break;
+      }
+
+      $subjectStatus.text(
+        "You " + actionText.action + " this subject " + actionText.preposition
+        + " " + nodeData.semesterCompleted + ", " + nodeData.yearCompleted
+      )
+      $subjectStatus.removeClass("hidden");
+    }
+  }
 })();
 
 Array.prototype.findIndex = function(tester) {
