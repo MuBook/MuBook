@@ -308,14 +308,14 @@ function insertFriendInfo(elemId, data) {
 function showStatistics(d) {
     var statText = ["Completed", "Studying", "Planned", "Bookmarked"];
     var statisticItems = document.querySelectorAll(".statisticsItem");
-    var data = [d.num_completed, d.num_studying, d.num_planned, d.num_bookmarked];
+    var data = [d.numCompleted, d.numStudying, d.numPlanned, d.numBookmarked];
     for (var i = 0; i < statisticItems.length; ++i) {
         statisticItems[i].innerHTML = data[i] + "<br>" + statText[i];
     }
 
     var socialStatisticItems = document.querySelectorAll(".socialStatisticsItem");
-    var socialData = [d.friends_info_completed, d.friends_info_studying,
-                      d.friends_info_planned, d.friends_info_bookmarked];
+    var socialData = [d.friendsInfoCompleted, d.friendsInfoStudying,
+                      d.friendsInfoPlanned, d.friendsInfoBookmarked];
 
     for (i = 0; i < socialStatisticItems.length; ++i) {
         var socialCount = document.createElement('a');
@@ -330,18 +330,18 @@ function showStatistics(d) {
     }
 
     if (socialStatisticItems.length > 0) {
-        insertFriendInfo('#friendsInfoCompleted', d.friends_info_completed);
-        insertFriendInfo('#friendsInfoStudying', d.friends_info_studying);
-        insertFriendInfo('#friendsInfoPlanned', d.friends_info_planned);
-        insertFriendInfo('#friendsInfoBookmarked', d.friends_info_bookmarked);
+        insertFriendInfo('#friendsInfoCompleted', d.friendsInfoCompleted);
+        insertFriendInfo('#friendsInfoStudying', d.friendsInfoStudying);
+        insertFriendInfo('#friendsInfoPlanned', d.friendsInfoPlanned);
+        insertFriendInfo('#friendsInfoBookmarked', d.friendsInfoBookmarked);
     }
 }
 
 function showNodeDetails(d, selectedName, selectedCode) {
     var detailsContainer = document.querySelectorAll(".subjectDetail"),
         data = [
-          d.credit, d.commence_date,
-          d.time_commitment, d.prereq,
+          d.credit, d.commenceDate,
+          d.timeCommitment, d.prereq,
           d.assessment, d.coreq,
           d.overview, d.objectives
         ];
@@ -349,7 +349,7 @@ function showNodeDetails(d, selectedName, selectedCode) {
     selectedName.innerHTML = d.name;
     selectedCode.innerHTML = d.code;
 
-    subjActionSync(d.isUserNode, d.has_completed);
+    subjActionSync(d.isUserNode, d.hasCompleted);
 
     showStatistics(d);
     for (var i = 0; i < detailsContainer.length; ++i) {

@@ -56,10 +56,10 @@ def social_statistics(friends, subj):
     friends_info_completed = get_friends_info(local_friends_uids, subj, COMPLETED)
     friends_info_bookmarked = get_friends_info(local_friends_uids, subj, BOOKMARKED)
 
-    return {'friends_info_planned': friends_info_planned,
-            'friends_info_studying': friends_info_studying,
-            'friends_info_completed': friends_info_completed,
-            'friends_info_bookmarked': friends_info_bookmarked}
+    return {'friendsInfoPlanned': friends_info_planned,
+            'friendsInfoStudying': friends_info_studying,
+            'friendsInfoCompleted': friends_info_completed,
+            'friendsInfoBookmarked': friends_info_bookmarked}
 
 
 def attach_social_statistics(friends, nodeinfo, subj):
@@ -80,13 +80,13 @@ def get_friends(user):
 def attach_user_info(nodeinfo, subj, user):
     if not user.is_authenticated() or \
         not len(UserSubject.objects.filter(user=user, subject=subj)):
-        nodeinfo.update({"has_completed": False})
+        nodeinfo.update({"hasCompleted": False})
     else:
         user_subject = UserSubject.objects.filter(user=user, subject=subj)[0]
         nodeinfo.update({
-            "has_completed": True,
-            "year_completed": user_subject.year,
-            "semester_completed": user_subject.semester,
+            "hasCompleted": True,
+            "yearCompleted": user_subject.year,
+            "semesterCompleted": user_subject.semester,
             "state": user_subject.state,
         })
 
@@ -125,8 +125,8 @@ def subject_graph(user, code, prereq=True):
             "url": subj.link,
             "root": parentIndex == -1 and True or False,
             "credit": str(subj.credit),
-            "commence_date": subj.commence_date,
-            "time_commitment": subj.time_commitment,
+            "commenceDate": subj.commence_date,
+            "timeCommitment": subj.time_commitment,
             "overview": subj.overview,
             "objectives": subj.objectives,
             "assessment": subj.assessment,
@@ -199,10 +199,10 @@ def attach_statistics(nodeinfo, subj):
     num_completed = UserSubject.objects.filter(subject=subj, state=COMPLETED).count()
     num_bookmarked = UserSubject.objects.filter(subject=subj, state=BOOKMARKED).count()
 
-    nodeinfo.update({"num_planned": num_planned,
-                     "num_studying": num_studying,
-                     "num_completed": num_completed,
-                     "num_bookmarked": num_bookmarked})
+    nodeinfo.update({"numPlanned": num_planned,
+                     "numStudying": num_studying,
+                     "numCompleted": num_completed,
+                     "numBookmarked": num_bookmarked})
 
 
 def attach_userinfo_node(user):
@@ -221,26 +221,26 @@ def attach_userinfo_node(user):
         "name": name_or_account(),
         "root": True,
         "credit": "",
-        "commence_date": "",
-        "time_commitment": "",
+        "commenceDate": "",
+        "timeCommitment": "",
         "overview": "",
         "objectives": "",
         "assessment": "",
         "prereq": "",
         "coreq": "",
         "isUserNode": True,
-        "has_completed": False,
-        "year_completed": 0,
-        "semester_completed": "",
+        "hasCompleted": False,
+        "yearCompleted": 0,
+        "semesterCompleted": "",
         "state": "",
-        "num_planned": 0,
-        "num_studying": 0,
-        "num_completed": 0,
-        "num_bookmarked": 0,
-        'friends_info_planned': 0,
-        'friends_info_studying': 0,
-        'friends_info_completed': 0,
-        'friends_info_bookmarked': 0
+        "numPlanned": 0,
+        "numStudying": 0,
+        "numCompleted": 0,
+        "numBookmarked": 0,
+        'friendsInfoPlanned': 0,
+        'friendsInfoStudying': 0,
+        'friendsInfoCompleted': 0,
+        'friendsInfoBookmarked': 0
     }
 
 
@@ -272,8 +272,8 @@ def get_user_subject(request, username, pretty=False):
             "url": subj.link,
             "root": False,
             "credit": str(subj.credit),
-            "commence_date": subj.commence_date,
-            "time_commitment": subj.time_commitment,
+            "commenceDate": subj.commence_date,
+            "timeCommitment": subj.time_commitment,
             "overview": subj.overview,
             "objectives": subj.objectives,
             "assessment": subj.assessment,
