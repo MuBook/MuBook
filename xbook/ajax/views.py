@@ -93,7 +93,7 @@ def attach_user_info(nodeinfo, subj, user):
 
 
 def subject_graph(user, code, prereq=True):
-    graph = { "nodes": [], "links": [], "noRoot": False }
+    graph = { "nodes": [], "links": [] }
     subjQueue = deque()
 
     try:
@@ -205,8 +205,38 @@ def attach_statistics(nodeinfo, subj):
                      "num_bookmarked": num_bookmarked})
 
 
+def attach_userinfo_node(user):
+    def name_or_account():
+        if user.first_name and user.last_name:
+            return user.first_name + ' ' + user.last_name
+        elif user.first_name:
+            return user.first_name
+        elif user.last_name:
+            return user.last_name
+        else:
+            return user.username
+
+    return {
+        "code": name_or_account(),
+        "name": name_or_account(),
+        "root": True,
+        "credit": "",
+        "commence_date": "",
+        "time_commitment": "",
+        "overview": "",
+        "objectives": "",
+        "assessment": "",
+        "prereq": "",
+        "coreq": "",
+        "has_completed": False,
+        "year_completed": 0,
+        "semester_completed": "",
+        "state": ""
+    }
+
+
 def get_user_subject(request, username, pretty=False):
-    graph = { "nodes": [], "links": [], "noRoot": True }
+    graph = { "nodes": [], "links": [] }
 
     if not len(User.objects.filter(username=username)):
         return Ajax(
@@ -231,7 +261,7 @@ def get_user_subject(request, username, pretty=False):
             "code": subj.code,
             "name": subj.name,
             "url": subj.link,
-            "root": parent_index == -1 and True or False,
+            "root": False,
             "credit": str(subj.credit),
             "commence_date": subj.commence_date,
             "time_commitment": subj.time_commitment,
@@ -260,6 +290,8 @@ def get_user_subject(request, username, pretty=False):
                 if taken_subject.subject.code == related.code:
                     links.append(add_link(parent_index, compare_index))
                 compare_index += 1
+
+    nodes.append(attach_userinfo_node(selected_user))
 
     info = json.dumps(graph, indent=4 if pretty else None)
 
