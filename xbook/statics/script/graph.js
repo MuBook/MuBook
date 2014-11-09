@@ -198,7 +198,7 @@ Graph.prototype.onClickHandler = function(d, graph, clickedNode, config) {
 
 Graph.prototype.onDblClickHandler = function(d) {
   var $graph = angular.element($("#graphContainer")).scope();
-  $graph.replacePath(d.code);
+  $graph.showSubject(d.code);
   $graph.$apply();
 };
 
@@ -269,72 +269,74 @@ function makeRestoreButton() {
 }
 
 function insertFriendInfo(elemId, data) {
-    var socialPopup = $(elemId);
-    socialPopup.empty();
+  var socialPopup = $(elemId);
+  socialPopup.empty();
 
-    for (var i = 0; i < data.length; ++i) {
-        var socialInfo = $("<li class=\"socialInfo\"></li>");
+  for (var i = 0; i < data.length; ++i) {
+    var socialInfo = $("<li class=\"socialInfo\"></li>");
 
-        var friendAvatar = $("<a/>", {
-            href: data[i].fb_url,
-            target: "_blank"
-        });
+    var friendAvatar = $("<a/>", {
+      href: data[i].fb_url,
+      target: "_blank"
+    });
 
-        var mubookProfileLink = $("<a/>", {
-            href: "/explorer/profile/" + data[i].username,
-            html: "Mubook Profile",
-            class: "profileLink"
-        });
+    var mubookProfileLink = $("<a/>", {
+      'ng-click': "visualizeUserGraph('" + data[i].username + "')",
+      html: "Mubook Profile",
+      class: "profileLink"
+    });
 
-        var img = $("<img>", {
-            src: data[i].avatar_url,
-            class: "avatar"
-        });
+    var img = $("<img>", {
+      src: data[i].avatar_url,
+      class: "avatar"
+    });
 
-        var friendLink = $("<a/>", {
-            href: data[i].fb_url,
-            target: "_blank",
-            html: data[i].fullname
-        });
+    var friendLink = $("<a/>", {
+      href: data[i].fb_url,
+      target: "_blank",
+      html: data[i].fullname
+    });
 
-        friendAvatar.append(img);
-        socialInfo.append(friendAvatar);
-        socialInfo.append(friendLink);
-        socialInfo.append(mubookProfileLink);
-        socialPopup.append(socialInfo);
-    }
+    friendAvatar.append(img);
+    socialInfo.append(friendAvatar);
+    socialInfo.append(friendLink);
+    socialInfo.append(mubookProfileLink);
+    socialPopup.append(socialInfo);
+  }
 }
 
 function showStatistics(d) {
-    var statText = ["Completed", "Studying", "Planned", "Bookmarked"];
-    var statisticItems = document.querySelectorAll(".statisticsItem");
-    var data = [d.numCompleted, d.numStudying, d.numPlanned, d.numBookmarked];
-    for (var i = 0; i < statisticItems.length; ++i) {
-        statisticItems[i].innerHTML = data[i] + "<br>" + statText[i];
-    }
+  var statText = ["Completed", "Studying", "Planned", "Bookmarked"],
+      statisticItems = document.querySelectorAll(".statisticsItem"),
+      data = [d.numCompleted, d.numStudying, d.numPlanned, d.numBookmarked];
+  for (var i = 0; i < statisticItems.length; ++i) {
+    statisticItems[i].innerHTML = data[i] + "<br>" + statText[i];
+  }
 
-    var socialStatisticItems = document.querySelectorAll(".socialStatisticsItem");
-    var socialData = [d.friendsInfoCompleted, d.friendsInfoStudying,
-                      d.friendsInfoPlanned, d.friendsInfoBookmarked];
+  var socialStatisticItems = document.querySelectorAll(".socialStatisticsItem");
+  var socialData = [
+    d.friendsInfoCompleted, d.friendsInfoStudying,
+    d.friendsInfoPlanned, d.friendsInfoBookmarked
+  ];
 
-    for (i = 0; i < socialStatisticItems.length; ++i) {
-        var socialCount = document.createElement('a');
-        socialCount.innerHTML = socialData[i].length;
-        var statTextNode = document.createTextNode(statText[i]);
-        var sepLine = document.createElement('br');
+  for (i = 0; i < socialStatisticItems.length; ++i) {
+    var socialCount = document.createElement('a');
+    socialCount.innerHTML = socialData[i].length;
+    var statTextNode = document.createTextNode(statText[i]);
+    var sepLine = document.createElement('br');
 
-        socialStatisticItems[i].innerHTML = '';
-        socialStatisticItems[i].appendChild(socialCount);
-        socialStatisticItems[i].appendChild(sepLine);
-        socialStatisticItems[i].appendChild(statTextNode);
-    }
+    socialStatisticItems[i].innerHTML = '';
+    socialStatisticItems[i].appendChild(socialCount);
+    socialStatisticItems[i].appendChild(sepLine);
+    socialStatisticItems[i].appendChild(statTextNode);
+  }
 
-    if (socialStatisticItems.length > 0) {
-        insertFriendInfo('#friendsInfoCompleted', d.friendsInfoCompleted);
-        insertFriendInfo('#friendsInfoStudying', d.friendsInfoStudying);
-        insertFriendInfo('#friendsInfoPlanned', d.friendsInfoPlanned);
-        insertFriendInfo('#friendsInfoBookmarked', d.friendsInfoBookmarked);
-    }
+  if (socialStatisticItems.length > 0) {
+    insertFriendInfo('#friendsInfoCompleted', d.friendsInfoCompleted);
+    insertFriendInfo('#friendsInfoStudying', d.friendsInfoStudying);
+    insertFriendInfo('#friendsInfoPlanned', d.friendsInfoPlanned);
+    insertFriendInfo('#friendsInfoBookmarked', d.friendsInfoBookmarked);
+  }
 }
 
 function showNodeDetails(d, selectedName, selectedCode) {

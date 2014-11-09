@@ -1,6 +1,10 @@
 var mubook = angular.module("mubook", ["ngRoute", "ngCookies"]);
 
-mubook.run(["$location", "$rootScope", function($location, $rootScope) {
+mubook.run(["$location", "$rootScope", "Global", function($location, $rootScope, Global) {
+  $rootScope.visualizeUserGraph = function(username) {
+    $location.path("/profile/" + username);
+  };
+
   $rootScope.$on("$routeChangeSuccess", function(event, current) {
     if (!!current.params.subjectCode) {
       $rootScope.pageTitle = current.params.subjectCode.toUpperCase() + current.$$route.title;
@@ -8,10 +12,8 @@ mubook.run(["$location", "$rootScope", function($location, $rootScope) {
       $rootScope.pageTitle = current.params.username + current.$$route.title;
     }
   });
-}]);
 
-mubook.run(["$location", "Global", "$rootScope", function($location, Global, $rootScope) {
-  $rootScope.replacePath = function replacePath(code) {
+  $rootScope.showSubject = function showSubject(code) {
     Global.code = code;
     Global.selected = code;
     $location.path("/explorer/" + Global.reqType + "/melbourne/" + code);
@@ -203,8 +205,8 @@ mubook.controller("SearchCtrl", function SearchCtrl($scope, $timeout, Subjects, 
     }
   );
 
-  $scope.replacePath = function(code) {
-    $scope.$parent.replacePath(code);
+  $scope.showSubject = function(code) {
+    $scope.$parent.showSubject(code);
     $scope.toggleSearch();
   };
 
@@ -356,10 +358,6 @@ mubook.controller("LoginCtrl", function LoginCtrl($scope, $http, $timeout, Globa
 
 
 mubook.controller("UserCtrl", function UserCtrl($scope, $timeout, $location, $routeParams, Global) {
-  $scope.visualizeUserGraph = function(username) {
-    $location.path("/profile/" + username);
-  };
-
   if (!$routeParams.username) {
     return;
   }
