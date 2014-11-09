@@ -17,34 +17,6 @@ STUDYING = 'Studying'
 PLANNED = 'Planned'
 
 
-def authenticate_user(func):
-    def wrapper(*args, **kwargs):
-        request = args[0]
-        try:
-            if request.user.is_authenticated():
-                return func(*args, **kwargs)
-            else:
-                return Ajax(
-                    ajaxCallback(request,
-                                 json.dumps(
-                                        {'error': 'Unauthorized',
-                                         'errorCode': '401'}
-                                )
-                    ),
-                    content_type='application/json'
-                )
-        except:
-            return Ajax(
-                    ajaxCallback(request,
-                                 json.dumps(
-                                        {'error': 'Bad Request',
-                                         'errorCode': '400'}
-                                )
-                    ),
-                    content_type='application/json'
-                )
-    return wrapper
-
 def Ajax(*args, **kwargs):
     resp = HttpResponse(*args, **kwargs)
     resp['Access-Control-Allow-Origin'] = '*'
@@ -84,10 +56,10 @@ def social_statistics(friends, subj):
     friends_info_completed = get_friends_info(local_friends_uids, subj, COMPLETED)
     friends_info_bookmarked = get_friends_info(local_friends_uids, subj, BOOKMARKED)
 
-    return {'friends_info_planned': friends_info_planned,
-            'friends_info_studying': friends_info_studying,
-            'friends_info_completed': friends_info_completed,
-            'friends_info_bookmarked': friends_info_bookmarked}
+    return {'friendsInfoPlanned': friends_info_planned,
+            'friendsInfoStudying': friends_info_studying,
+            'friendsInfoCompleted': friends_info_completed,
+            'friendsInfoBookmarked': friends_info_bookmarked}
 
 
 def attach_social_statistics(friends, nodeinfo, subj):
@@ -108,13 +80,13 @@ def get_friends(user):
 def attach_user_info(nodeinfo, subj, user):
     if not user.is_authenticated() or \
         not len(UserSubject.objects.filter(user=user, subject=subj)):
-        nodeinfo.update({"has_completed": False})
+        nodeinfo.update({"hasCompleted": False})
     else:
         user_subject = UserSubject.objects.filter(user=user, subject=subj)[0]
         nodeinfo.update({
-            "has_completed": True,
-            "year_completed": user_subject.year,
-            "semester_completed": user_subject.semester,
+            "hasCompleted": True,
+            "yearCompleted": user_subject.year,
+            "semesterCompleted": user_subject.semester,
             "state": user_subject.state,
         })
 
@@ -153,8 +125,8 @@ def subject_graph(user, code, prereq=True):
             "url": subj.link,
             "root": parentIndex == -1 and True or False,
             "credit": str(subj.credit),
-            "commence_date": subj.commence_date,
-            "time_commitment": subj.time_commitment,
+            "commenceDate": subj.commence_date,
+            "timeCommitment": subj.time_commitment,
             "overview": subj.overview,
             "objectives": subj.objectives,
             "assessment": subj.assessment,
@@ -227,10 +199,49 @@ def attach_statistics(nodeinfo, subj):
     num_completed = UserSubject.objects.filter(subject=subj, state=COMPLETED).count()
     num_bookmarked = UserSubject.objects.filter(subject=subj, state=BOOKMARKED).count()
 
-    nodeinfo.update({"num_planned": num_planned,
-                     "num_studying": num_studying,
-                     "num_completed": num_completed,
-                     "num_bookmarked": num_bookmarked})
+    nodeinfo.update({"numPlanned": num_planned,
+                     "numStudying": num_studying,
+                     "numCompleted": num_completed,
+                     "numBookmarked": num_bookmarked})
+
+
+def attach_userinfo_node(user):
+    def name_or_account():
+        if user.first_name and user.last_name:
+            return user.first_name + ' ' + user.last_name
+        elif user.first_name:
+            return user.first_name
+        elif user.last_name:
+            return user.last_name
+        else:
+            return user.username
+
+    return {
+        "code": name_or_account(),
+        "name": name_or_account(),
+        "root": True,
+        "credit": "",
+        "commenceDate": "",
+        "timeCommitment": "",
+        "overview": "",
+        "objectives": "",
+        "assessment": "",
+        "prereq": "",
+        "coreq": "",
+        "isUserNode": True,
+        "hasCompleted": False,
+        "yearCompleted": 0,
+        "semesterCompleted": "",
+        "state": "",
+        "numPlanned": 0,
+        "numStudying": 0,
+        "numCompleted": 0,
+        "numBookmarked": 0,
+        'friendsInfoPlanned': 0,
+        'friendsInfoStudying': 0,
+        'friendsInfoCompleted': 0,
+        'friendsInfoBookmarked': 0
+    }
 
 
 def get_user_subject(request, username, pretty=False):
@@ -259,21 +270,18 @@ def get_user_subject(request, username, pretty=False):
             "code": subj.code,
             "name": subj.name,
             "url": subj.link,
-            "root": parent_index == -1 and True or False,
+            "root": False,
             "credit": str(subj.credit),
-            "commence_date": subj.commence_date,
-            "time_commitment": subj.time_commitment,
+            "commenceDate": subj.commence_date,
+            "timeCommitment": subj.time_commitment,
             "overview": subj.overview,
             "objectives": subj.objectives,
             "assessment": subj.assessment,
             "prereq": subj.prerequisite,
-            "coreq": subj.corequisite,
-            "has_completed": True,
-            "year_completed": user_subject.year,
-            "semester_completed": user_subject.semester,
-            "state": user_subject.state
+            "coreq": subj.corequisite
         }
 
+        attach_user_info(nodeinfo, subj, selected_user)
         attach_statistics(nodeinfo, subj)
         attach_social_statistics(friends, nodeinfo, subj)
         nodes.append(nodeinfo)
@@ -288,6 +296,8 @@ def get_user_subject(request, username, pretty=False):
                 if taken_subject.subject.code == related.code:
                     links.append(add_link(parent_index, compare_index))
                 compare_index += 1
+
+    nodes.append(attach_userinfo_node(selected_user))
 
     info = json.dumps(graph, indent=4 if pretty else None)
 
