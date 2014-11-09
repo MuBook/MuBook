@@ -1,6 +1,6 @@
 mubook.config(["$routeProvider", "$locationProvider",
   function($routeProvider, $locationProvider) {
-    $locationProvider.html5Mode(true);
+    $locationProvider.html5Mode({ enabled: true, requireBase: false });
 
     mubook.$routeProvider = $routeProvider
       .when("/profile/:username", {
@@ -8,7 +8,7 @@ mubook.config(["$routeProvider", "$locationProvider",
         templateUrl: "/template",
         controller: "UserCtrl"
       })
-      .when("/:reqType/:university/:subjectCode", {
+      .when("/explorer/:reqType/:university/:subjectCode", {
         title: " - µBook",
         templateUrl: "/template",
         controller: "GraphCtrl"
@@ -18,6 +18,6 @@ mubook.config(["$routeProvider", "$locationProvider",
 
 mubook.run(["$cookies", function($cookies) {
   mubook.$routeProvider.otherwise({
-    redirectTo: "/prereq/melbourne/" + ($cookies.subjCode || "COMP30018")
+    redirectTo: "/explorer/prereq/melbourne/" + ($cookies.subjCode || "COMP30018")
   });
 }]);

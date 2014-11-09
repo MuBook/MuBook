@@ -14,7 +14,7 @@ mubook.run(["$location", "Global", "$rootScope", function($location, Global, $ro
   $rootScope.replacePath = function replacePath(code) {
     Global.code = code;
     Global.selected = code;
-    $location.path(Global.reqType + "/melbourne/" + code);
+    $location.path("/explorer/" + Global.reqType + "/melbourne/" + code);
   };
 
   $rootScope.setSelected = function setSelected(code) {
@@ -237,7 +237,7 @@ mubook.controller("GraphCtrl", function GraphCtrl($scope, $routeParams, $locatio
       status.reqType = "postreq";
       break;
     default:
-      $location.path("/prereq/melbourne/COMP30018");
+      $location.path("/explorer/prereq/melbourne/COMP30018");
   }
 
   Global.selected = Global.code = status.code;
@@ -278,12 +278,12 @@ mubook.controller("LegendCtrl", function LegendCtrl($scope, $cookies, PopupContr
 mubook.controller("GraphTypeCtrl", function GraphTypeCtrl($scope, $location, Global) {
   $scope.toPre = function toPre() {
     Global.reqType = "prereq";
-    $location.path(Global.reqType + "/melbourne/" + Global.code);
+    $location.path("/explorer/" + Global.reqType + "/melbourne/" + Global.code);
   };
 
   $scope.toPost = function toPost() {
     Global.reqType = "postreq";
-    $location.path(Global.reqType + "/melbourne/" + Global.code);
+    $location.path("/explorer/" + Global.reqType + "/melbourne/" + Global.code);
   };
 
   $scope.prereq = function prereq() {
@@ -291,7 +291,7 @@ mubook.controller("GraphTypeCtrl", function GraphTypeCtrl($scope, $location, Glo
   };
 
   $scope.onGraphPage = function() {
-    return $location.path().search("^/(prereq|postreq)/") != -1;
+    return $location.path().search("/(prereq|postreq)/") != -1;
   };
 });
 
