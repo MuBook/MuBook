@@ -62,7 +62,7 @@ Graph.prototype.renderGraph = function(config) {
   this.node = d3.select(this._id + " .nodes");
   this.edge = d3.select(this._id + " .edgePaths");
 
-  this.setStyle({ resetOpacity: true, highlightRoot: true });
+  this.setStyle({ resetOpacity: true, highlightRoot: !this.nodeData.noRoot });
 
   d3.selectAll(this._id + " .node text")
     .attr("class", "button-text")

@@ -17,34 +17,6 @@ STUDYING = 'Studying'
 PLANNED = 'Planned'
 
 
-def authenticate_user(func):
-    def wrapper(*args, **kwargs):
-        request = args[0]
-        try:
-            if request.user.is_authenticated():
-                return func(*args, **kwargs)
-            else:
-                return Ajax(
-                    ajaxCallback(request,
-                                 json.dumps(
-                                        {'error': 'Unauthorized',
-                                         'errorCode': '401'}
-                                )
-                    ),
-                    content_type='application/json'
-                )
-        except:
-            return Ajax(
-                    ajaxCallback(request,
-                                 json.dumps(
-                                        {'error': 'Bad Request',
-                                         'errorCode': '400'}
-                                )
-                    ),
-                    content_type='application/json'
-                )
-    return wrapper
-
 def Ajax(*args, **kwargs):
     resp = HttpResponse(*args, **kwargs)
     resp['Access-Control-Allow-Origin'] = '*'
@@ -121,7 +93,7 @@ def attach_user_info(nodeinfo, subj, user):
 
 
 def subject_graph(user, code, prereq=True):
-    graph = { "nodes": [], "links": [] }
+    graph = { "nodes": [], "links": [], "noRoot": False }
     subjQueue = deque()
 
     try:
@@ -234,7 +206,7 @@ def attach_statistics(nodeinfo, subj):
 
 
 def get_user_subject(request, username, pretty=False):
-    graph = { "nodes": [], "links": [] }
+    graph = { "nodes": [], "links": [], "noRoot": True }
 
     if not len(User.objects.filter(username=username)):
         return Ajax(
