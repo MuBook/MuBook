@@ -383,13 +383,13 @@ var subjActionSync = (function() {
 })();
 
 var subjectStatusInfo = (function() {
-  var $subjectStatus = $("#userSubjectStatus");
+  var $subjectStatus = $("#userSubjectStatus"),
+      actionText = { "action": "", "preposition": "" };
 
   return function(nodeData) {
     $subjectStatus.addClass("hidden");
 
     if (!nodeData.isUserNode && nodeData.hasCompleted) {
-      var actionText = { "action": "", "preposition": "" };
       switch (nodeData.state) {
         case "Studying":
           actionText.action = "are studying"
