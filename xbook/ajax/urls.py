@@ -1,15 +1,11 @@
 from django.conf.urls import patterns, url
+from xbook.ajax import views
 
-urlpatterns = patterns('xbook.ajax',
-	url(r'^u-(?P<uni>.*?)/prereq/(?P<code>.*?)$', 'views.subject'),
-	url(r'^p/u-(?P<uni>.*?)/prereq/(?P<code>.*?)$', 'views.subject', { 'pretty': True }),
+urlpatterns = [
+	url(r"^u-(?P<uni>.*?)/prereq/(?P<code>.*?)$", views.subject),
+	url(r"^u-(?P<uni>.*?)/postreq/(?P<code>.*?)$", views.subject, { "prereq": False }),
 
-	url(r'^u-(?P<uni>.*?)/postreq/(?P<code>.*?)$', 'views.subject', { 'prereq': False }),
-	url(r'^p/u-(?P<uni>.*?)/postreq/(?P<code>.*?)$', 'views.subject', { 'pretty': True, 'prereq': False }),
+	url(r"^u-(?P<uni>.*?)/subjectlist/?$", views.subjectList),
 
-	url(r'^u-(?P<uni>.*?)/subjectlist/?$', 'views.subjectList'),
-	url(r'^p/u-(?P<uni>.*?)/subjectlist/?$', 'views.subjectList', {'pretty': True}),
-
-    url(r'profile/(?P<username>.*?)/?$', 'views.get_user_subject'),
-    url(r'^profile/(?P<username>.*?)/?$', 'views.get_user_subject', {'pretty': True}),
-)
+  url(r"^profile/(?P<username>.*?)/?$", views.get_user_subject)
+]

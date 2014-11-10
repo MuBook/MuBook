@@ -20,7 +20,7 @@ PLANNED = "Planned"
 def Ajax(*args, **kwargs):
     resp = HttpResponse(*args, **kwargs)
     resp["Access-Control-Allow-Origin"] = "*"
-    resp["Access-Control-Allow-Methods"] = "POST, GET, OPTIONS"
+    resp["Access-Control-Allow-Methods"] = "GET, POST"
     resp["Access-Control-Max-Age"] = "1000"
     resp["Access-Control-Allow-Headers"] = "*"
     return resp
@@ -91,7 +91,6 @@ def attach_user_info(nodeinfo, subj, user):
         })
 
 
-
 def subject_graph(user, code, prereq=True):
     graph = { "nodes": [], "links": [] }
     subjQueue = deque()
@@ -156,18 +155,15 @@ def subject_graph(user, code, prereq=True):
     return graph
 
 
-def subject(request, uni, code, pretty=False, prereq=True):
+def subject(request, uni, code, prereq=True):
     graph = subject_graph(request.user, code.upper(), prereq)
 
-    info = json.dumps(graph, indent=4 if pretty else None)
+    info = json.dumps(graph)
 
-    return Ajax(
-        ajaxCallback(request, info),
-        content_type="application/json"
-    )
+    return Ajax(info, content_type="application/json")
 
 
-def subjectListCollector(uni, pretty=False):
+def subjectListCollector(uni):
     d = {"subjList": []}
     l = d["subjList"]
 
@@ -175,22 +171,12 @@ def subjectListCollector(uni, pretty=False):
         this = {"code": subj.code, "name": subj.name}
         l.append(this)
 
-    return json.dumps(d, indent=4 if pretty else None)
+    return json.dumps(d)
 
 
 @cache_page(60 * 60 * 24)
-def subjectList(request, uni, pretty=False):
-    return Ajax(
-        ajaxCallback(request, subjectListCollector(uni, pretty)),
-        content_type="application/json"
-    )
-
-
-def ajaxCallback(request, info):
-    if "callback" in request.GET:
-        return request.GET["callback"] + "({})".format(info)
-    else:
-        return info
+def subjectList(request, uni):
+    return Ajax(subjectListCollector(uni), content_type="application/json")
 
 
 def attach_statistics(nodeinfo, subj):
@@ -248,10 +234,7 @@ def get_user_subject(request, username, pretty=False):
     graph = { "nodes": [], "links": [] }
 
     if not len(User.objects.filter(username=username)):
-        return Ajax(
-            ajaxCallback(request, json.dumps(graph)),
-            content_type="application/json"
-        )
+        return Ajax(json.dumps(graph), content_type="application/json")
 
     selected_user = User.objects.filter(username=username)[0]
     user_subjects = selected_user.user_subject.all()
@@ -301,7 +284,4 @@ def get_user_subject(request, username, pretty=False):
 
     info = json.dumps(graph, indent=4 if pretty else None)
 
-    return Ajax(
-        ajaxCallback(request, info),
-        content_type="application/json"
-    )
+    return Ajax(info, content_type="application/json")
