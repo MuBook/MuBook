@@ -27,7 +27,6 @@ def index(request):
     return redirect('/explorer/')
 
 
-# Comment out the following line for testing index.html
 @cache_page(60 * 60 * 24)
 @csrf_protect
 def explorer(request):
