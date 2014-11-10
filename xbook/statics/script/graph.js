@@ -281,7 +281,7 @@ function insertFriendInfo(elemId, data) {
     });
 
     var mubookProfileLink = $("<a/>", {
-      'ng-click': "visualizeUserGraph(" + data[i].username + ")",
+      'ng-click': "visualizeUserGraph('" + data[i].username + "')",
       html: "Mubook Profile",
       class: "profileLink"
     });
