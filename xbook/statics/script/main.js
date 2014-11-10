@@ -1,8 +1,13 @@
 var mubook = angular.module("mubook", ["ngRoute", "ngCookies"]);
 
-mubook.run(["$location", "$rootScope", "Global", function($location, $rootScope, Global) {
+mubook.run(["$location", "$rootScope", "$window", "Global",
+function($location, $rootScope, $window, Global) {
   $rootScope.visualizeUserGraph = function(username) {
     $location.path("/profile/" + username);
+  };
+
+  $rootScope.goto = function(url) {
+    $window.location.href = url;
   };
 
   $rootScope.$on("$routeChangeSuccess", function(event, current) {

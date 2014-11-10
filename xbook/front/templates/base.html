@@ -59,7 +59,7 @@
           <a class="dropdown-item" ng-controller="UserCtrl" ng-click="visualizeUserGraph('{{ request.user.username }}')">
             <li>Profile</li>
           </a>
-          <a class="dropdown-item" href="{% url 'account_logout' %}">
+          <a class="dropdown-item" href="#" ng-click="goto('{% url 'account_logout' %}')">
             <li>Sign out</li>
           </a>
         </ul>
