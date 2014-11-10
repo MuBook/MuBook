@@ -340,24 +340,24 @@ function showStatistics(d) {
 }
 
 function showNodeDetails(d, selectedName, selectedCode) {
-    var detailsContainer = document.querySelectorAll(".subjectDetail"),
-        data = [
-          d.credit, d.commenceDate,
-          d.timeCommitment, d.prereq,
-          d.assessment, d.coreq,
-          d.overview, d.objectives
-        ];
+  var detailsContainer = document.querySelectorAll(".subjectDetail"),
+    data = [
+      d.credit, d.commenceDate,
+      d.timeCommitment, d.prereq,
+      d.assessment, d.coreq,
+      d.overview, d.objectives
+    ];
 
-    selectedName.innerHTML = d.name;
-    selectedCode.innerHTML = d.code;
+  selectedName.innerHTML = d.name;
+  selectedCode.innerHTML = d.code;
 
-    subjectStatusInfo(d);
-    subjActionSync(d.isUserNode, d.hasCompleted);
+  subjectStatusInfo(d);
+  subjActionSync(d.isUserNode, d.hasCompleted);
 
-    showStatistics(d);
-    for (var i = 0; i < detailsContainer.length; ++i) {
-        detailsContainer[i].innerHTML = data[i];
-    }
+  showStatistics(d);
+  for (var i = 0; i < detailsContainer.length; ++i) {
+    detailsContainer[i].innerHTML = data[i];
+  }
 }
 
 var subjActionSync = (function() {
