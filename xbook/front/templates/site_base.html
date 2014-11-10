@@ -1,7 +1,5 @@
 {% extends "base.html" %}
 
-{% load url from future %}
-
 {% block additional-css %}
 <link rel="stylesheet" href="/static/style/site.css">
 {% endblock %}
@@ -11,13 +9,13 @@
 <nav class="site-nav">
   <div class="site-nav-content">
   <ul>
-    <li class="{{ bold.site_general }}">
+    <li class="{{ general|yesno:'active,' }}">
     <a href="{% url 'site_general' %}">General</a>
     </li>
-    <li class="{{ bold.site_tos }}">
+    <li class="{{ tos|yesno:'active,' }}">
     <a href="{% url 'site_tos' %}">Terms of Service</a>
     </li>
-    <li class="{{ bold.site_pp }}">
+    <li class="{{ pp|yesno:'active,' }}">
     <a href="{% url 'site_pp' %}">Privacy Policy</a>
     </li>
   </ul>

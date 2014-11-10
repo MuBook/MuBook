@@ -11,19 +11,9 @@ from django.template import RequestContext
 from xbook.ajax.models import Subject
 from xbook.front.models import UserSubject
 
-CURRENT_PATH = os.path.dirname(os.path.abspath(__file__))
-INDEX_PATH = os.path.join(
-    os.path.join(CURRENT_PATH, 'templates'),
-    'index.html'
-)
-
 CONTACT_US = 1
 PRIVACY_POLICY = 2
 TERMS_SERVICE = 3
-
-
-def index(request):
-    return redirect('/explorer/')
 
 
 @cache_page(60 * 60 * 24)
@@ -85,29 +75,10 @@ def delete_subject(request, subject):
     return HttpResponse(status=200)
 
 def site_general(request):
-    bold = make_bold(CONTACT_US)
-    return render(request, "site_general.html", { "bold": bold })
+    return render(request, "site_general.html", { "general": True })
 
 def site_tos(request):
-    bold = make_bold(TERMS_SERVICE)
-    return render(request, "site_tos.html", { "bold": bold })
+    return render(request, "site_tos.html", { "tos": True })
 
 def site_pp(request):
-    bold = make_bold(PRIVACY_POLICY)
-    return render(request, "site_pp.html", { "bold": bold })
-
-def make_bold(page):
-    general = ""
-    privacy_policy = ""
-    terms_of_service = ""
-    if page == CONTACT_US:
-        general = "active"
-    elif page == PRIVACY_POLICY:
-        privacy_policy = "active"
-    elif page == TERMS_SERVICE:
-        terms_of_service = "active"
-    return {
-        "site_general": general,
-        "site_pp": privacy_policy,
-        "site_tos": terms_of_service
-    }
+    return render(request, "site_pp.html", { "pp": True })
