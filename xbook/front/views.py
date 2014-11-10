@@ -35,7 +35,7 @@ def send_feedback(request):
     message = data.get("message", "error")
     send_mail("Feedback from " + name, email + "\n\n" + message, "xbookfeedback@gmail.com",
               ["xbookfeedback@gmail.com"], fail_silently=False)
-    return HttpResponse("OK")
+    return HttpResponse()
 
 
 def add_subject(request):
@@ -51,11 +51,14 @@ def add_subject(request):
     if not subjectCode or not subjectYear or not subjectState or not subjectSemester:
         return HttpResponse(status=400)
 
-    selected_subject = Subject.objects.filter(code=subjectCode)[0]
+    try:
+        selectedSubject = Subject.objects.get(code=subjectCode)
+    except Subject.DoesNotExist:
+        return HttpResponse(status=404)
 
-    UserSubject.add(currentUser, selected_subject, subjectYear, subjectSemester, subjectState)
+    UserSubject.add(currentUser, selectedSubject, subjectYear, subjectSemester, subjectState)
 
-    return HttpResponse("Success")
+    return HttpResponse(status=201)
 
 
 def delete_subject(request, subject):
@@ -72,7 +75,7 @@ def delete_subject(request, subject):
 
     relation.delete()
 
-    return HttpResponse(status=200)
+    return HttpResponse()
 
 def site(request, which):
     return render(request, "site_{}.html".format(which), { which: True })
