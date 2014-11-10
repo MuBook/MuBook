@@ -6,7 +6,7 @@ from django.core.mail import send_mail
 from django.views.decorators.http import require_POST
 from django.views.decorators.cache import cache_page
 from django.views.decorators.csrf import csrf_protect
-from django.shortcuts import render_to_response, render, redirect
+from django.shortcuts import render, redirect
 from django.template import RequestContext
 from django.contrib.auth.models import User
 from xbook.ajax.models import Subject
@@ -55,12 +55,8 @@ def send_feedback(request):
 
 def user_profile(request, username):
     user = User.objects.get(username=username)
-    assert isinstance(user, User)
     user_subjects = user.user_subject.all()
-    context = RequestContext(request, {
-        'user_subjects': user_subjects,
-    })
-    return render_to_response("user_profile.html", context)
+    return render(request, "user_profile.html", { 'user_subjects': user_subjects })
 
 
 def add_subject(request):
@@ -105,24 +101,15 @@ def delete_subject(request, subject):
 
 def site_general(request):
     bold = make_bold(CONTACT_US)
-    context = RequestContext(request, {
-        "bold": bold
-    })
-    return render_to_response("site_general.html", context)
+    return render(request, "site_general.html", { "bold": bold })
 
 def site_tos(request):
     bold = make_bold(TERMS_SERVICE)
-    context = RequestContext(request, {
-        "bold": bold
-    })
-    return render_to_response("site_tos.html", context)
+    return render(request, "site_tos.html", { "bold": bold })
 
 def site_pp(request):
     bold = make_bold(PRIVACY_POLICY)
-    context = RequestContext(request, {
-        "bold": bold
-    })
-    return render_to_response("site_pp.html", context)
+    return render(request, "site_pp.html", { "bold": bold })
 
 def make_bold(page):
     general = ""

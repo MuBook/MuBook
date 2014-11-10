@@ -9,7 +9,7 @@ admin.autodiscover()
 urlpatterns = patterns('',
     url(r'^accounts/logout/$', logout, {'next_page': '/'}),
     url(r'^accounts/', include('allauth.urls')),
-    
+
     url(r'^(?P<path>(?:prereq|postreq)/.*)', RedirectView.as_view(url='/explorer/%(path)s')),
 )
 
