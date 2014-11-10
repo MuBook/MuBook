@@ -74,11 +74,5 @@ def delete_subject(request, subject):
 
     return HttpResponse(status=200)
 
-def site_general(request):
-    return render(request, "site_general.html", { "general": True })
-
-def site_tos(request):
-    return render(request, "site_tos.html", { "tos": True })
-
-def site_pp(request):
-    return render(request, "site_pp.html", { "pp": True })
+def site(request, which):
+    return render(request, "site_{}.html".format(which), { which: True })

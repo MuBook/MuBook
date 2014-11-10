@@ -22,9 +22,9 @@ urlpatterns += patterns("xbook.front.views",
     url(r"^profile/subjects/delete/(?P<subject>.*?)$", "delete_subject"),
     url(r"^profile/.*?$", "explorer"),
 
-    url(r"^site/general$", "site_general", name="site_general"),
-    url(r"^site/termsofservice$", "site_tos", name="site_tos"),
-    url(r"^site/privacypolicy$", "site_pp", name="site_pp"),
+    url(r"^site/general$", "site", { "which": "general" }, name="site_general"),
+    url(r"^site/termsofservice$", "site", { "which": "tos" }, name="site_tos"),
+    url(r"^site/privacypolicy$", "site", { "which": "pp" }, name="site_pp"),
 
     url(r"^admin/", include(admin.site.urls)),
 
