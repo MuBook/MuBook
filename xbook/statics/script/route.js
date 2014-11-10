@@ -5,12 +5,12 @@ mubook.config(["$routeProvider", "$locationProvider",
     mubook.$routeProvider = $routeProvider
       .when("/profile/:username", {
         title: " - µBook",
-        templateUrl: "/template",
+        templateUrl: "view.html",
         controller: "UserCtrl"
       })
       .when("/explorer/:reqType/:university/:subjectCode", {
         title: " - µBook",
-        templateUrl: "/template",
+        templateUrl: "view.html",
         controller: "GraphCtrl"
       });
   }

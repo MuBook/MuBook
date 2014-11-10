@@ -38,10 +38,6 @@ def error404(request, path):
     return render(request, "404.html")
 
 
-def ngView(request):
-    return HttpResponse('<div id="graph"></div>')
-
-
 @require_POST
 def send_feedback(request):
     data = json.loads(request.body)
@@ -51,12 +47,6 @@ def send_feedback(request):
     send_mail("Feedback from " + name, email + "\n\n" + message, "xbookfeedback@gmail.com",
               ["xbookfeedback@gmail.com"], fail_silently=False)
     return HttpResponse("OK")
-
-
-def user_profile(request, username):
-    user = User.objects.get(username=username)
-    user_subjects = user.user_subject.all()
-    return render(request, "user_profile.html", { 'user_subjects': user_subjects })
 
 
 def add_subject(request):
