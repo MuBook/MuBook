@@ -38,6 +38,7 @@ def send_feedback(request):
     return HttpResponse()
 
 
+@require_POST
 def add_subject(request):
     if not request.user.is_authenticated():
         return HttpResponse(status=401)
@@ -61,6 +62,7 @@ def add_subject(request):
     return HttpResponse(status=201)
 
 
+@require_POST
 def delete_subject(request, subject):
     if not request.user.is_authenticated():
         return HttpResponse(status=401)
