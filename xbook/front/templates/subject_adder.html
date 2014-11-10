@@ -1,0 +1,53 @@
+<div id="subjectAdder" ng-controller="SubjectAddCtrl" popup ng-cloak>
+  <div class="sidePaneBtnWrapper">
+    <button id="subjectAdderAddBtn" class="btn btn-primary" type="button" ng-cloak ng-click="togglePopup($event)">Add Subject</button>
+    <button id="subjectAdderDelBtn" class="btn btn-danger" type="button" ng-cloak ng-click="toggleDelPopup($event)">Remove Subject</button>
+  </div>
+  <div id="subjectAdderSection" ng-show="isVisible()" ng-submit="addSubject($event)">
+    <h2 class="add-heading">Adding <span class="add-heading-subj" ng-bind="selected()"></span></h2>
+    <form name="subjectAdderForm" id="subjectAdderForm" class="form-horizontal">
+      {% csrf_token %}
+      <div class="form-group">
+        <label for="subjectAdderYear" class="col-sm-4 control-label">Year</label>
+        <div class="col-sm-4">
+          <input id="subjectAdderYear" class="form-control" name="subjectYear" type="number"
+              ng-model="modelYear" min="2000" max="2020" required ng-disabled="formDisabled">
+        </div>
+        <div class="control-label pull-left">
+          <span ng-hide="isValidYear()" class="label label-danger error-label">Invalid Year</span>
+        </div>
+      </div>
+      <div class="form-group">
+        <label for="subjectAdderSemester" class="col-sm-4 control-label">Semester</label>
+        <div class="col-sm-4">
+          <select name="subjectSemester" id="subjectAdderSemester" class="form-control"
+              ng-model="modelSemester" ng-options="semester for semester in semesters" ng-disabled="formDisabled"></select>
+        </div>
+        <div class="control-label pull-left">
+          <span ng-hide="isValidSemester()" class="label label-danger error-label">Invalid Semester</span>
+        </div>
+      </div>
+      <div class="form-group">
+        <label for="subjectAdderState" class="col-sm-4 control-label">State</label>
+        <div class="col-sm-4">
+          <select name="subjectState" id="subjectAdderState" class="form-control"
+              ng-model="modelState" ng-options="state for state in states" ng-disabled="formDisabled"></select>
+        </div>
+        <div class="control-label pull-left">
+          <span ng-hide="isValidState()" class="label label-danger error-label">Invalid Semester</span>
+        </div>
+      </div>
+      <div class="form-group">
+        <button id="subjectAdderConfirmBtn" class="col-sm-offset-2 col-sm-3 btn btn-success" type="submit" ng-disabled="formDisabled">Add</button>
+        <button class="col-sm-offset-1 col-sm-3 btn btn-default" ng-click="togglePopup($event)" type="button">Cancel</button>
+      </div>
+    </form>
+  </div>
+  <div id="subjDelConfirm" ng-show="isDelVisible()">
+    <p class="space-up-10">Are you sure you want to remove</p>
+    <p><b ng-bind="delSubjCode"></b></p>
+    <i class="close-popup glyphicon glyphicon-remove" ng-click="toggleDelPopup($event)"></i>
+    <button class="btn btn-danger" type="button" ng-click="deleteSubject($event)">Remove</button>
+    <button class="btn btn-default" type="button" ng-click="toggleDelPopup($event)">Cancel</button>
+  </div>
+</div>
