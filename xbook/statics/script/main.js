@@ -442,7 +442,7 @@ function SubjectAddCtrl($scope, $timeout, $route, $cookies, Global, PopupControl
     $.ajax({
       headers: { "X-CSRFToken": $cookies.csrftoken },
       type: 'POST',
-      url: '/profile/selected_subjects/add/',
+      url: '/profile/subjects/add',
       data: payload
     })
     .done(function(message) {
@@ -459,7 +459,7 @@ function SubjectAddCtrl($scope, $timeout, $route, $cookies, Global, PopupControl
   };
 
   $scope.deleteSubject = function(e) {
-    var url = '/profile/selected_subjects/delete/' + Global.selected + '/';
+    var url = '/profile/subjects/delete/' + Global.selected;
     $.ajax({
       headers: { "X-CSRFToken": $cookies.csrftoken },
       type: 'POST',

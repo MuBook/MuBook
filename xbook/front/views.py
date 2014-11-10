@@ -8,7 +8,6 @@ from django.views.decorators.cache import cache_page
 from django.views.decorators.csrf import csrf_protect
 from django.shortcuts import render, redirect
 from django.template import RequestContext
-from django.contrib.auth.models import User
 from xbook.ajax.models import Subject
 from xbook.front.models import UserSubject
 
@@ -51,43 +50,39 @@ def send_feedback(request):
 
 def add_subject(request):
     if not request.user.is_authenticated():
-        return HttpResponse(
-            "You can only add subjects if you are logged in. \
-            Please log in or sign up through the buttons at the top.")
+        return HttpResponse(status=401)
 
-    current_user = request.user
-    subject_code = request.POST["subject"]
-    subject_year = request.POST["year"]
-    subject_state = request.POST["state"]
-    subject_semester = request.POST["semester"]
+    currentUser = request.user
+    subjectCode = request.POST["subject"]
+    subjectYear = request.POST["year"]
+    subjectState = request.POST["state"]
+    subjectSemester = request.POST["semester"]
 
-    if not subject_code and not subject_year and not subject_state and not subject_semester:
-        return HttpResponse("Error: Bad payload.")
+    if not subjectCode or not subjectYear or not subjectState or not subjectSemester:
+        return HttpResponse(status=400)
 
-    selected_subject = Subject.objects.filter(code=subject_code)[0]
+    selected_subject = Subject.objects.filter(code=subjectCode)[0]
 
-    UserSubject.add(current_user, selected_subject,
-                    subject_year, subject_semester,
-                    subject_state)
+    UserSubject.add(currentUser, selected_subject, subjectYear, subjectSemester, subjectState)
 
     return HttpResponse("Success")
 
 
 def delete_subject(request, subject):
     if not request.user.is_authenticated():
-        return HttpResponse("You can only delete subject if you are logged in.")
+        return HttpResponse(status=401)
 
     user = request.user
     subject = Subject.objects.get(code=subject)
 
-    if not len(UserSubject.objects.filter(user=user, subject=subject)):
-        return HttpResponse("Sorry, you have not stared this subject")
+    try:
+        relation = UserSubject.objects.get(user=user, subject=subject)
+    except UserSubject.DoesNotExist:
+        return HttpResponse(status=404)
 
-    user_subject = UserSubject.objects.filter(user=user, subject=subject)[0]
+    relation.delete()
 
-    user_subject.delete()
-
-    return HttpResponse("Successfully deleted subject")
+    return HttpResponse(status=200)
 
 def site_general(request):
     bold = make_bold(CONTACT_US)

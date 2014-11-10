@@ -18,8 +18,8 @@ urlpatterns += patterns("xbook.front.views",
     url(r"^explorer/", "explorer", name="explorer"),
     url(r"^ajax/", include("xbook.ajax.urls")),
 
-    url(r"^profile/selected_subjects/add/$", "add_subject"),
-    url(r"^profile/selected_subjects/delete/(?P<subject>.*?)/$", "delete_subject"),
+    url(r"^profile/subjects/add$", "add_subject"),
+    url(r"^profile/subjects/delete/(?P<subject>.*?)$", "delete_subject"),
     url(r"^profile/.*?$", "explorer"),
 
     url(r"^site/general$", "site_general", name="site_general"),
