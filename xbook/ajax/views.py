@@ -60,10 +60,12 @@ def get_friends_info(localFriendsUids, subj, state):
         if uid in subject_state_uids(subj, state):
             social_account = SocialAccount.objects.filter(uid=uid)[0]
             user = social_account.user
-            friendsInfo.append({"fullname": user.get_full_name(),
-                                 "avatar_url": social_account.get_avatar_url(),
-                                 "fb_url": social_account.get_profile_url(),
-                                 "username": user.username})
+            friendsInfo.append({
+                "fullname": user.get_full_name(),
+                "avatar_url": social_account.get_avatar_url(),
+                "fb_url": social_account.get_profile_url(),
+                "username": user.username
+            })
     return friendsInfo
 
 
@@ -135,7 +137,6 @@ def subject_graph(request, uni, code, prereq=True):
 
         friends = get_friends(request.user)
         attach_user_info(nodeInfo, subj, request.user)
-        attach_statistics(nodeInfo, subj)
         attach_social_statistics(friends, nodeInfo, subj)
         nodes.append(nodeInfo)
 
@@ -167,15 +168,16 @@ def subjectList(request, uni):
     return JSON(subjList)
 
 
-def attach_statistics(nodeInfo, subj):
-    userSubjects = UserSubject.objects.filter(subject=subj)
+@cache_page(60 * 60 * 4)
+def subject_statistics(request, subjectCode):
+    userSubjects = UserSubject.objects.filter(subject__code=subjectCode)
 
-    nodeInfo.update(
-        numPlanned = userSubjects.filter(state=PLANNED).count(),
-        numStudying = userSubjects.filter(state=STUDYING).count(),
-        numCompleted = userSubjects.filter(state=COMPLETED).count(),
-        numBookmarked = userSubjects.filter(state=BOOKMARKED).count()
-    )
+    return JSON({
+        "planned": userSubjects.filter(state=PLANNED).count(),
+        "studying": userSubjects.filter(state=STUDYING).count(),
+        "completed": userSubjects.filter(state=COMPLETED).count(),
+        "bookmarked": userSubjects.filter(state=BOOKMARKED).count()
+    })
 
 
 def name_or_account(user):
@@ -238,7 +240,6 @@ def get_user_subject(request, username):
 
         friends = get_friends(selected_user)
         attach_user_info(nodeInfo, subj, selected_user)
-        attach_statistics(nodeInfo, subj)
         attach_social_statistics(friends, nodeInfo, subj)
         nodes.append(nodeInfo)
 

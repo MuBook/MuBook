@@ -2,6 +2,8 @@ var mubook = angular.module("mubook", ["ngRoute", "ngCookies"]);
 
 mubook.run(["$location", "$rootScope", "$window", "Global",
 function($location, $rootScope, $window, Global) {
+  $window.$rootScope = $rootScope;
+
   $rootScope.visualizeUserGraph = function(username) {
     $location.path("/profile/" + username);
   };
@@ -475,6 +477,26 @@ function SubjectAddCtrl($scope, $timeout, $route, $cookies, Global, PopupControl
       $scope.toggleDelPopup(e);
     });
   };
+});
+
+mubook.factory("Statistics", function($http) {
+  return function(code) {
+    return $http.get("/ajax/subjects/" + code + "/statistics");
+  };
+});
+
+mubook.controller("StatisticsCtrl", function StatisticsCtrl($scope, $routeParams, Statistics) {
+  var updateStatistics = function(event, target) {
+    Statistics(target || $routeParams.subjectCode).success(function(data) {
+      $scope.planned = data.planned;
+      $scope.studying = data.studying;
+      $scope.bookmarked = data.bookmarked;
+      $scope.completed = data.completed;
+    });
+  };
+
+  $scope.$on("$routeChangeSuccess", updateStatistics.bind(null, null, $routeParams.subjectCode));
+  $scope.$on("selectedSubjectChange", updateStatistics);
 });
 
 mubook.controller("SocialCtrl", function SocialCtrl($scope, PopupControl) {

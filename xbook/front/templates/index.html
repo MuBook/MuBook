@@ -24,11 +24,13 @@
     <div id="statistics">
       <h4 class="subjectMeta">Status</h4>
       <h5 class="statisticsLabel">All Students</h5>
-      <ul id="statisticsInfo" class="statisticsList">
-        <li class="statisticsItem" id="nCompleted"></li>
-        <li class="statisticsItem" id="nStudying"></li>
-        <li class="statisticsItem" id="nPlanned"></li>
-        <li class="statisticsItem" id="nBookmarked"></li>
+      <ul id="statisticsInfo" class="statisticsList" ng-controller="StatisticsCtrl">
+        {% verbatim %}
+        <li class="statisticsItem" id="nCompleted">{{completed}}<br>Completed</li>
+        <li class="statisticsItem" id="nStudying">{{studying}}<br>Studying</li>
+        <li class="statisticsItem" id="nPlanned">{{planned}}<br>Planned</li>
+        <li class="statisticsItem" id="nBookmarked">{{bookmarked}}<br>Bookmarked</li>
+        {% endverbatim %}
       </ul>
       {% if is_social %}
       <div id="socialInfo" ng-controller="SocialCtrl" popup ng-cloak>

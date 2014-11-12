@@ -7,5 +7,7 @@ urlpatterns = [
 
     url(r"^u-(?P<uni>.*?)/subjectlist$", views.subjectList),
 
+    url(r"subjects/(?P<subjectCode>\w+?)/statistics", views.subject_statistics),
+
     url(r"^profile/(?P<username>.*?)/?$", views.get_user_subject)
 ]

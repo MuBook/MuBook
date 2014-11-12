@@ -171,22 +171,20 @@ Graph.prototype.onClickHandler = function(d, graph, clickedNode, config) {
 
   graph.setStyle({ dimOpacity: true, removeSelected: true });
 
-  var $graphScope = angular.element($("#graphContainer")).scope();
-
   if (d.code != graph.prevHighlightNode) {
-    $graphScope.setSelected(d.code);
-    $graphScope.$apply();
+    $rootScope.setSelected(d.code);
+    $rootScope.$broadcast("selectedSubjectChange", d.code);
     graph.highlightSubtree(d.code);
     clickedNode.classList.add("selected");
     graph.prevHighlightNode = d.code;
   } else {
-    $graphScope.setSelected();
-    $graphScope.$apply();
+    $rootScope.setSelected();
+    $rootScope.$broadcast("selectedSubjectChange", $rootScope.getSelected());
     clickedNode.classList.remove("selected");
     graph.prevHighlightNode = "";
     graph.setStyle({ resetOpacity: true });
 
-    var selected = $graphScope.getSelected();
+    var selected = $rootScope.getSelected();
     var selectedIndex = graph.nodeData.nodes.findIndex({ code: selected });
     d = graph.nodeData.nodes[selectedIndex];
 
@@ -306,12 +304,7 @@ function insertFriendInfo(elemId, data) {
 }
 
 function showStatistics(d) {
-  var statText = ["Completed", "Studying", "Planned", "Bookmarked"],
-      statisticItems = document.querySelectorAll(".statisticsItem"),
-      data = [d.numCompleted, d.numStudying, d.numPlanned, d.numBookmarked];
-  for (var i = 0; i < statisticItems.length; ++i) {
-    statisticItems[i].innerHTML = data[i] + "<br>" + statText[i];
-  }
+  var statText = ["Completed", "Studying", "Planned", "Bookmarked"];
 
   var socialStatisticItems = document.querySelectorAll(".socialStatisticsItem");
   var socialData = [
