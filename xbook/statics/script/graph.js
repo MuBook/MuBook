@@ -195,9 +195,7 @@ Graph.prototype.onClickHandler = function(d, graph, clickedNode, config) {
 };
 
 Graph.prototype.onDblClickHandler = function(d) {
-  var $graph = angular.element($("#graphContainer")).scope();
-  $graph.showSubject(d.code);
-  $graph.$apply();
+  $rootScope.gotoSubject(d.code);
 };
 
 function zoomScale(node, edge) {

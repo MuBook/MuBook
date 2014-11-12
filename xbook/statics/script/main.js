@@ -8,7 +8,7 @@ function($location, $rootScope, $window, Global) {
     $location.path("/profile/" + username);
   };
 
-  $rootScope.goto = function(url) {
+  $rootScope.jumpTo = function(url) {
     $window.location.href = url;
   };
 
@@ -20,7 +20,7 @@ function($location, $rootScope, $window, Global) {
     }
   });
 
-  $rootScope.showSubject = function showSubject(code) {
+  $rootScope.gotoSubject = function gotoSubject(code) {
     Global.code = code;
     Global.selected = code;
     $location.path("/explorer/" + Global.reqType + "/melbourne/" + code);
@@ -212,8 +212,8 @@ mubook.controller("SearchCtrl", function SearchCtrl($scope, $timeout, Subjects, 
     }
   );
 
-  $scope.showSubject = function(code) {
-    $scope.$parent.showSubject(code);
+  $scope.gotoSubject = function(code) {
+    $scope.$parent.gotoSubject(code);
     $scope.toggleSearch();
   };
 
