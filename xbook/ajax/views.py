@@ -26,45 +26,61 @@ def Ajax(*args, **kwargs):
     return resp
 
 
+def JSON(hash, *args, **kwargs):
+    return Ajax(json.dumps(hash), *args, content_type="application/json", **kwargs)
+
+
+def presentSubject(subj, root=False):
+    return {
+        "code": subj.code,
+        "name": subj.name,
+        "url": subj.link,
+        "root": root,
+        "credit": str(subj.credit),
+        "commenceDate": subj.commence_date,
+        "timeCommitment": subj.time_commitment,
+        "overview": subj.overview,
+        "objectives": subj.objectives,
+        "assessment": subj.assessment,
+        "prereq": subj.prerequisite,
+        "coreq": subj.corequisite
+    }
+
+
 # return uid of users who mark "subject" as "state"
 def subject_state_uids(subj, state):
-    return map((lambda x: x.user.socialaccount_set.all()[0].uid),
-               filter((lambda x: x.user.socialaccount_set.count() > 0),
-                      UserSubject.objects.filter(subject=subj, state=state)))
+    return map(lambda x: x.user.socialaccount_set.all()[0].uid,
+               filter(lambda x: x.user.socialaccount_set.count() > 0,
+                   UserSubject.objects.filter(subject=subj, state=state)))
 
 
-def get_friends_info(local_friends_uids, subj, state):
-    friends_info = []
-    for uid in local_friends_uids:
+def get_friends_info(localFriendsUids, subj, state):
+    friendsInfo = []
+    for uid in localFriendsUids:
         if uid in subject_state_uids(subj, state):
             social_account = SocialAccount.objects.filter(uid=uid)[0]
             user = social_account.user
-            friends_info.append({"fullname": user.get_full_name(),
+            friendsInfo.append({"fullname": user.get_full_name(),
                                  "avatar_url": social_account.get_avatar_url(),
                                  "fb_url": social_account.get_profile_url(),
                                  "username": user.username})
-    return friends_info
+    return friendsInfo
 
 
-def social_statistics(friends, subj):
-    friends_uids = map((lambda x: x.get("id")), friends)
-    local_facebook_uids = map((lambda x: x.uid), SocialAccount.objects.filter(provider="facebook"))
-    local_friends_uids = filter(lambda x: x in friends_uids, local_facebook_uids)
+def attach_social_statistics(friends, nodeInfo, subj):
+    if not friends:
+        return
 
-    friends_info_planned = get_friends_info(local_friends_uids, subj, PLANNED)
-    friends_info_studying = get_friends_info(local_friends_uids, subj, STUDYING)
-    friends_info_completed = get_friends_info(local_friends_uids, subj, COMPLETED)
-    friends_info_bookmarked = get_friends_info(local_friends_uids, subj, BOOKMARKED)
+    friendsUids = map(lambda x: x.get("id"), friends)
+    localFacebookUids = map(lambda x: x.uid, SocialAccount.objects.filter(provider="facebook"))
+    localFriendsUids = filter(lambda x: x in friendsUids, localFacebookUids)
 
-    return {"friendsInfoPlanned": friends_info_planned,
-            "friendsInfoStudying": friends_info_studying,
-            "friendsInfoCompleted": friends_info_completed,
-            "friendsInfoBookmarked": friends_info_bookmarked}
-
-
-def attach_social_statistics(friends, nodeinfo, subj):
-    if friends:
-        nodeinfo.update(social_statistics(friends, subj))
+    nodeInfo.update(
+        friendsInfoPlanned = get_friends_info(localFriendsUids, subj, PLANNED),
+        friendsInfoStudying = get_friends_info(localFriendsUids, subj, STUDYING),
+        friendsInfoCompleted = get_friends_info(localFriendsUids, subj, COMPLETED),
+        friendsInfoBookmarked = get_friends_info(localFriendsUids, subj, BOOKMARKED)
+    )
 
 
 def get_friends(user):
@@ -77,22 +93,23 @@ def get_friends(user):
     return friends
 
 
-def attach_user_info(nodeinfo, subj, user):
+def attach_user_info(nodeInfo, subj, user):
     if not user.is_authenticated() or \
         not len(UserSubject.objects.filter(user=user, subject=subj)):
-        nodeinfo.update({"hasCompleted": False})
+        nodeInfo.update({"hasCompleted": False})
     else:
         user_subject = UserSubject.objects.filter(user=user, subject=subj)[0]
-        nodeinfo.update({
-            "hasCompleted": True,
-            "yearCompleted": user_subject.year,
-            "semesterCompleted": user_subject.semester,
-            "state": user_subject.state,
-        })
+        nodeInfo.update(
+            state = user_subject.state,
+            hasCompleted = True,
+            yearCompleted = user_subject.year,
+            semesterCompleted = user_subject.semester
+        )
 
 
-def subject_graph(user, code, prereq=True):
-    graph = { "nodes": [], "links": [] }
+def subject_graph(request, uni, code, prereq=True):
+    nodes, links = [], []
+    graph = { "nodes": nodes, "links": links }
     subjQueue = deque()
 
     try:
@@ -110,33 +127,17 @@ def subject_graph(user, code, prereq=True):
         (lambda relation: relation.prereq) or \
         (lambda relation: relation.subject)
 
-    nodes = graph["nodes"]
-    links = graph["links"]
-
-    friends = get_friends(user)
     parentIndex, codeToIndex = -1, { subject.code: 0 }
     while subjQueue:
         subj = subjQueue.popleft()
 
-        nodeinfo = {
-            "code": subj.code,
-            "name": subj.name,
-            "url": subj.link,
-            "root": parentIndex == -1 and True or False,
-            "credit": str(subj.credit),
-            "commenceDate": subj.commence_date,
-            "timeCommitment": subj.time_commitment,
-            "overview": subj.overview,
-            "objectives": subj.objectives,
-            "assessment": subj.assessment,
-            "prereq": subj.prerequisite,
-            "coreq": subj.corequisite
-        }
+        nodeInfo = presentSubject(subj, root=(parentIndex == -1))
 
-        attach_user_info(nodeinfo, subj, user)
-        attach_statistics(nodeinfo, subj)
-        attach_social_statistics(friends, nodeinfo, subj)
-        nodes.append(nodeinfo)
+        friends = get_friends(request.user)
+        attach_user_info(nodeInfo, subj, request.user)
+        attach_statistics(nodeInfo, subj)
+        attach_social_statistics(friends, nodeInfo, subj)
+        nodes.append(nodeInfo)
 
         parentIndex += 1
         queryParam[queryKey] = subj.code
@@ -152,59 +153,48 @@ def subject_graph(user, code, prereq=True):
             if not seen:
                 subjQueue.append(related)
 
-    return graph
-
-
-def subject(request, uni, code, prereq=True):
-    graph = subject_graph(request.user, code.upper(), prereq)
-
-    info = json.dumps(graph)
-
-    return Ajax(info, content_type="application/json")
-
-
-def subjectListCollector(uni):
-    d = {"subjList": []}
-    l = d["subjList"]
-
-    for subj in Subject.objects.all():
-        this = {"code": subj.code, "name": subj.name}
-        l.append(this)
-
-    return json.dumps(d)
+    return JSON(graph)
 
 
 @cache_page(60 * 60 * 24)
 def subjectList(request, uni):
-    return Ajax(subjectListCollector(uni), content_type="application/json")
+    l = []
+    subjList = { "subjList": l }
+
+    for subj in Subject.objects.only("code", "name").iterator():
+        l.append({ "code": subj.code, "name": subj.name })
+
+    return JSON(subjList)
 
 
-def attach_statistics(nodeinfo, subj):
-    num_planned = UserSubject.objects.filter(subject=subj, state=PLANNED).count()
-    num_studying = UserSubject.objects.filter(subject=subj, state=STUDYING).count()
-    num_completed = UserSubject.objects.filter(subject=subj, state=COMPLETED).count()
-    num_bookmarked = UserSubject.objects.filter(subject=subj, state=BOOKMARKED).count()
+def attach_statistics(nodeInfo, subj):
+    userSubjects = UserSubject.objects.filter(subject=subj)
 
-    nodeinfo.update({"numPlanned": num_planned,
-                     "numStudying": num_studying,
-                     "numCompleted": num_completed,
-                     "numBookmarked": num_bookmarked})
+    nodeInfo.update(
+        numPlanned = userSubjects.filter(state=PLANNED).count(),
+        numStudying = userSubjects.filter(state=STUDYING).count(),
+        numCompleted = userSubjects.filter(state=COMPLETED).count(),
+        numBookmarked = userSubjects.filter(state=BOOKMARKED).count()
+    )
+
+
+def name_or_account(user):
+    if user.first_name and user.last_name:
+        return user.first_name + " " + user.last_name
+    elif user.first_name:
+        return user.first_name
+    elif user.last_name:
+        return user.last_name
+    else:
+        return user.username
 
 
 def attach_userinfo_node(user):
-    def name_or_account():
-        if user.first_name and user.last_name:
-            return user.first_name + " " + user.last_name
-        elif user.first_name:
-            return user.first_name
-        elif user.last_name:
-            return user.last_name
-        else:
-            return user.username
+    user = name_or_account(user)
 
     return {
-        "code": name_or_account(),
-        "name": name_or_account(),
+        "code": user,
+        "name": user,
         "root": True,
         "credit": "",
         "commenceDate": "",
@@ -231,43 +221,26 @@ def attach_userinfo_node(user):
 
 
 def get_user_subject(request, username, pretty=False):
-    graph = { "nodes": [], "links": [] }
+    nodes, links = [], []
+    graph = { "nodes": nodes, "links": links }
 
     if not len(User.objects.filter(username=username)):
-        return Ajax(json.dumps(graph), content_type="application/json")
+        return JSON(graph)
 
-    selected_user = User.objects.filter(username=username)[0]
+    selected_user = User.objects.get(username=username)
     user_subjects = selected_user.user_subject.all()
 
-    add_link = lambda source, target: {"source": source, "target": target}
-
-    nodes = graph["nodes"]
-    links = graph["links"]
-
-    friends = get_friends(selected_user)
     parent_index = -1
     for user_subject in user_subjects:
         subj = user_subject.subject
 
-        nodeinfo = {
-            "code": subj.code,
-            "name": subj.name,
-            "url": subj.link,
-            "root": False,
-            "credit": str(subj.credit),
-            "commenceDate": subj.commence_date,
-            "timeCommitment": subj.time_commitment,
-            "overview": subj.overview,
-            "objectives": subj.objectives,
-            "assessment": subj.assessment,
-            "prereq": subj.prerequisite,
-            "coreq": subj.corequisite
-        }
+        nodeInfo = presentSubject(subj)
 
-        attach_user_info(nodeinfo, subj, selected_user)
-        attach_statistics(nodeinfo, subj)
-        attach_social_statistics(friends, nodeinfo, subj)
-        nodes.append(nodeinfo)
+        friends = get_friends(selected_user)
+        attach_user_info(nodeInfo, subj, selected_user)
+        attach_statistics(nodeInfo, subj)
+        attach_social_statistics(friends, nodeInfo, subj)
+        nodes.append(nodeInfo)
 
         parent_index += 1
         relations = SubjectPrereq.objects.filter(subject__code=subj.code)
@@ -277,11 +250,9 @@ def get_user_subject(request, username, pretty=False):
             for taken_subject in user_subjects:
                 related = relation.prereq
                 if taken_subject.subject.code == related.code:
-                    links.append(add_link(parent_index, compare_index))
+                    links.append({ "source": parent_index, "target": compare_index })
                 compare_index += 1
 
     nodes.append(attach_userinfo_node(selected_user))
 
-    info = json.dumps(graph, indent=4 if pretty else None)
-
-    return Ajax(info, content_type="application/json")
+    return JSON(graph)
