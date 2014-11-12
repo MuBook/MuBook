@@ -220,7 +220,7 @@ def attach_userinfo_node(user):
     }
 
 
-def get_user_subject(request, username, pretty=False):
+def get_user_subject(request, username):
     nodes, links = [], []
     graph = { "nodes": nodes, "links": links }
 
