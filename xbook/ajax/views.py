@@ -1,14 +1,18 @@
 import json
 
-from collections import deque
+from django.http import HttpResponse
+from django.views.decorators.cache import cache_page
+from django.core.cache import cache
+
+from django.contrib.auth.models import User
+
 from allauth.socialaccount.models import SocialToken
 from allauth.socialaccount.models import SocialAccount
-from django.http import HttpResponse
-from django.core.exceptions import ObjectDoesNotExist
-from django.views.decorators.cache import cache_page
-from django.contrib.auth.models import User
+
 from xbook.ajax.models import Subject, SubjectPrereq
 from xbook.front.models import UserSubject
+
+from collections import deque
 from facepy import GraphAPI
 
 BOOKMARKED = "Bookmarked"
@@ -17,7 +21,7 @@ STUDYING = "Studying"
 PLANNED = "Planned"
 
 
-def Ajax(*args, **kwargs):
+def AJAX(*args, **kwargs):
     resp = HttpResponse(*args, **kwargs)
     resp["Access-Control-Allow-Origin"] = "*"
     resp["Access-Control-Allow-Methods"] = "GET, POST"
@@ -27,7 +31,7 @@ def Ajax(*args, **kwargs):
 
 
 def JSON(hash, *args, **kwargs):
-    return Ajax(json.dumps(hash), *args, content_type="application/json", **kwargs)
+    return AJAX(json.dumps(hash), *args, content_type="application/json", **kwargs)
 
 
 def presentSubject(subj, root=False):
@@ -47,52 +51,60 @@ def presentSubject(subj, root=False):
     }
 
 
-# return uid of users who mark "subject" as "state"
-def subject_state_uids(subj, state):
-    return map(lambda x: x.user.socialaccount_set.all()[0].uid,
-               filter(lambda x: x.user.socialaccount_set.count() > 0,
-                   UserSubject.objects.filter(subject=subj, state=state)))
+def presentFriend(socialAccount, **details):
+    info = {
+        "avatarUrl": socialAccount.get_avatarUrl(),
+        "fbUrl": socialAccount.get_profile_url(),
+        "fullname": socialAccount.user.get_full_name(),
+        "username": socialAccount.user.username
+    }
+    info.update(**details)
+
+    return info
 
 
-def get_friends_info(localFriendsUids, subj, state):
+def get_friends_info(localFriends, subjectCode):
     friendsInfo = []
-    for uid in localFriendsUids:
-        if uid in subject_state_uids(subj, state):
-            social_account = SocialAccount.objects.filter(uid=uid)[0]
-            user = social_account.user
-            friendsInfo.append({
-                "fullname": user.get_full_name(),
-                "avatar_url": social_account.get_avatar_url(),
-                "fb_url": social_account.get_profile_url(),
-                "username": user.username
-            })
+
+    users = map(lambda friend: friend.user, localFriends)
+    userSubjects = UserSubject.objects.filter(user__in=users, subject__code=subjectCode)
+
+    for friend in localFriends:
+        friendsInfo.append(
+            presentFriend(
+                friend,
+                state = 'blah'
+            )
+        )
+
     return friendsInfo
 
 
-def attach_social_statistics(friends, nodeInfo, subj):
-    if not friends:
-        return
+def social_statistics(request, subjectCode):
+    friendsUIDs = set(get_friend_uids(request.user) or [])
 
-    friendsUids = map(lambda x: x.get("id"), friends)
-    localFacebookUids = map(lambda x: x.uid, SocialAccount.objects.filter(provider="facebook"))
-    localFriendsUids = filter(lambda x: x in friendsUids, localFacebookUids)
+    if not friendsUIDs: return
 
-    nodeInfo.update(
-        friendsInfoPlanned = get_friends_info(localFriendsUids, subj, PLANNED),
-        friendsInfoStudying = get_friends_info(localFriendsUids, subj, STUDYING),
-        friendsInfoCompleted = get_friends_info(localFriendsUids, subj, COMPLETED),
-        friendsInfoBookmarked = get_friends_info(localFriendsUids, subj, BOOKMARKED)
-    )
+    localFriends = SocialAccount.objects.filter(uid__in=friendsUIDs, provider="facebook")
+
+    return JSON({
+        "friends": get_friends_info(localFriends, subjectCode)
+    })
 
 
-def get_friends(user):
-    friends = None
+def get_friend_uids(user):
+    friendsCacheKey = 'friend-ids-of-{}'.format(user.id)
+    friendUIDs = cache.get(friendsCacheKey)
+
+    if friendUIDs: return friendUIDs
+
     if user.is_authenticated():
         tokens = SocialToken.objects.filter(account__user=user, account__provider="facebook")
         if tokens:
             fb_graph = GraphAPI(tokens[0])
-            friends = fb_graph.get("me/friends").get("data")
-    return friends
+            friendUIDs = map(lambda f: f["id"], fb_graph.get("me/friends").get("data"))
+            cache.set(friendsCacheKey, friendUIDs, timeout=60 * 60)
+    return friendUIDs
 
 
 def attach_user_info(nodeInfo, subj, user):
@@ -118,7 +130,7 @@ def subject_graph(request, uni, code, prereq=True):
     try:
         subject = Subject.objects.get(code=code)
         subjQueue.append(subject)
-    except ObjectDoesNotExist:
+    except Subject.DoesNotExist:
         return graph
 
     queryKey = prereq and "subject__code" or "prereq__code"
@@ -130,7 +142,6 @@ def subject_graph(request, uni, code, prereq=True):
         (lambda relation: relation.prereq) or \
         (lambda relation: relation.subject)
 
-    friends = get_friends(request.user)
     parentIndex, codeToIndex = -1, { subject.code: 0 }
     while subjQueue:
         subj = subjQueue.popleft()
@@ -138,7 +149,6 @@ def subject_graph(request, uni, code, prereq=True):
         nodeInfo = presentSubject(subj, root=(parentIndex == -1))
 
         attach_user_info(nodeInfo, subj, request.user)
-        attach_social_statistics(friends, nodeInfo, subj)
         nodes.append(nodeInfo)
 
         parentIndex += 1
@@ -159,7 +169,7 @@ def subject_graph(request, uni, code, prereq=True):
 
 
 @cache_page(60 * 60 * 24)
-def subjectList(request, uni):
+def subject_list(request, uni):
     l = []
     subjList = { "subjList": l }
 
@@ -233,7 +243,6 @@ def get_user_subject(request, username):
     selected_user = User.objects.get(username=username)
     user_subjects = selected_user.user_subject.all()
 
-    friends = get_friends(selected_user)
     parent_index = -1
     for user_subject in user_subjects:
         subj = user_subject.subject
@@ -241,7 +250,6 @@ def get_user_subject(request, username):
         nodeInfo = presentSubject(subj)
 
         attach_user_info(nodeInfo, subj, selected_user)
-        attach_social_statistics(friends, nodeInfo, subj)
         nodes.append(nodeInfo)
 
         parent_index += 1

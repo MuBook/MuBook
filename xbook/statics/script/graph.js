@@ -272,7 +272,7 @@ function insertFriendInfo(elemId, data) {
     var socialInfo = $("<li class=\"socialInfo\"></li>");
 
     var friendAvatar = $("<a/>", {
-      href: data[i].fb_url,
+      href: data[i].fbUrl,
       target: "_blank"
     });
 
@@ -283,7 +283,7 @@ function insertFriendInfo(elemId, data) {
     });
 
     var img = $("<img>", {
-      src: data[i].avatar_url,
+      src: data[i].avatarUrl,
       class: "avatar"
     });
 

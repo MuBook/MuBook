@@ -48,7 +48,7 @@ mubook.run(["$window", "PopupControl", function($window, PopupControl) {
 }]);
 
 mubook.factory("Subjects", function($http) {
-  return $http.get("/ajax/u-melbourne/subjectlist");
+  return $http.get("/ajax/u-melbourne/subject_list");
 });
 
 mubook.factory("Global", function($cookies) {
@@ -481,7 +481,7 @@ function SubjectAddCtrl($scope, $timeout, $route, $cookies, Global, PopupControl
 
 mubook.factory("Statistics", function($http) {
   return function(code) {
-    return $http.get("/ajax/subjects/" + code + "/statistics");
+    return $http.get("/ajax/subjects/" + code + "/general_statistics");
   };
 });
 
