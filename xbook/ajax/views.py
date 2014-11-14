@@ -109,6 +109,7 @@ def attach_user_info(nodeInfo, subj, user):
         )
 
 
+@cache_page(60 * 60)
 def subject_graph(request, uni, code, prereq=True):
     nodes, links = [], []
     graph = { "nodes": nodes, "links": links }
