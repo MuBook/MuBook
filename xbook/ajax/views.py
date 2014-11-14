@@ -129,13 +129,13 @@ def subject_graph(request, uni, code, prereq=True):
         (lambda relation: relation.prereq) or \
         (lambda relation: relation.subject)
 
+    friends = get_friends(request.user)
     parentIndex, codeToIndex = -1, { subject.code: 0 }
     while subjQueue:
         subj = subjQueue.popleft()
 
         nodeInfo = presentSubject(subj, root=(parentIndex == -1))
 
-        friends = get_friends(request.user)
         attach_user_info(nodeInfo, subj, request.user)
         attach_social_statistics(friends, nodeInfo, subj)
         nodes.append(nodeInfo)
@@ -232,13 +232,13 @@ def get_user_subject(request, username):
     selected_user = User.objects.get(username=username)
     user_subjects = selected_user.user_subject.all()
 
+    friends = get_friends(selected_user)
     parent_index = -1
     for user_subject in user_subjects:
         subj = user_subject.subject
 
         nodeInfo = presentSubject(subj)
 
-        friends = get_friends(selected_user)
         attach_user_info(nodeInfo, subj, selected_user)
         attach_social_statistics(friends, nodeInfo, subj)
         nodes.append(nodeInfo)
