@@ -3,7 +3,6 @@ from django.contrib.auth.views import logout
 from django.views.generic import RedirectView
 
 from django.contrib import admin
-admin.autodiscover()
 
 urlpatterns = patterns("",
     url(r"^accounts/logout/$", logout, {"next_page": "/"}),

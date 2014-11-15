@@ -1,6 +1,6 @@
 facepy
 --allow-external PIL
-Django==1.6.7
+Django==1.7.1
 dj-database-url==0.3.0
 dj-static==0.0.6
 django-toolbelt==0.0.1
