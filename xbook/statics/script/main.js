@@ -35,7 +35,6 @@ function($location, $rootScope, $window, Global) {
   };
 
   $rootScope.extend = function(data) {
-    console.log(this, data);
     angular.extend(this, data);
   };
 }]);
@@ -456,7 +455,7 @@ function SubjectAddCtrl($scope, $timeout, $route, $cookies, Global, PopupControl
       $route.reload();
     })
     .fail(function(message) {
-      console.warn("Fail: " + message);
+      console.error("Fail: " + message);
     })
     .always(function() {
       $scope.formDisabled = false;
@@ -476,7 +475,7 @@ function SubjectAddCtrl($scope, $timeout, $route, $cookies, Global, PopupControl
       $route.reload();
     })
     .fail(function(message) {
-      console.warn("Fail: " + message);
+      console.error("Fail: " + message);
     })
     .always(function() {
       $scope.toggleDelPopup(e);
