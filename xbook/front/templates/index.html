@@ -37,18 +37,19 @@
       {% verbatim %}
       <h4 class="statisticsLabel">Friends</h4>
       <ul id="socialStatisticsInfo" class="statisticsList">
-        <li class="socialStatisticsItem" id="nSocialCompleted"
+        <li class="socialStatisticsItem clickable" id="nSocialCompleted"
             ng-click="toggleFriendsList('Completed')">{{ friends | state: 'Completed' }}</li>
-        <li class="socialStatisticsItem" id="nSocialStudying"
+        <li class="socialStatisticsItem clickable" id="nSocialStudying"
             ng-click="toggleFriendsList('Studying')">{{ friends | state: 'Studying' }}</li>
-        <li class="socialStatisticsItem" id="nSocialPlanned"
+        <li class="socialStatisticsItem clickable" id="nSocialPlanned"
             ng-click="toggleFriendsList('Planned')">{{ friends | state: 'Planned' }}</li>
-        <li class="socialStatisticsItem" id="nSocialBookmarked"
+        <li class="socialStatisticsItem clickable" id="nSocialBookmarked"
             ng-click="toggleFriendsList('Bookmarked')">{{ friends | state: 'Bookmarked' }}</li>
       </ul>
 
-      <div id="socialCompleted" class="socialInfoPopup" ng-show="friendsListVisible()">
-        <ul id="friendsInfoCompleted" class="friendsInfo">
+      <div id="socialCompleted" class="socialInfoPopup abs-center panel panel-default" ng-show="friendsListVisible()">
+        <div class="panel-heading">Friends list</div>
+        <ul id="friendsInfoCompleted" class="friendsInfo panel-body">
           <li class="socialInfo" ng-repeat="friend in filteredFriends">
             <a ng-href="{{friend.fbUrl}}" target="_blank">
               <img class="avatar" ng-src="{{friend.avatarUrl}}" alt="Avatar">

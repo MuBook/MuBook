@@ -66,6 +66,13 @@ a:focus {
   cursor: pointer;
 }
 
+.abs-center {
+  position: fixed;
+  left: 50%;
+  top: 50%;
+  transform: translate(-50%, -50%);
+}
+
 .space-up-10 {
   margin-top: 10px;
 }
@@ -294,8 +301,9 @@ a:focus {
   text-align: center
 }
 
-#statisticsInfo, #socialStatisticsInfo {
-  color: #fff;pull-right
+#statisticsInfo,
+#socialStatisticsInfo {
+  color: #fff;
   font-weight: 600;
 }
 
@@ -359,15 +367,9 @@ a:focus {
 }
 
 .socialInfoPopup {
-  position: fixed;
-  left: 50%;
-  margin-left: -220px;
   padding: 10px;
-  top: 25%;
   width: 440px;
-  background: #fff;
   box-shadow: 0 4px 6px 2px rgba(0, 0, 0, .10);
-  border-radius: 5px;
 }
 
 .avatar {
