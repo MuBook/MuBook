@@ -21,10 +21,10 @@
       </div>
     </div>
 
-    <div id="statistics">
+    <div id="statistics" ng-controller="StatisticsCtrl" popup ng-cloak>
       <h4 class="subjectMeta">Status</h4>
       <h5 class="statisticsLabel">All Students</h5>
-      <ul id="statisticsInfo" class="statisticsList" ng-controller="StatisticsCtrl">
+      <ul id="statisticsInfo" class="statisticsList">
         {% verbatim %}
         <li class="statisticsItem" id="nCompleted">{{completed}}<br>Completed</li>
         <li class="statisticsItem" id="nStudying">{{studying}}<br>Studying</li>
@@ -32,34 +32,34 @@
         <li class="statisticsItem" id="nBookmarked">{{bookmarked}}<br>Bookmarked</li>
         {% endverbatim %}
       </ul>
-      {% if is_social %}
-      <div id="socialInfo" ng-controller="SocialCtrl" popup ng-cloak>
-        <h4 class="statisticsLabel">Friends</h4>
-        <ul id="socialStatisticsInfo" class="statisticsList">
-          <li class="socialStatisticsItem" id="nSocialCompleted" ng-click="togglePopupCompleted($event)"></li>
-          <li class="socialStatisticsItem" id="nSocialStudying" ng-click="togglePopupStudying($event)"></li>
-          <li class="socialStatisticsItem" id="nSocialPlanned" ng-click="togglePopupPlanned($event)"></li>
-          <li class="socialStatisticsItem" id="nSocialBookmarked" ng-click="togglePopupBookmarked($event)"></li>
-        </ul>
 
-        <div id="socialCompleted" class="socialInfoPopup" ng-show="isVisibleCompleted()">
-          <h4 class="socialPopupHeading">Friends completed this subject</h4>
-          <ul id="friendsInfoCompleted" class="friendsInfo"></ul>
-        </div>
-        <div id="socialStudying" class="socialInfoPopup" ng-show="isVisibleStudying()">
-          <h4 class="socialPopupHeading">Friends studying this subject</h4>
-          <ul id="friendsInfoStudying" class="friendsInfo"></ul>
-        </div>
-        <div id="socialPlanned" class="socialInfoPopup" ng-show="isVisiblePlanned()">
-          <h4 class="socialPopupHeading">Friends planned this subject</h4>
-          <ul id="friendsInfoPlanned" class="friendsInfo"></ul>
-        </div>
-        <div id="socialBookmarked" class="socialInfoPopup" ng-show="isVisibleBookmarked()">
-          <h4 class="socialPopupHeading">Friends bookmarked this subject</h4>
-          <ul id="friendsInfoBookmarked" class="friendsInfo"></ul>
-        </div>
+      {% if isSocial %}
+      {% verbatim %}
+      <h4 class="statisticsLabel">Friends</h4>
+      <ul id="socialStatisticsInfo" class="statisticsList">
+        <li class="socialStatisticsItem" id="nSocialCompleted"
+            ng-click="toggleFriendsList('Completed')">{{ friends | state: 'Completed' }}</li>
+        <li class="socialStatisticsItem" id="nSocialStudying"
+            ng-click="toggleFriendsList('Studying')">{{ friends | state: 'Studying' }}</li>
+        <li class="socialStatisticsItem" id="nSocialPlanned"
+            ng-click="toggleFriendsList('Planned')">{{ friends | state: 'Planned' }}</li>
+        <li class="socialStatisticsItem" id="nSocialBookmarked"
+            ng-click="toggleFriendsList('Bookmarked')">{{ friends | state: 'Bookmarked' }}</li>
+      </ul>
+
+      <div id="socialCompleted" class="socialInfoPopup" ng-show="friendsListVisible()">
+        <ul id="friendsInfoCompleted" class="friendsInfo">
+          <li class="socialInfo" ng-repeat="friend in filteredFriends">
+            <a ng-href="{{friend.fbUrl}}" target="_blank">
+              <img class="avatar" ng-src="{{friend.avatarUrl}}" alt="Avatar">
+              {{friend.fullname}}
+            </a>
+            <a class="profileLink clickable" ng-click="gotoUser(friend.username)">Mubook Profile</a>
+          </li>
+        </ul>
       </div>
-    {% endif %}
+      {% endverbatim %}
+      {% endif %}
     </div>
 
     <div id="creditPoint">
@@ -130,6 +130,7 @@
 {% block page-js %}
 <script src="//cdnjs.cloudflare.com/ajax/libs/d3/3.4.1/d3.min.js" charset="utf-8"></script>
 <script src="//cdn.jsdelivr.net/dagre-d3/0.2.9/dagre-d3.min.js"></script>
+<script src="//cdnjs.cloudflare.com/ajax/libs/lodash.js/2.4.1/lodash.min.js"></script>
 <script src="/static/script/main.js"></script>
 <script src="/static/script/route.js"></script>
 <script src="/static/script/graph.js"></script>

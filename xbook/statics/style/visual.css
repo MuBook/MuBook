@@ -90,6 +90,10 @@ a:focus {
   margin: 20px 0;
 }
 
+.clickable {
+  cursor: pointer;
+}
+
 /************
 * =Effects
 *************/
@@ -291,7 +295,7 @@ a:focus {
 }
 
 #statisticsInfo, #socialStatisticsInfo {
-  color: #fff;
+  color: #fff;pull-right
   font-weight: 600;
 }
 
@@ -341,25 +345,17 @@ a:focus {
   background-color: #556270;
 }
 
-ul.friendsInfo
-{
-    list-style-type: none;
-    padding-left: 0;
-    padding-top: 14px;
-    text-align: left;
-    margin: 0;
+.friendsInfo {
+  list-style-type: none;
+  padding-left: 0;
+  text-align: left;
+  margin: 0;
 }
 
-a.profileLink {
-    float: right;
-    font-size: 13px;
-    margin-top: 15.5px;
-}
-
-h4.socialPopupHeading {
-    text-align: left;
-    font-size: 14px;
-    color: #141823;
+.profileLink {
+  float: right;
+  font-size: 13px;
+  margin-top: 15.5px;
 }
 
 .socialInfoPopup {

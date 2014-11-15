@@ -4,10 +4,6 @@ mubook.run(["$location", "$rootScope", "$window", "Global",
 function($location, $rootScope, $window, Global) {
   $window.$rootScope = $rootScope;
 
-  $rootScope.visualizeUserGraph = function(username) {
-    $location.path("/profile/" + username);
-  };
-
   $rootScope.jumpTo = function(url) {
     $window.location.href = url;
   };
@@ -26,12 +22,21 @@ function($location, $rootScope, $window, Global) {
     $location.path("/explorer/" + Global.reqType + "/melbourne/" + code);
   };
 
+  $rootScope.gotoUser = function gotoUser(username) {
+    $location.path("/profile/" + username);
+  };
+
   $rootScope.setSelected = function setSelected(code) {
     Global.selected = code || Global.code;
   };
 
   $rootScope.getSelected = function getSelected() {
     return Global.selected;
+  };
+
+  $rootScope.extend = function(data) {
+    console.log(this, data);
+    angular.extend(this, data);
   };
 }]);
 
@@ -479,40 +484,49 @@ function SubjectAddCtrl($scope, $timeout, $route, $cookies, Global, PopupControl
   };
 });
 
-mubook.factory("Statistics", function($http) {
+mubook.factory("GeneralStatistics", function($http) {
   return function(code) {
     return $http.get("/ajax/subjects/" + code + "/general_statistics");
   };
 });
 
-mubook.controller("StatisticsCtrl", function StatisticsCtrl($scope, $routeParams, Statistics) {
+mubook.factory("SocialStatistics", function($http) {
+  return function(code) {
+    return $http.get("/ajax/subjects/" + code + "/social_statistics");
+  };
+});
+
+mubook.filter("state", function() {
+  return function(list, state) {
+    return _.where(list, { state: state }).length;
+  };
+});
+
+mubook.controller("StatisticsCtrl", ["$scope", "$routeParams", "GeneralStatistics", "SocialStatistics", "PopupControl",
+function StatisticsCtrl($scope, $routeParams, GeneralStatistics, SocialStatistics, PopupControl) {
   var updateStatistics = function(event, target) {
-    Statistics(target || $routeParams.subjectCode).success(function(data) {
-      $scope.planned = data.planned;
-      $scope.studying = data.studying;
-      $scope.bookmarked = data.bookmarked;
-      $scope.completed = data.completed;
-    });
+    GeneralStatistics(target || $routeParams.subjectCode).success($scope.extend.bind($scope));
+    SocialStatistics(target || $routeParams.subjectCode).success($scope.extend.bind($scope));
+  };
+
+  var toggleFriendsList = PopupControl.register("friendsList", { scope: $scope });
+  $scope.friendsListVisible = PopupControl.visibilityOf("friendsList");
+
+  $scope.toggleFriendsList = function(state) {
+    $scope.filteredFriends = _.where($scope.friends, { state: state });
+    toggleFriendsList();
+  };
+
+  $scope.gotoUser = function(username) {
+    $scope.$parent.gotoUser(username);
+    toggleFriendsList();
   };
 
   $scope.$on("$routeChangeSuccess", updateStatistics.bind(null, null, $routeParams.subjectCode));
   $scope.$on("selectedSubjectChange", updateStatistics);
-});
-
-mubook.controller("SocialCtrl", function SocialCtrl($scope, PopupControl) {
-  $scope.togglePopupCompleted = PopupControl.register("togglePopupCompleted", { scope: $scope });
-  $scope.togglePopupPlanned = PopupControl.register("togglePopupPlanned", { scope: $scope });
-  $scope.togglePopupStudying = PopupControl.register("togglePopupStudying", { scope: $scope });
-  $scope.togglePopupBookmarked = PopupControl.register("togglePopupBookmarked", { scope: $scope });
-
-  $scope.isVisibleCompleted = PopupControl.visibilityOf("togglePopupCompleted");
-  $scope.isVisiblePlanned = PopupControl.visibilityOf("togglePopupPlanned");
-  $scope.isVisibleStudying = PopupControl.visibilityOf("togglePopupStudying");
-  $scope.isVisibleBookmarked = PopupControl.visibilityOf("togglePopupBookmarked");
-});
+}]);
 
 var fail = function(type, name) {
   $("#selectedName").text("Oops!");
   $("#selectedCode").text("The " + type + " " + $routeParams.subjectCode + " does not exist.");
 };
-

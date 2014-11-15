@@ -19,8 +19,8 @@ TERMS_SERVICE = 3
 @cache_page(60 * 60 * 24)
 @csrf_protect
 def explorer(request):
-    is_social = request.user.is_authenticated() and request.user.socialaccount_set.count() > 0
-    return render(request, "index.html", {'is_social': is_social})
+    isSocial = request.user.is_authenticated() and request.user.socialaccount_set.count() > 0
+    return render(request, "index.html", { "isSocial": isSocial })
 
 
 def error404(request, path):

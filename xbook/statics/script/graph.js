@@ -133,14 +133,14 @@ Graph.prototype.deleteNode = function(subjectCode, node) {
 };
 
 Graph.prototype.restoreNode = function(subjectCode) {
-  var index = this.nodeData.nodes.findIndex({ code: subjectCode });
+  var index = _(this.nodeData.nodes).findIndex({ code: subjectCode });
   this.nodes[0][index].classList.remove("deleted");
   this.setStyle({ resetOpacity: true, removeSelected: true });
 };
 
 Graph.prototype.highlightSubtree = function(subjectCode) {
   var nodeQueue    = new SetQueue(),
-      rootPosition = this.nodeData.nodes.findIndex({ code: subjectCode });
+      rootPosition = _(this.nodeData.nodes).findIndex({ code: subjectCode });
 
   nodeQueue.push(rootPosition);
 
@@ -185,7 +185,7 @@ Graph.prototype.onClickHandler = function(d, graph, clickedNode, config) {
     graph.setStyle({ resetOpacity: true });
 
     var selected = $rootScope.getSelected();
-    var selectedIndex = graph.nodeData.nodes.findIndex({ code: selected });
+    var selectedIndex = _(graph.nodeData.nodes).findIndex({ code: selected });
     d = graph.nodeData.nodes[selectedIndex];
 
   }
@@ -204,7 +204,7 @@ function zoomScale(node, edge) {
 }
 
 function updateCorrespondingEdge(graph, subjectCode, operation) {
-  var position = graph.nodeData.nodes.findIndex({ code: subjectCode }),
+  var position = _(graph.nodeData.nodes).findIndex({ code: subjectCode }),
       data = graph.nodeData,
       edges = graph.edges[0];
   for (var i = 0; i < data.links.length; ++i) {
@@ -301,35 +301,6 @@ function insertFriendInfo(elemId, data) {
   }
 }
 
-function showStatistics(d) {
-  var statText = ["Completed", "Studying", "Planned", "Bookmarked"];
-
-  var socialStatisticItems = document.querySelectorAll(".socialStatisticsItem");
-  var socialData = [
-    d.friendsInfoCompleted, d.friendsInfoStudying,
-    d.friendsInfoPlanned, d.friendsInfoBookmarked
-  ];
-
-  for (i = 0; i < socialStatisticItems.length; ++i) {
-    var socialCount = document.createElement('a');
-    socialCount.innerHTML = socialData[i].length;
-    var statTextNode = document.createTextNode(statText[i]);
-    var sepLine = document.createElement('br');
-
-    socialStatisticItems[i].innerHTML = '';
-    socialStatisticItems[i].appendChild(socialCount);
-    socialStatisticItems[i].appendChild(sepLine);
-    socialStatisticItems[i].appendChild(statTextNode);
-  }
-
-  if (socialStatisticItems.length > 0) {
-    insertFriendInfo('#friendsInfoCompleted', d.friendsInfoCompleted);
-    insertFriendInfo('#friendsInfoStudying', d.friendsInfoStudying);
-    insertFriendInfo('#friendsInfoPlanned', d.friendsInfoPlanned);
-    insertFriendInfo('#friendsInfoBookmarked', d.friendsInfoBookmarked);
-  }
-}
-
 function showNodeDetails(d, selectedName, selectedCode) {
   var detailsContainer = document.querySelectorAll(".subjectDetail"),
     data = [
@@ -345,7 +316,6 @@ function showNodeDetails(d, selectedName, selectedCode) {
   subjectStatusInfo(d);
   subjActionSync(d.isUserNode, d.hasCompleted);
 
-  showStatistics(d);
   for (var i = 0; i < detailsContainer.length; ++i) {
     detailsContainer[i].innerHTML = data[i];
   }
@@ -410,29 +380,3 @@ var subjectStatusInfo = (function() {
     }
   }
 })();
-
-Array.prototype.findIndex = function(tester) {
-  switch(typeof tester) {
-  case "function":
-    for (var i = 0; i < this.length; ++i) {
-      if (tester(this[i])) { return i; }
-    }
-    break;
-  case "object":
-    for (var i = 0; i < this.length; ++i) {
-      var match = true,
-          elem  = this[i];
-      for (var key in tester) {
-        if (elem[key] !== tester[key]) {
-          match = false;
-          break;
-        }
-      }
-      if (match) { return i; }
-    }
-    break;
-  default:
-    return this.indexOf(tester);
-  }
-  return -1;
-};

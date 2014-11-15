@@ -1,4 +1,5 @@
 import json
+import sys
 
 from django.http import HttpResponse
 from django.views.decorators.cache import cache_page
@@ -19,6 +20,10 @@ BOOKMARKED = "Bookmarked"
 COMPLETED = "Completed"
 STUDYING = "Studying"
 PLANNED = "Planned"
+
+
+def devlog(data):
+    print >> sys.stderr, data
 
 
 def AJAX(*args, **kwargs):
@@ -53,7 +58,7 @@ def presentSubject(subj, root=False):
 
 def presentFriend(socialAccount, **details):
     info = {
-        "avatarUrl": socialAccount.get_avatarUrl(),
+        "avatarUrl": socialAccount.get_avatar_url(),
         "fbUrl": socialAccount.get_profile_url(),
         "fullname": socialAccount.user.get_full_name(),
         "username": socialAccount.user.username
@@ -68,12 +73,15 @@ def get_friends_info(localFriends, subjectCode):
 
     users = map(lambda friend: friend.user, localFriends)
     userSubjects = UserSubject.objects.filter(user__in=users, subject__code=subjectCode)
+    states = { item.user.id: item.state for item in userSubjects }
 
     for friend in localFriends:
+        if not friend.user.id in states:
+            continue
         friendsInfo.append(
             presentFriend(
                 friend,
-                state = 'blah'
+                state = states[friend.user.id]
             )
         )
 
@@ -81,11 +89,11 @@ def get_friends_info(localFriends, subjectCode):
 
 
 def social_statistics(request, subjectCode):
-    friendsUIDs = set(get_friend_uids(request.user) or [])
+    friendUIDs = set(get_friend_uids(request.user) or [])
 
-    if not friendsUIDs: return
+    if not friendUIDs: return JSON({ "friends": [] })
 
-    localFriends = SocialAccount.objects.filter(uid__in=friendsUIDs, provider="facebook")
+    localFriends = SocialAccount.objects.filter(uid__in=friendUIDs, provider="facebook")
 
     return JSON({
         "friends": get_friends_info(localFriends, subjectCode)
@@ -99,11 +107,13 @@ def get_friend_uids(user):
     if friendUIDs: return friendUIDs
 
     if user.is_authenticated():
-        tokens = SocialToken.objects.filter(account__user=user, account__provider="facebook")
-        if tokens:
-            fb_graph = GraphAPI(tokens[0])
+        try:
+            tokens = SocialToken.objects.get(account__user=user, account__provider="facebook")
+            fb_graph = GraphAPI(tokens)
             friendUIDs = map(lambda f: f["id"], fb_graph.get("me/friends").get("data"))
             cache.set(friendsCacheKey, friendUIDs, timeout=60 * 60)
+        except SocialAccount.DoesNotExist:
+            return None
     return friendUIDs
 
 
