@@ -88,6 +88,7 @@ def get_friends_info(localFriends, subjectCode):
     return friendsInfo
 
 
+@cache_page(60 * 60 * 4)
 def social_statistics(request, subjectCode):
     friendUIDs = set(get_friend_uids(request.user) or [])
 
@@ -231,15 +232,7 @@ def attach_userinfo_node(user):
         "hasCompleted": False,
         "yearCompleted": 0,
         "semesterCompleted": "",
-        "state": "",
-        "numPlanned": 0,
-        "numStudying": 0,
-        "numCompleted": 0,
-        "numBookmarked": 0,
-        "friendsInfoPlanned": 0,
-        "friendsInfoStudying": 0,
-        "friendsInfoCompleted": 0,
-        "friendsInfoBookmarked": 0
+        "state": ""
     }
 
 
