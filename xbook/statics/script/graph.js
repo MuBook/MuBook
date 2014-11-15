@@ -264,43 +264,6 @@ function makeRestoreButton() {
   return restoreBtn;
 }
 
-function insertFriendInfo(elemId, data) {
-  var socialPopup = $(elemId);
-  socialPopup.empty();
-
-  for (var i = 0; i < data.length; ++i) {
-    var socialInfo = $("<li class=\"socialInfo\"></li>");
-
-    var friendAvatar = $("<a/>", {
-      href: data[i].fbUrl,
-      target: "_blank"
-    });
-
-    var mubookProfileLink = $("<a/>", {
-      'ng-click': "visualizeUserGraph('" + data[i].username + "')",
-      html: "Mubook Profile",
-      class: "profileLink"
-    });
-
-    var img = $("<img>", {
-      src: data[i].avatarUrl,
-      class: "avatar"
-    });
-
-    var friendLink = $("<a/>", {
-      href: data[i].fb_url,
-      target: "_blank",
-      html: data[i].fullname
-    });
-
-    friendAvatar.append(img);
-    socialInfo.append(friendAvatar);
-    socialInfo.append(friendLink);
-    socialInfo.append(mubookProfileLink);
-    socialPopup.append(socialInfo);
-  }
-}
-
 function showNodeDetails(d, selectedName, selectedCode) {
   var detailsContainer = document.querySelectorAll(".subjectDetail"),
     data = [
