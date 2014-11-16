@@ -1,4 +1,4 @@
-# How to test the server on your own computer
+# Development instructions
 
 ## Things you need to have
 
