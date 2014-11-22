@@ -515,7 +515,14 @@ mubook.controller("SidePaneCtrl",
 ["$scope", "$routeParams", "UserSubject", "GeneralStatistics", "SocialStatistics", "PopupControl",
 function SidePaneCtrl($scope, $routeParams, UserSubject, GeneralStatistics, SocialStatistics, PopupControl) {
   var updateSubjectInfo = function(event, route) {
-    var subjectCode = route.params && route.params.subjectCode || route;
+    var subjectCode;
+    if (angular.isString(route)) {
+      subjectCode = route;
+    } else if (route.params && route.params.subjectCode) {
+      subjectCode = route.params.subjectCode;
+    } else {
+      subjectCode = $routeParams.subjectCode;
+    }
     GeneralStatistics(subjectCode).success($scope.extend.bind($scope));
     SocialStatistics(subjectCode).success($scope.extend.bind($scope));
     UserSubject(subjectCode).success($scope.extend.bind($scope)).error(function() {
