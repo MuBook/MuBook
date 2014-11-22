@@ -3,11 +3,15 @@
 {% block body %}
 <div id="sidePaneContainer" expandable width-min="25%" width-max="75%">
   <button id="sidePaneExpansion" expandable-trigger ng-click="toggle()">&lt;&gt;</button>
-  <section id="sidePane">
+  <section id="sidePane" ng-controller="SidePaneCtrl">
     <div id="selectedSubject">
       <h2 id="selectedName">No Subject Selected</h2>
       <h4 id="selectedCode">Use the search to find a subject</h4>
-      <p id="userSubjectStatus" class="hidden space-up-20"></p>
+      {% verbatim %}
+      <p id="userSubjectStatus" class="space-up-20" ng-show="status" ng-cloak>
+        {{status}} - {{year}} {{semester}}
+      </p>
+      {% endverbatim %}
     </div>
 
     {% if user.is_authenticated %}
@@ -21,7 +25,7 @@
       </div>
     </div>
 
-    <div id="statistics" ng-controller="StatisticsCtrl" popup ng-cloak>
+    <div id="statistics" popup ng-cloak>
       <h4 class="subjectMeta">Status</h4>
       <h5 class="statisticsLabel">All Students</h5>
       <ul id="statisticsInfo" class="statisticsList">
@@ -55,7 +59,7 @@
               <img class="avatar" ng-src="{{friend.avatarUrl}}" alt="Avatar">
               {{friend.fullname}}
             </a>
-            <a class="profileLink clickable" ng-click="gotoUser(friend.username)">Mubook Profile</a>
+            <a class="profileLink clickable" ng-click="gotoUser(friend.username, toggleFriendsList)">Mubook Profile</a>
           </li>
         </ul>
       </div>

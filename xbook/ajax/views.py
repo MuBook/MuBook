@@ -10,11 +10,12 @@ from xbook.ajax.models import Subject, SubjectPrereq
 from xbook.front.models import UserSubject
 
 from shared.utils import devlog, ajax, json
+from shared.response import r404
 
 from collections import deque
 from facepy import GraphAPI
 
-from .presenters import presentSubject, presentFriend, presentUsername
+from .presenters import presentSubject, presentFriend, presentUsername, presentUserSubject
 
 BOOKMARKED = "Bookmarked"
 COMPLETED = "Completed"
@@ -22,7 +23,7 @@ STUDYING = "Studying"
 PLANNED = "Planned"
 
 
-def get_friends_info(localFriends, subjectCode):
+def friends_info(localFriends, subjectCode):
     friendsInfo = []
 
     users = map(lambda friend: friend.user, localFriends)
@@ -42,18 +43,7 @@ def get_friends_info(localFriends, subjectCode):
     return friendsInfo
 
 
-@cache_page(60 * 60 * 4)
-def social_statistics(request, subjectCode):
-    friendUIDs = set(get_friend_uids(request.user) or [])
-
-    if not friendUIDs: return json({ "friends": [] })
-
-    localFriends = SocialAccount.objects.filter(uid__in=friendUIDs, provider="facebook")
-
-    return json({ "friends": get_friends_info(localFriends, subjectCode) })
-
-
-def get_friend_uids(user):
+def friend_uids(user):
     friendsCacheKey = 'friend-ids-of-{}'.format(user.id)
     friendUIDs = cache.get(friendsCacheKey)
 
@@ -70,18 +60,24 @@ def get_friend_uids(user):
     return friendUIDs
 
 
-def attach_user_info(nodeInfo, subj, user):
-    if not user.is_authenticated() or \
-        not len(UserSubject.objects.filter(user=user, subject=subj)):
-        nodeInfo.update({"hasCompleted": False})
+@cache_page(60 * 60 * 4)
+def social_statistics(request, subjectCode):
+    friendUIDs = set(friend_uids(request.user) or [])
+
+    if not friendUIDs: return json({ "friends": [] })
+
+    localFriends = SocialAccount.objects.filter(uid__in=friendUIDs, provider="facebook")
+
+    return json({ "friends": friends_info(localFriends, subjectCode) })
+
+
+def user_subject(request, subjectCode):
+    if not request.user.is_authenticated() or \
+        not UserSubject.objects.filter(user=request.user, subject__code=subjectCode).exists():
+        return r404()
     else:
-        user_subject = UserSubject.objects.filter(user=user, subject=subj)[0]
-        nodeInfo.update(
-            state = user_subject.state,
-            hasCompleted = True,
-            yearCompleted = user_subject.year,
-            semesterCompleted = user_subject.semester
-        )
+        userSubject = UserSubject.objects.get(user=request.user, subject__code=subjectCode)
+        return json(presentUserSubject(userSubject))
 
 
 @cache_page(60 * 60)
@@ -111,7 +107,6 @@ def subject_graph(request, uni, code, prereq=True):
 
         nodeInfo = presentSubject(subj, root=(parentIndex == -1))
 
-        attach_user_info(nodeInfo, subj, request.user)
         nodes.append(nodeInfo)
 
         parentIndex += 1
@@ -193,7 +188,6 @@ def get_user_subject(request, username):
 
         nodeInfo = presentSubject(subj)
 
-        attach_user_info(nodeInfo, subj, selected_user)
         nodes.append(nodeInfo)
 
         parent_index += 1

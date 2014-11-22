@@ -1,17 +1,25 @@
-def presentSubject(subj, root=False):
+def presentUserSubject(userSubject):
     return {
-        "code": subj.code,
-        "name": subj.name,
-        "url": subj.link,
+        "status": userSubject.state,
+        "year": userSubject.year,
+        "semester": userSubject.semester
+    }
+
+
+def presentSubject(subject, root=False):
+    return {
+        "code": subject.code,
+        "name": subject.name,
+        "url": subject.link,
         "root": root,
-        "credit": str(subj.credit),
-        "commenceDate": subj.commence_date,
-        "timeCommitment": subj.time_commitment,
-        "overview": subj.overview,
-        "objectives": subj.objectives,
-        "assessment": subj.assessment,
-        "prereq": subj.prerequisite,
-        "coreq": subj.corequisite
+        "credit": str(subject.credit),
+        "commenceDate": subject.commence_date,
+        "timeCommitment": subject.time_commitment,
+        "overview": subject.overview,
+        "objectives": subject.objectives,
+        "assessment": subject.assessment,
+        "prereq": subject.prerequisite,
+        "coreq": subject.corequisite
     }
 
 

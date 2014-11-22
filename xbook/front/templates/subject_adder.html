@@ -1,7 +1,9 @@
 <div id="subjectAdder" ng-controller="SubjectAddCtrl" popup ng-cloak>
   <div class="sidePaneBtnWrapper">
-    <button id="subjectAdderAddBtn" class="btn btn-primary" type="button" ng-cloak ng-click="togglePopup($event)">Add Subject</button>
-    <button id="subjectAdderDelBtn" class="btn btn-danger" type="button" ng-cloak ng-click="toggleDelPopup($event)">Remove Subject</button>
+    <button id="subjectAdderAddBtn" class="btn btn-primary" type="button"
+        ng-hide="status" ng-cloak ng-click="togglePopup($event)">Add Subject</button>
+    <button id="subjectAdderDelBtn" class="btn btn-danger" type="button"
+        ng-show="status" ng-cloak ng-click="toggleDelPopup($event)">Remove Subject</button>
   </div>
   <div id="subjectAdderSection" ng-show="isVisible()" ng-submit="addSubject($event)">
     <h2 class="add-heading">Adding <span class="add-heading-subj" ng-bind="selected()"></span></h2>

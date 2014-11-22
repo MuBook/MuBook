@@ -276,70 +276,7 @@ function showNodeDetails(d, selectedName, selectedCode) {
   selectedName.innerHTML = d.name;
   selectedCode.innerHTML = d.code;
 
-  subjectStatusInfo(d);
-  subjActionSync(d.isUserNode, d.hasCompleted);
-
   for (var i = 0; i < detailsContainer.length; ++i) {
     detailsContainer[i].innerHTML = data[i];
   }
 }
-
-var subjActionSync = (function() {
-  var $subjectAddBtn = $("#subjectAdderAddBtn"),
-      $subjectRemoveBtn = $("#subjectAdderDelBtn");
-
-  $subjectAddBtn.addClass("hidden");
-  $subjectRemoveBtn.addClass("hidden");
-
-  return function(isUserNode, hasCompleted) {
-    if (isUserNode) {
-      $subjectAddBtn.addClass("hidden");
-      $subjectRemoveBtn.addClass("hidden");
-      return;
-    }
-
-    if (hasCompleted) {
-      $subjectAddBtn.addClass("hidden");
-      $subjectRemoveBtn.removeClass("hidden");
-    } else {
-      $subjectAddBtn.removeClass("hidden");
-      $subjectRemoveBtn.addClass("hidden");
-    }
-  };
-})();
-
-var subjectStatusInfo = (function() {
-  var $subjectStatus = $("#userSubjectStatus"),
-      actionText = { "action": "", "preposition": "" };
-
-  return function(nodeData) {
-    $subjectStatus.addClass("hidden");
-
-    if (!nodeData.isUserNode && nodeData.hasCompleted) {
-      switch (nodeData.state) {
-        case "Studying":
-          actionText.action = "are studying"
-          actionText.preposition = "in"
-          break;
-        case "Completed":
-          actionText.action = "have completed"
-          actionText.preposition = "in"
-          break;
-        case "Planned":
-          actionText.action = "are planning to do"
-          actionText.preposition = "in"
-          break;
-        case "Bookmarked":
-          actionText.action = "have bookmarked"
-          actionText.preposition = "for"
-          break;
-      }
-
-      $subjectStatus.text(
-        "You " + actionText.action + " this subject " + actionText.preposition
-        + " " + nodeData.semesterCompleted + ", " + nodeData.yearCompleted
-      )
-      $subjectStatus.removeClass("hidden");
-    }
-  }
-})();

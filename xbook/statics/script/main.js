@@ -16,14 +16,18 @@ function($location, $rootScope, $window, Global) {
     }
   });
 
-  $rootScope.gotoSubject = function gotoSubject(code) {
+  $rootScope.gotoSubject = function gotoSubject(code, callback) {
     Global.code = code;
     Global.selected = code;
     $location.path("/explorer/" + Global.reqType + "/melbourne/" + code);
+
+    if (callback) { callback() };
   };
 
-  $rootScope.gotoUser = function gotoUser(username) {
+  $rootScope.gotoUser = function gotoUser(username, callback) {
     $location.path("/profile/" + username);
+
+    if (callback) { callback() };
   };
 
   $rootScope.setSelected = function setSelected(code) {
@@ -495,17 +499,28 @@ mubook.factory("SocialStatistics", function($http) {
   };
 });
 
+mubook.factory("UserSubject", function($http) {
+  return function(code) {
+    return $http.get("/ajax/my_subjects/" + code);
+  };
+});
+
 mubook.filter("state", function() {
   return function(list, state) {
     return _.where(list, { state: state }).length;
   };
 });
 
-mubook.controller("StatisticsCtrl", ["$scope", "$routeParams", "GeneralStatistics", "SocialStatistics", "PopupControl",
-function StatisticsCtrl($scope, $routeParams, GeneralStatistics, SocialStatistics, PopupControl) {
-  var updateStatistics = function(event, target) {
-    GeneralStatistics(target || $routeParams.subjectCode).success($scope.extend.bind($scope));
-    SocialStatistics(target || $routeParams.subjectCode).success($scope.extend.bind($scope));
+mubook.controller("SidePaneCtrl",
+["$scope", "$routeParams", "UserSubject", "GeneralStatistics", "SocialStatistics", "PopupControl",
+function SidePaneCtrl($scope, $routeParams, UserSubject, GeneralStatistics, SocialStatistics, PopupControl) {
+  var updateSubjectInfo = function(event, route) {
+    var subjectCode = route.params && route.params.subjectCode || route;
+    GeneralStatistics(subjectCode).success($scope.extend.bind($scope));
+    SocialStatistics(subjectCode).success($scope.extend.bind($scope));
+    UserSubject(subjectCode).success($scope.extend.bind($scope)).error(function() {
+      $scope.status = $scope.year = $scope.semester = undefined;
+    });
   };
 
   var toggleFriendsList = PopupControl.register("friendsList", { scope: $scope });
@@ -516,13 +531,8 @@ function StatisticsCtrl($scope, $routeParams, GeneralStatistics, SocialStatistic
     toggleFriendsList();
   };
 
-  $scope.gotoUser = function(username) {
-    $scope.$parent.gotoUser(username);
-    toggleFriendsList();
-  };
-
-  $scope.$on("$routeChangeSuccess", updateStatistics.bind(null, null, $routeParams.subjectCode));
-  $scope.$on("selectedSubjectChange", updateStatistics);
+  $scope.$on("$routeChangeSuccess", updateSubjectInfo);
+  $scope.$on("selectedSubjectChange", updateSubjectInfo);
 }]);
 
 var fail = function(type, name) {
