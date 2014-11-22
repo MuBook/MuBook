@@ -1,17 +1,15 @@
-import json
-import sys
-
-from django.http import HttpResponse
 from django.views.decorators.cache import cache_page
 from django.core.cache import cache
-
-from django.contrib.auth.models import User
 
 from allauth.socialaccount.models import SocialToken
 from allauth.socialaccount.models import SocialAccount
 
+from django.contrib.auth.models import User
+
 from xbook.ajax.models import Subject, SubjectPrereq
 from xbook.front.models import UserSubject
+
+from shared.utils import devlog, ajax, json
 
 from collections import deque
 from facepy import GraphAPI
@@ -20,23 +18,6 @@ BOOKMARKED = "Bookmarked"
 COMPLETED = "Completed"
 STUDYING = "Studying"
 PLANNED = "Planned"
-
-
-def devlog(data):
-    print >> sys.stderr, data
-
-
-def AJAX(*args, **kwargs):
-    resp = HttpResponse(*args, **kwargs)
-    resp["Access-Control-Allow-Origin"] = "*"
-    resp["Access-Control-Allow-Methods"] = "GET, POST"
-    resp["Access-Control-Max-Age"] = "1000"
-    resp["Access-Control-Allow-Headers"] = "*"
-    return resp
-
-
-def JSON(hash, *args, **kwargs):
-    return AJAX(json.dumps(hash), *args, content_type="application/json", **kwargs)
 
 
 def presentSubject(subj, root=False):
@@ -92,13 +73,11 @@ def get_friends_info(localFriends, subjectCode):
 def social_statistics(request, subjectCode):
     friendUIDs = set(get_friend_uids(request.user) or [])
 
-    if not friendUIDs: return JSON({ "friends": [] })
+    if not friendUIDs: return json({ "friends": [] })
 
     localFriends = SocialAccount.objects.filter(uid__in=friendUIDs, provider="facebook")
 
-    return JSON({
-        "friends": get_friends_info(localFriends, subjectCode)
-    })
+    return json({ "friends": get_friends_info(localFriends, subjectCode) })
 
 
 def get_friend_uids(user):
@@ -176,7 +155,7 @@ def subject_graph(request, uni, code, prereq=True):
             if not seen:
                 subjQueue.append(related)
 
-    return JSON(graph)
+    return json(graph)
 
 
 @cache_page(60 * 60 * 24)
@@ -187,14 +166,14 @@ def subject_list(request, uni):
     for subj in Subject.objects.only("code", "name").iterator():
         l.append({ "code": subj.code, "name": subj.name })
 
-    return JSON(subjList)
+    return json(subjList)
 
 
 @cache_page(60 * 60 * 4)
 def subject_statistics(request, subjectCode):
     userSubjects = UserSubject.objects.filter(subject__code=subjectCode)
 
-    return JSON({
+    return json({
         "planned": userSubjects.filter(state=PLANNED).count(),
         "studying": userSubjects.filter(state=STUDYING).count(),
         "completed": userSubjects.filter(state=COMPLETED).count(),
@@ -241,7 +220,7 @@ def get_user_subject(request, username):
     graph = { "nodes": nodes, "links": links }
 
     if not len(User.objects.filter(username=username)):
-        return JSON(graph)
+        return json(graph)
 
     selected_user = User.objects.get(username=username)
     user_subjects = selected_user.user_subject.all()
@@ -268,4 +247,4 @@ def get_user_subject(request, username):
 
     nodes.append(attach_userinfo_node(selected_user))
 
-    return JSON(graph)
+    return json(graph)
