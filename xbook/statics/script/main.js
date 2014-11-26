@@ -1,4 +1,4 @@
-var mubook = angular.module("mubook", ["ngRoute", "ngCookies"]);
+var mubook = angular.module("mubook", ["ngRoute", "ngAnimate", "ngCookies", "angular-loading"]);
 
 mubook.run(["$location", "$rootScope", "$window", "Global",
 function($location, $rootScope, $window, Global) {
