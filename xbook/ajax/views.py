@@ -17,6 +17,8 @@ from facepy import GraphAPI
 
 from .presenters import presentSubject, presentFriend, presentUsername, presentUserSubject
 
+import sys
+
 BOOKMARKED = "Bookmarked"
 COMPLETED = "Completed"
 STUDYING = "Studying"
@@ -90,7 +92,7 @@ def subject_graph(request, uni, code, prereq=True):
         subject = Subject.objects.get(code=code)
         subjQueue.append(subject)
     except Subject.DoesNotExist:
-        return graph
+        return json(graph)
 
     queryKey = prereq and "subject__code" or "prereq__code"
     queryParam = {}
@@ -124,6 +126,16 @@ def subject_graph(request, uni, code, prereq=True):
                 subjQueue.append(related)
 
     return json(graph)
+
+
+def subject_detail(request, uni, code):
+    try:
+        subject = Subject.objects.get(code=code)
+        print >>sys.stderr, "just before return"
+        return json(presentSubject(subject))
+    except:
+        return json({})
+
 
 
 @cache_page(60 * 60 * 24)

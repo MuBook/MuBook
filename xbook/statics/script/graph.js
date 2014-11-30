@@ -265,18 +265,23 @@ function makeRestoreButton() {
 }
 
 function showNodeDetails(d, selectedName, selectedCode) {
-  var detailsContainer = document.querySelectorAll(".subjectDetail"),
-    data = [
-      d.credit, d.commenceDate,
-      d.timeCommitment, d.prereq,
-      d.assessment, d.coreq,
-      d.overview, d.objectives
+  var url = "/ajax/u-melbourne/" + d.code + "/details";
+  console.log(url);
+  $.getJSON(url, function(data) {
+    console.log(data);
+    dataArr = [
+      data.credit, data.commenceDate,
+      data.timeCommitment, data.prereq,
+      data.assessment, data.coreq,
+      data.overview, data.objectives
     ];
+    var detailsContainer = document.querySelectorAll(".subjectDetail");
 
-  selectedName.innerHTML = d.name;
-  selectedCode.innerHTML = d.code;
+    selectedName.innerHTML = data.name;
+    selectedCode.innerHTML = data.code;
 
-  for (var i = 0; i < detailsContainer.length; ++i) {
-    detailsContainer[i].innerHTML = data[i];
-  }
+    for (var i = 0; i < detailsContainer.length; ++i) {
+      detailsContainer[i].innerHTML = dataArr[i];
+    }
+  });
 }
