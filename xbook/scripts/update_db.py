@@ -12,8 +12,9 @@ def log(message):
     def wrapper(fn):
         def logged_fn(*args, **kwargs):
             logging.info("Starting: {}".format(message))
-            fn(*args, **kwargs)
+            return_val = fn(*args, **kwargs)
             logging.info("Finished: {}".format(message))
+            return return_val
         return logged_fn
     return wrapper
 
