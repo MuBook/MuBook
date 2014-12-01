@@ -12,6 +12,7 @@ def presentSubject(subject, root=False, lite=True):
         "name": subject.name,
         "root": root
     }
+
     if lite:
         return node
 
@@ -26,6 +27,7 @@ def presentSubject(subject, root=False, lite=True):
         "prereq": subject.prerequisite,
         "coreq": subject.corequisite
     })
+
     return node
 
 
