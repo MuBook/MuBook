@@ -187,10 +187,6 @@ Graph.prototype.onClickHandler = function(d, graph, clickedNode, config) {
     var selected = $rootScope.getSelected();
     var selectedIndex = _(graph.nodeData.nodes).findIndex({ code: selected });
     d = graph.nodeData.nodes[selectedIndex];
-
-  }
-  if (config.showNodeDetails) {
-    config.showNodeDetails(d, graph.selectedName, graph.selectedCode);
   }
 };
 
@@ -262,32 +258,4 @@ function makeRestoreButton() {
   graphContainer.appendChild(restoreBtn);
 
   return restoreBtn;
-}
-
-function showNodeDetails(d, selectedName, selectedCode) {
-  var displayDetails = function(data) {
-    dataArr = [
-      data.credit, data.commenceDate,
-      data.timeCommitment, data.prereq,
-      data.assessment, data.coreq,
-      data.overview, data.objectives
-    ];
-    var detailsContainer = document.querySelectorAll(".subjectDetail");
-
-    selectedName.innerHTML = data.name;
-    selectedCode.innerHTML = data.code;
-
-    for (var i = 0; i < detailsContainer.length; ++i) {
-      detailsContainer[i].innerHTML = dataArr[i];
-    }
-  };
-
-  if (d.isUserNode) {
-    displayDetails(d);
-  } else {
-    var url = "/ajax/u-melbourne/" + d.code + "/details";
-    $.getJSON(url, function(data) {
-      displayDetails(data);
-    });
-  }
 }

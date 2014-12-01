@@ -505,6 +505,12 @@ mubook.factory("UserSubject", function($http) {
   };
 });
 
+mubook.factory("SubjectDetails", function($http) {
+  return function(code) {
+    return $http.get("/ajax/u-melbourne/" + code + "/details");
+  };
+});
+
 mubook.filter("state", function() {
   return function(list, state) {
     return _.where(list, { state: state }).length;
@@ -512,8 +518,10 @@ mubook.filter("state", function() {
 });
 
 mubook.controller("SidePaneCtrl",
-["$scope", "$routeParams", "UserSubject", "GeneralStatistics", "SocialStatistics", "PopupControl",
-function SidePaneCtrl($scope, $routeParams, UserSubject, GeneralStatistics, SocialStatistics, PopupControl) {
+["$scope", "$routeParams", "$sce", "PopupControl",
+  "UserSubject", "GeneralStatistics", "SocialStatistics", "SubjectDetails",
+function SidePaneCtrl($scope, $routeParams, $sce, PopupControl,
+    UserSubject, GeneralStatistics, SocialStatistics, SubjectDetails) {
   var updateSubjectInfo = function(event, route) {
     var subjectCode;
     if (angular.isString(route)) {
@@ -528,7 +536,18 @@ function SidePaneCtrl($scope, $routeParams, UserSubject, GeneralStatistics, Soci
     UserSubject(subjectCode).success($scope.extend.bind($scope)).error(function() {
       $scope.status = $scope.year = $scope.semester = undefined;
     });
+    SubjectDetails(subjectCode).success(function(subjectDetails) {
+      $scope.extend(_.forOwn(_.pick(subjectDetails, [
+        "code", "name", "credit", "commenceDate", "timeCommitment", "prereq",
+        "assessment", "coreq", "overview", "objectives"
+      ]), function(val, key, obj) {
+        obj[key] = $sce.trustAsHtml(val);
+      }));
+    });
   };
+
+  $scope.name = "No Subject Selected";
+  $scope.code = "Use the search to find a subject";
 
   var toggleFriendsList = PopupControl.register("friendsList", { scope: $scope });
   $scope.friendsListVisible = PopupControl.visibilityOf("friendsList");

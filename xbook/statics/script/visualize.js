@@ -25,7 +25,6 @@ var visualizeGraph = (function () {
       graph.renderGraph();
 
       $graphScope.setSelected(data.nodes[0].code);
-      showNodeDetails(data.nodes[0], graph.selectedName, graph.selectedCode);
 
       graph.centerGraph(isPrereq);
       graph.addPanZoom(SCALE_RANGE);
@@ -34,7 +33,7 @@ var visualizeGraph = (function () {
           d,
           graph,
           this,
-          { enableDelete: true, showNodeDetails: showNodeDetails }
+          { enableDelete: true }
         );
       });
       graph.nodes.on("dblclick", graph.onDblClickHandler);
