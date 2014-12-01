@@ -265,10 +265,7 @@ function makeRestoreButton() {
 }
 
 function showNodeDetails(d, selectedName, selectedCode) {
-  var url = "/ajax/u-melbourne/" + d.code + "/details";
-  console.log(url);
-  $.getJSON(url, function(data) {
-    console.log(data);
+  var displayDetails = function(data) {
     dataArr = [
       data.credit, data.commenceDate,
       data.timeCommitment, data.prereq,
@@ -283,5 +280,14 @@ function showNodeDetails(d, selectedName, selectedCode) {
     for (var i = 0; i < detailsContainer.length; ++i) {
       detailsContainer[i].innerHTML = dataArr[i];
     }
-  });
+  };
+
+  if (d.isUserNode) {
+    displayDetails(d);
+  } else {
+    var url = "/ajax/u-melbourne/" + d.code + "/details";
+    $.getJSON(url, function(data) {
+      displayDetails(data);
+    });
+  }
 }

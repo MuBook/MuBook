@@ -17,7 +17,6 @@ from facepy import GraphAPI
 
 from .presenters import presentSubject, presentFriend, presentUsername, presentUserSubject
 
-import sys
 
 BOOKMARKED = "Bookmarked"
 COMPLETED = "Completed"
@@ -131,8 +130,7 @@ def subject_graph(request, uni, code, prereq=True):
 def subject_detail(request, uni, code):
     try:
         subject = Subject.objects.get(code=code)
-        print >>sys.stderr, "just before return"
-        return json(presentSubject(subject))
+        return json(presentSubject(subject, lite=False))
     except:
         return json({})
 
