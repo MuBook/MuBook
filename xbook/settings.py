@@ -33,7 +33,7 @@ DATABASES = {
     }
 }
 
-if env('MUBOOK_RUNTIME_ENV', None):
+if env('MUBOOK_RUNTIME_ENV'):
     DATABASES['default'] = dj_database_url.config()
 else: # local dev
     CACHES = {

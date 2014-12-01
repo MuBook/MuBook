@@ -187,10 +187,6 @@ Graph.prototype.onClickHandler = function(d, graph, clickedNode, config) {
     var selected = $rootScope.getSelected();
     var selectedIndex = _(graph.nodeData.nodes).findIndex({ code: selected });
     d = graph.nodeData.nodes[selectedIndex];
-
-  }
-  if (config.showNodeDetails) {
-    config.showNodeDetails(d, graph.selectedName, graph.selectedCode);
   }
 };
 
@@ -262,21 +258,4 @@ function makeRestoreButton() {
   graphContainer.appendChild(restoreBtn);
 
   return restoreBtn;
-}
-
-function showNodeDetails(d, selectedName, selectedCode) {
-  var detailsContainer = document.querySelectorAll(".subjectDetail"),
-    data = [
-      d.credit, d.commenceDate,
-      d.timeCommitment, d.prereq,
-      d.assessment, d.coreq,
-      d.overview, d.objectives
-    ];
-
-  selectedName.innerHTML = d.name;
-  selectedCode.innerHTML = d.code;
-
-  for (var i = 0; i < detailsContainer.length; ++i) {
-    detailsContainer[i].innerHTML = data[i];
-  }
 }

@@ -6,12 +6,18 @@ def presentUserSubject(userSubject):
     }
 
 
-def presentSubject(subject, root=False):
-    return {
+def presentSubject(subject, root=False, lite=True):
+    node = {
         "code": subject.code,
         "name": subject.name,
+        "root": root
+    }
+
+    if lite:
+        return node
+
+    node.update({
         "url": subject.link,
-        "root": root,
         "credit": str(subject.credit),
         "commenceDate": subject.commence_date,
         "timeCommitment": subject.time_commitment,
@@ -20,7 +26,9 @@ def presentSubject(subject, root=False):
         "assessment": subject.assessment,
         "prereq": subject.prerequisite,
         "coreq": subject.corequisite
-    }
+    })
+
+    return node
 
 
 def presentFriend(socialAccount, **details):

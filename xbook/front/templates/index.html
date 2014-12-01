@@ -5,9 +5,9 @@
   <button id="sidePaneExpansion" expandable-trigger ng-click="toggle()">&lt;&gt;</button>
   <section id="sidePane" ng-controller="SidePaneCtrl">
     <div id="selectedSubject">
-      <h2 id="selectedName">No Subject Selected</h2>
-      <h4 id="selectedCode">Use the search to find a subject</h4>
       {% verbatim %}
+      <h2 id="selectedName" ng-cloak>{{name}}</h2>
+      <h4 id="selectedCode" ng-cloak>{{code}}</h4>
       <p id="userSubjectStatus" class="space-up-20" ng-show="status" ng-cloak>
         {{status}} - {{year}} {{semester}}
       </p>
@@ -67,38 +67,40 @@
       {% endif %}
     </div>
 
+    {% verbatim %}
     <div id="creditPoint">
       <h4 class="subjectDetailHeading">Credit Points</h4>
-      <p class="subjectDetail" id="creditPointDetail"></p>
+      <p class="subjectDetail" ng-bind-html="credit"></p>
     </div>
     <div id="semester">
       <h4 class="subjectDetailHeading">Semester</h4>
-      <p class="subjectDetail" id="semesterDetail"></p>
+      <p class="subjectDetail" ng-bind-html="commenceDate"></p>
     </div>
     <div id="timeCommit">
       <h4 class="subjectDetailHeading">Time Commitment</h4>
-      <p class="subjectDetail" id="timeCommitDetail"></p>
+      <p class="subjectDetail" ng-bind-html="timeCommitment"></p>
     </div>
     <div id="prerequisites">
       <h4 class="subjectDetailHeading">Prerequisites</h4>
-      <p class="subjectDetail" id="prerequisitesDetail"></p>
+      <p class="subjectDetail" ng-bind-html="prereq"></p>
     </div>
     <div id="assessments">
       <h4 class="subjectDetailHeading">Assessment</h4>
-      <p class="subjectDetail" id="assessmentsDetail"></p>
+      <p class="subjectDetail" ng-bind-html="assessment"></p>
     </div>
     <div id="corequisites">
       <h4 class="subjectDetailHeading">Corequisites</h4>
-      <p class="subjectDetail" id="corequisitesDetail"></p>
+      <p class="subjectDetail" ng-bind-html="coreq"></p>
     </div>
     <div id="subjectOverview">
       <h4 class="subjectDetailHeading">Subject Overview</h4>
-      <p class="subjectDetail" id="subjectOverviewDetail"></p>
+      <p class="subjectDetail" ng-bind-html="overview"></p>
     </div>
     <div id="objectives">
       <h4 class="subjectDetailHeading">Objectives</h4>
-      <p class="subjectDetail" id="objectivesDetail"></p>
+      <p class="subjectDetail" ng-bind-html="objectives"></p>
     </div>
+    {% endverbatim %}
   </section>
 
   <section ng-view id="graphContainer"></section>
