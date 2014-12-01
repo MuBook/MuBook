@@ -5,7 +5,7 @@ urlpatterns = [
     url(r"^u-(?P<uni>.*?)/prereq/(?P<code>.*?)$", views.subject_graph),
     url(r"^u-(?P<uni>.*?)/postreq/(?P<code>.*?)$", views.subject_graph, { "prereq": False }),
 
-    url(r"^u-(?P<uni>.*?)/(?P<code>.*?)/details$", views.subject_detail),
+    url(r"^u-(?P<uni>.*?)/(?P<code>.*?)/details$", views.subject_details),
 
     url(r"^u-(?P<uni>.*?)/subject_list$", views.subject_list),
 

@@ -76,9 +76,9 @@ def user_subject(request, subjectCode):
     if not request.user.is_authenticated() or \
         not UserSubject.objects.filter(user=request.user, subject__code=subjectCode).exists():
         return r404()
-    else:
-        userSubject = UserSubject.objects.get(user=request.user, subject__code=subjectCode)
-        return json(presentUserSubject(userSubject))
+
+    userSubject = UserSubject.objects.get(user=request.user, subject__code=subjectCode)
+    return json(presentUserSubject(userSubject))
 
 
 @cache_page(60 * 60)
@@ -127,13 +127,13 @@ def subject_graph(request, uni, code, prereq=True):
     return json(graph)
 
 
-def subject_detail(request, uni, code):
+@cache_page(60 * 60 * 24 * 7)
+def subject_details(request, uni, code):
     try:
         subject = Subject.objects.get(code=code)
         return json(presentSubject(subject, lite=False))
-    except:
-        return json({})
-
+    except Subject.DoesNotExist:
+        return r404()
 
 
 @cache_page(60 * 60 * 24)
