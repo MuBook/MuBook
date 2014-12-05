@@ -12,8 +12,8 @@ var visualizeGraph = (function () {
         return fail(false);
       }
 
-      var isPrereq = angular.element($("#typeSwitcher")).scope().prereq();
-      var $graphScope = angular.element($("#graphContainer")).scope();
+      var isPrereq = angular.element("#typeSwitcher").scope().prereq();
+      var $graphScope = angular.element("#graphContainer").scope();
 
       var graph = new Graph({
         nodeData: data,
