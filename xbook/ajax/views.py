@@ -91,7 +91,7 @@ def subject_graph(request, uni, code, prereq=True):
         subject = Subject.objects.get(code=code)
         subjQueue.append(subject)
     except Subject.DoesNotExist:
-        return json(graph)
+        return r404()
 
     queryKey = prereq and "subject__code" or "prereq__code"
     queryParam = {}
