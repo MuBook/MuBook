@@ -1,7 +1,7 @@
 var mubook = angular.module("mubook", ["ngRoute", "ngAnimate", "ngCookies", "angular-loading"]);
 
-mubook.run(["$location", "$rootScope", "$window", "Global",
-function($location, $rootScope, $window, Global) {
+mubook.run(["$location", "$rootScope", "$window", "Global", "visualizeGraph",
+function($location, $rootScope, $window, Global, visualizeGraph) {
   $window.$rootScope = $rootScope;
 
   $rootScope.jumpTo = function(url) {
@@ -28,6 +28,11 @@ function($location, $rootScope, $window, Global) {
     $location.path("/profile/" + username);
 
     if (callback) { callback() };
+  };
+
+  $rootScope.loadGraph = function(type, code) {
+    url = "/ajax/u-melbourne/" + type + "/" + code;
+    visualizeGraph(url);
   };
 
   $rootScope.setSelected = function setSelected(code) {
@@ -59,15 +64,8 @@ mubook.factory("Subjects", function($http) {
   return $http.get("/ajax/u-melbourne/subject_list");
 });
 
-mubook.factory("Global", function($cookies) {
-  var loadTree = function(type, code, fail) {
-    url = "/ajax/u-melbourne/" + type + "/" + code;
-    visualizeGraph(url, fail);
-    $cookies.subjCode = code;
-  };
-
+mubook.factory("Global", function() {
   return {
-    loadTree: loadTree,
     code: "COMP30018",
     reqType: "prereq",
     selected: "COMP30018"
@@ -260,7 +258,7 @@ mubook.controller("GraphCtrl", function GraphCtrl($scope, $routeParams, $locatio
   Global.selected = Global.code = status.code;
   Global.reqType = status.reqType;
 
-  Global.loadTree(status.reqType, $routeParams.subjectCode, fail.bind(null, "subject", $routeParams.subjectCode));
+  $scope.loadGraph(status.reqType, $routeParams.subjectCode);
 });
 
 mubook.controller("LegendCtrl", function LegendCtrl($scope, $cookies, PopupControl) {
@@ -303,7 +301,7 @@ mubook.controller("GraphTypeCtrl", function GraphTypeCtrl($scope, $location, Glo
     $location.path("/explorer/" + Global.reqType + "/melbourne/" + Global.code);
   };
 
-  $scope.prereq = function prereq() {
+  $scope.isPrereq = function prereq() {
     return Global.reqType == "prereq";
   };
 
@@ -372,11 +370,12 @@ mubook.controller("LoginCtrl", function LoginCtrl($scope, $http, $timeout, Globa
 });
 
 
-mubook.controller("UserCtrl", function UserCtrl($scope, $timeout, $location, $routeParams, Global) {
+mubook.controller("UserCtrl",
+function UserCtrl($scope, $timeout, $location, $routeParams, Global, visualizeGraph) {
   if (!$routeParams.username) {
     return;
   }
-  visualizeGraph("/ajax/profile/" + $routeParams.username, fail.bind(null, "user", $routeParams.username));
+  visualizeGraph("/ajax/profile/" + $routeParams.username);
 });
 
 mubook.controller("SubjectAddCtrl",
@@ -561,7 +560,50 @@ function SidePaneCtrl($scope, $routeParams, $sce, PopupControl,
   $scope.$on("selectedSubjectChange", updateSubjectInfo);
 }]);
 
+mubook.factory("visualizeGraph", function ($http, $cookies, Global) {
+  var $sidePane    = $("#sidePane"),
+      $topBar      = $("#topBar"),
+      $searchInput = $("#searchInput"),
+      SCALE_RANGE  = [0.4, 2],
+      GRAPH_WIDTH  = window.innerWidth - $sidePane.width(),
+      GRAPH_HEIGHT = window.innerHeight - $topBar.height();
+
+  return function (url) {
+    $http.get(url).success(function(data) {
+      $cookies.subjCode = Global.code;
+
+      var graph = new Graph({
+        name: "graphSVG", nodeData: data,
+        width: GRAPH_WIDTH, height: GRAPH_HEIGHT
+      });
+      graph.makeGraph();
+      graph.renderGraph();
+
+      Global.selected = data.nodes[0].code || Global.code;
+
+      graph.centerGraph(Global.reqType == "prereq");
+      graph.addPanZoom(SCALE_RANGE);
+      graph.nodes.on("click", function(d) {
+        graph.onClickHandler(d, graph, this, { enableDelete: true });
+      });
+      graph.nodes.on("dblclick", graph.onDblClickHandler);
+      makeRestoreButton().onclick = function (e) {
+        if (graph.deletedNodeContainer.length != 0) {
+          var curNode = graph.deletedNodeContainer.pop();
+          graph.restoreNode(curNode);
+          updateCorrespondingEdge(graph, curNode, RESTORE);
+          if (graph.deletedNodeContainer.length == 0) {
+            restoreBtn.style.display = "none";
+          }
+        }
+      };
+
+      $searchInput.val(data.nodes[0].code + " - " + data.nodes[0].name);
+    }).error(fail);
+  };
+});
+
 var fail = function(type, name) {
   $("#selectedName").text("Oops!");
-  $("#selectedCode").text("The " + type + " " + $routeParams.subjectCode + " does not exist.");
+  $("#selectedCode").text("The subject does not exist.");
 };

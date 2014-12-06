@@ -19,9 +19,9 @@
     {% endif %}
 
     <div id="typeSwitcher" class="graphActions" ng-controller="GraphTypeCtrl">
-      <div ng-show="onGraphPage()" class="btn-group">
-        <span class="btn btn-default" ng-class="{active: prereq()}" ng-cloak ng-click="toPre()">Prerequisites</span>
-        <span class="btn btn-default" ng-class="{active: !prereq()}" ng-cloak ng-click="toPost()">Postrequisites</span>
+      <div ng-show="onGraphPage()" class="btn-group" ng-cloak>
+        <span class="btn btn-default" ng-class="{active: isPrereq()}" ng-click="toPre()">Prerequisites</span>
+        <span class="btn btn-default" ng-class="{active: !isPrereq()}" ng-click="toPost()">Postrequisites</span>
       </div>
     </div>
 
