@@ -29,7 +29,7 @@ DB_PASSWORD=your_postgres_password
 
 # Admin Login
 
-## Both Testing and Production
+**Both Testing and Production**
 - username: mubookadmin
 - password: dawsonkhkzpo
 
