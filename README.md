@@ -29,15 +29,9 @@ DB_PASSWORD=your_postgres_password
 
 # Admin Login
 
-## Production
-username: mubookadmin
-
-password: dawsonkhkzpo
-
-##Testing
-username: mubookadmin
-
-password: dawsonkhkzpo
+## Both Testing and Production
+- username: mubookadmin
+- password: dawsonkhkzpo
 
 # How to update the database
 
