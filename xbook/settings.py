@@ -5,7 +5,7 @@ import dj_database_url
 
 from getenv import env
 
-DEBUG = True
+DEBUG = not env('MUBOOK_DEBUG') is None
 TEMPLATE_DEBUG = DEBUG
 
 # Honor the 'X-Forwarded-Proto' header for request.is_secure()
@@ -110,6 +110,10 @@ STATICFILES_FINDERS = (
     'django.contrib.staticfiles.finders.AppDirectoriesFinder',
 #    'django.contrib.staticfiles.finders.DefaultStorageFinder',
 )
+
+# Simplified static file serving.
+# https://warehouse.python.org/project/whitenoise/
+STATICFILES_STORAGE = 'whitenoise.django.GzipManifestStaticFilesStorage'
 
 # Make this unique, and don't share it with anybody.
 SECRET_KEY = 'qlbt(+0jyrllm9rf20tzh^g#pn7@gy#^67cy1^d5_)%6a^#k_9'
