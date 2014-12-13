@@ -871,3 +871,38 @@ ul.pageNav
             transform: rotate(360deg);
   }
 }
+
+/***********
+* =Notification
+************/
+notification {
+  position: fixed;
+  width: 200px;
+  top: 70px;
+  right: 20px;
+  z-index: 9999;
+}
+
+.notification {
+  position: relative;
+}
+
+.notification.ng-move,
+.notification.ng-enter,
+.notification.ng-leave {
+  transition: all linear 0.3s;
+}
+
+.notification.ng-leave.ng-leave-active,
+.notification.ng-move,
+.notification.ng-enter {
+  opacity: 0;
+  left: 20px;
+}
+
+.notification.ng-leave,
+.notification.ng-move.ng-move-active,
+.notification.ng-enter.ng-enter-active {
+  opacity: 1;
+  left: 0;
+}
