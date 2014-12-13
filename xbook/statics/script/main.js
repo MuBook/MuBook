@@ -1,5 +1,9 @@
 var mubook = angular.module("mubook", ["ngRoute", "ngAnimate", "ngCookies", "angular-loading"]);
 
+mubook.run(["$templateCache", function($templateCache) {
+  $templateCache.put('view.html', '<div id="graph"></div>');
+}]);
+
 mubook.run(["$location", "$rootScope", "$window", "Global", "visualizeGraph",
 function($location, $rootScope, $window, Global, visualizeGraph) {
   $window.$rootScope = $rootScope;
