@@ -204,19 +204,14 @@ mubook.factory("PopupControl", ["$rootScope", "$timeout", function($rootScope, $
 }]);
 
 mubook.controller("SearchCtrl", function SearchCtrl($scope, $timeout, Subjects, Global, PopupControl) {
-  $scope.$input = $("#searchInput");
+  var $input = $("#searchInput");
 
-  $scope.toggleSearch = PopupControl.register("search",
-    {
-      scope: $scope,
-      onOpen: function() {
-        $scope.$input.select();
-        $timeout(function() {
-          $scope.$input.focus();
-        });
-      }
+  $scope.toggleSearch = PopupControl.register("search", {
+    scope: $scope,
+    onOpen: function() {
+      $input.select();
     }
-  );
+  });
 
   $scope.gotoSubject = function(code) {
     $scope.$parent.gotoSubject(code);
@@ -311,16 +306,14 @@ mubook.controller("GraphTypeCtrl", function GraphTypeCtrl($scope, $location, Glo
 });
 
 mubook.controller("FeedbackCtrl", function FeedbackCtrl($scope, $http, $timeout, Global, PopupControl) {
-  $scope.toggleForm = PopupControl.register("feedback",
-    {
-      scope: $scope,
-      onOpen: function() {
-        $timeout(function() {
-          $("#feedback-name").focus();
-        });
-      }
+  $scope.toggleForm = PopupControl.register("feedback", {
+    scope: $scope,
+    onOpen: function() {
+      $timeout(function() {
+        $("#feedback-name").focus();
+      });
     }
-  );
+  });
 
   $scope.isVisible = PopupControl.visibilityOf("feedback");
 
@@ -343,7 +336,7 @@ mubook.controller("FeedbackCtrl", function FeedbackCtrl($scope, $http, $timeout,
     };
 
     $submit = $("#feedback-submit");
-    $submit.val("Sending...").attr("disabled", true);
+    $submit.val("Sending...").prop("disabled", true);
 
     $.ajax({
       type: 'POST',
@@ -358,7 +351,7 @@ mubook.controller("FeedbackCtrl", function FeedbackCtrl($scope, $http, $timeout,
       alert("Something went wrong, would you like to try again? Sorry...");
     })
     .always(function() {
-      $submit.val("Send").attr("disabled", false);
+      $submit.val("Send").prop("disabled", false);
       $scope.toggleForm();
     });
   };
