@@ -560,13 +560,13 @@ function SidePaneCtrl($scope, $routeParams, $sce, PopupControl,
   $scope.$on("selectedSubjectChange", updateSubjectInfo);
 }]);
 
-mubook.factory("visualizeGraph", function ($http, $cookies, Global) {
+mubook.factory("visualizeGraph", function ($http, $cookies, $window, Global) {
   var $sidePane    = $("#sidePane"),
       $topBar      = $("#topBar"),
       $searchInput = $("#searchInput"),
       SCALE_RANGE  = [0.4, 2],
-      GRAPH_WIDTH  = window.innerWidth - $sidePane.width(),
-      GRAPH_HEIGHT = window.innerHeight - $topBar.height();
+      GRAPH_WIDTH  = $window.innerWidth - $sidePane.width(),
+      GRAPH_HEIGHT = $window.innerHeight - $topBar.height();
 
   return function (url) {
     $http.get(url).success(function(data) {
