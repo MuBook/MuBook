@@ -229,7 +229,7 @@ mubook.provider("Notify", ["NotifyDefault", function(NotifyDefault) {
         _config.container.notify(message, status);
         $timeout(function() {
           _config.container.notifications.shift();
-          _config.container.$digest();
+          _config.container.$apply();
         }, _config.duration);
       },
       info: function(message) {
@@ -252,7 +252,7 @@ mubook.provider("Notify", ["NotifyDefault", function(NotifyDefault) {
 mubook.directive("notification", ["Notify", function(Notify) {
   return {
     restrict: "E",
-    scope: false,
+    scope: true,
     templateUrl: "directives/notification.html",
     link: function(scope, elem) {
       Notify.$container(scope);
@@ -370,7 +370,8 @@ mubook.controller("GraphTypeCtrl", function GraphTypeCtrl($scope, $location, Glo
   };
 });
 
-mubook.controller("FeedbackCtrl", function FeedbackCtrl($scope, $http, $timeout, Global, PopupControl) {
+mubook.controller("FeedbackCtrl",
+function FeedbackCtrl($scope, $http, $timeout, Global, PopupControl, Notify) {
   $scope.toggleForm = PopupControl.register("feedback", {
     scope: $scope,
     onOpen: function() {
@@ -384,7 +385,7 @@ mubook.controller("FeedbackCtrl", function FeedbackCtrl($scope, $http, $timeout,
 
   $scope.sendFeedback = function(e) {
     if (!$scope.message) {
-      alert("Feedback message cannot be empty!");
+      Notify.warn("Feedback message cannot be empty!");
       e.preventDefault();
       $timeout(function() {
         $("#feedback-message").focus();
@@ -392,33 +393,29 @@ mubook.controller("FeedbackCtrl", function FeedbackCtrl($scope, $http, $timeout,
       return;
     };
 
-    var data = {
+    var data = $.param({
       record: {
         name:    $scope.name,
         email:   $scope.email,
         message: $scope.message
       }
-    };
+    });
 
     $submit = $("#feedback-submit");
     $submit.val("Sending...").prop("disabled", true);
 
-    $.ajax({
-      type: "POST",
-      url: "http://monitor.mubook.me/api/records",
-      crossDomain: true,
-      data: data
-    })
-    .done(function() {
-      alert("Your feedback has been received. Thank you!");
-    })
-    .fail(function() {
-      alert("Something went wrong, would you like to try again? Sorry...");
-    })
-    .always(function() {
-      $submit.val("Send").prop("disabled", false);
-      $scope.toggleForm();
-    });
+    $http.post("http://monitor.mubook.me/api/records", data, {
+      headers: {
+        "Content-Type": "application/x-www-form-urlencoded; charset=UTF-8"
+      }
+    }).success(function() {
+        $scope.toggleForm();
+        Notify.success("Your feedback has been received. Thank you!");
+      }).error(function() {
+        Notify.error("Something went wrong, would you like to try again? Sorry...");
+      }).finally(function() {
+        $submit.val("Send").prop("disabled", false);
+      });
   };
 });
 
