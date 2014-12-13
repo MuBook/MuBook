@@ -1,7 +1,7 @@
 var mubook = angular.module("mubook", ["ngRoute", "ngAnimate", "ngCookies", "angular-loading"]);
 
 mubook.run(["$templateCache", function($templateCache) {
-  $templateCache.put('view.html', '<div id="graph"></div>');
+  $templateCache.put("view.html", '<div id="graph"></div>');
 }]);
 
 mubook.run(["$location", "$rootScope", "$window", "Global", "visualizeGraph",
@@ -343,8 +343,8 @@ mubook.controller("FeedbackCtrl", function FeedbackCtrl($scope, $http, $timeout,
     $submit.val("Sending...").prop("disabled", true);
 
     $.ajax({
-      type: 'POST',
-      url: 'http://monitor.mubook.me/api/records',
+      type: "POST",
+      url: "http://monitor.mubook.me/api/records",
       crossDomain: true,
       data: data
     })
@@ -447,8 +447,8 @@ function SubjectAddCtrl($scope, $timeout, $route, $cookies, Global, PopupControl
 
     $.ajax({
       headers: { "X-CSRFToken": $cookies.csrftoken },
-      type: 'POST',
-      url: '/profile/subjects/add',
+      type: "POST",
+      url: "/profile/subjects/add",
       data: payload
     })
     .done(function(message) {
@@ -465,10 +465,10 @@ function SubjectAddCtrl($scope, $timeout, $route, $cookies, Global, PopupControl
   };
 
   $scope.deleteSubject = function(e) {
-    var url = '/profile/subjects/delete/' + Global.selected;
+    var url = "/profile/subjects/delete/" + Global.selected;
     $.ajax({
       headers: { "X-CSRFToken": $cookies.csrftoken },
-      type: 'POST',
+      type: "POST",
       url: url
     })
     .done(function(message) {
