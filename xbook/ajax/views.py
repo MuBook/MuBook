@@ -9,7 +9,7 @@ from django.contrib.auth.models import User
 from xbook.ajax.models import Subject, SubjectPrereq
 from xbook.front.models import UserSubject
 
-from shared.utils import devlog, ajax, json
+from shared.utils import devlog, json
 from shared.response import r404
 
 from collections import deque
