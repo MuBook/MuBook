@@ -18,8 +18,10 @@
 	- [download xdb.dump](https://s3-ap-southeast-2.amazonaws.com/pochen-temp/xdb.dump)
 * MANDATORY: create a .env file in the django project folder (`/xbook`) like below
 ```
-DB_USER=your_postgres_username
+DB_NAME=your_postgres_db_name
+DB_USERNAME=your_postgres_username
 DB_PASSWORD=your_postgres_password
+MUBOOK_DEBUG=TRUE
 ```
 
 * CACHE TRICK: should now be gone with the environment aware settings
