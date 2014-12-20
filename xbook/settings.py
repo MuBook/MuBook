@@ -22,14 +22,13 @@ BASE_DIR = path.dirname(path.abspath(__file__))
 
 DATABASES = {
     'default': {
-        'ENGINE': 'django.db.backends.postgresql_psycopg2', # Add 'postgresql_psycopg2', 'mysql', 'sqlite3' or 'oracle'.
-        'NAME': 'xbook',                 # Or path to database file if using sqlite3.
+        'ENGINE': 'django.db.backends.postgresql_psycopg2',
+        'NAME': env('DB_NAME') or 'xbook',
 
-        # The following settings are not used with sqlite3:
-        'USER': env('DB_USER'),
+        'USER': env('DB_USER') or env('DB_USERNAME'),
         'PASSWORD': env('DB_PASSWORD'),
-        'HOST': '',                      # Empty for localhost through domain sockets or '127.0.0.1' for localhost through TCP.
-        'PORT': '',                      # Set to empty string for default.
+        'HOST': '',
+        'PORT': '',
     }
 }
 
