@@ -434,7 +434,7 @@ function UserCtrl($scope, $timeout, $location, $routeParams, Global, visualizeGr
 });
 
 mubook.controller("SubjectAddCtrl",
-function SubjectAddCtrl($scope, $timeout, $route, $cookies, Global, PopupControl) {
+function SubjectAddCtrl($scope, $timeout, $route, $cookies, $http, Global, PopupControl, Notify) {
   $scope.semesters = ["Semester 1", "Semester 2", "Summer", "Winter", "Other"];
   $scope.states = ["Studying", "Completed", "Planned", "Bookmarked"];
 
@@ -443,14 +443,14 @@ function SubjectAddCtrl($scope, $timeout, $route, $cookies, Global, PopupControl
   var $state = $("#subjectAdderState");
   var $addBtn = $("#subjectAdderConfirmBtn");
 
-  $scope.togglePopup = PopupControl.register("addSubject", {
+  $scope.toggleAddForm = PopupControl.register("addSubject", {
     scope: $scope,
     onOpen: function() {
       $scope.resetForm();
     }
   });
 
-  $scope.toggleDelPopup = PopupControl.register("delSubject", {
+  $scope.toggleDelForm = PopupControl.register("delSubject", {
     scope: $scope,
     onOpen: function() {
       $scope.delSubjCode = Global.selected;
@@ -485,7 +485,7 @@ function SubjectAddCtrl($scope, $timeout, $route, $cookies, Global, PopupControl
     $scope.modelState = $scope.states[0];
   };
 
-  $scope.addSubject = function(e) {
+  $scope.addSubject = function() {
     if (!$scope.isValidYear()) {
       return $year.focus();
     } else if (!$scope.isValidSemester()) {
@@ -494,8 +494,6 @@ function SubjectAddCtrl($scope, $timeout, $route, $cookies, Global, PopupControl
       return $state.focus();
     }
 
-    $scope.formDisabled = true;
-
     payload = {
       subject: Global.selected,
       year: $scope.modelYear,
@@ -503,40 +501,27 @@ function SubjectAddCtrl($scope, $timeout, $route, $cookies, Global, PopupControl
       state: $scope.modelState
     };
 
-    $.ajax({
-      headers: { "X-CSRFToken": $cookies.csrftoken },
-      type: "POST",
-      url: "/profile/subjects/add",
-      data: payload
-    })
-    .done(function(message) {
+    $http.post("/profile/subjects/add", payload, {
+      headers: { "X-CSRFToken": $cookies.csrftoken }
+    }).then(function() {
       $route.reload();
-    })
-    .fail(function(message) {
-      console.error("Fail: " + message);
-    })
-    .always(function() {
-      $scope.formDisabled = false;
+      $scope.toggleAddForm();
+      Notify.success("Added " + Global.selected);
+    }, function(error) {
+      Notify.error("Failed to add " + Global.selected);
     });
-    $scope.resetForm();
-    $scope.togglePopup();
   };
 
-  $scope.deleteSubject = function(e) {
+  $scope.deleteSubject = function() {
     var url = "/profile/subjects/delete/" + Global.selected;
-    $.ajax({
+    $http.post(url, {}, {
       headers: { "X-CSRFToken": $cookies.csrftoken },
-      type: "POST",
-      url: url
-    })
-    .done(function(message) {
+    }).then(function(message) {
       $route.reload();
-    })
-    .fail(function(message) {
-      console.error("Fail: " + message);
-    })
-    .always(function() {
-      $scope.toggleDelPopup(e);
+      $scope.toggleDelForm(e);
+      Notify.success("Deleted " + Global.selected);
+    }, function(message) {
+      Notify.error("Failed to delete " + Global.selected);
     });
   };
 });

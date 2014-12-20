@@ -1,5 +1,5 @@
 import os
-import json
+import json as JSON
 
 from django.http import HttpResponse
 from django.core.mail import send_mail
@@ -33,7 +33,7 @@ def error404(request, path):
 
 @require_POST
 def send_feedback(request):
-    data = json.loads(request.body)
+    data = JSON.loads(request.body)
     name = data.get("name", "someone")
     email = data.get("email", "Email not given")
     message = data.get("message", "error")
@@ -47,11 +47,12 @@ def add_subject(request):
     if not request.user.is_authenticated():
         return r401()
 
-    currentUser = request.user
-    subjectCode = request.POST["subject"]
-    subjectYear = request.POST["year"]
-    subjectState = request.POST["state"]
-    subjectSemester = request.POST["semester"]
+    currentUser     = request.user
+    payload         = JSON.loads(request.body)
+    subjectCode     = payload["subject"]
+    subjectYear     = payload["year"]
+    subjectState    = payload["state"]
+    subjectSemester = payload["semester"]
 
     if not subjectCode or not subjectYear or not subjectState or not subjectSemester:
         return r400()

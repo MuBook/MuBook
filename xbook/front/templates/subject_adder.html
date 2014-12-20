@@ -1,11 +1,11 @@
 <div id="subjectAdder" ng-controller="SubjectAddCtrl" popup ng-cloak>
   <div class="sidePaneBtnWrapper">
     <button id="subjectAdderAddBtn" class="btn btn-primary" type="button"
-        ng-hide="status" ng-cloak ng-click="togglePopup($event)">Add Subject</button>
+        ng-hide="status" ng-cloak ng-click="toggleAddForm()">Add Subject</button>
     <button id="subjectAdderDelBtn" class="btn btn-danger" type="button"
-        ng-show="status" ng-cloak ng-click="toggleDelPopup($event)">Remove Subject</button>
+        ng-show="status" ng-cloak ng-click="toggleDelForm()">Remove Subject</button>
   </div>
-  <div id="subjectAdderSection" ng-show="isVisible()" ng-submit="addSubject($event)">
+  <div id="subjectAdderSection" ng-show="isVisible()" ng-submit="addSubject()">
     <h2 class="add-heading">Adding <span class="add-heading-subj" ng-bind="selected()"></span></h2>
     <form name="subjectAdderForm" id="subjectAdderForm" class="form-horizontal">
       {% csrf_token %}
@@ -41,15 +41,15 @@
       </div>
       <div class="form-group">
         <button id="subjectAdderConfirmBtn" class="col-sm-offset-2 col-sm-3 btn btn-success" type="submit" ng-disabled="formDisabled">Add</button>
-        <button class="col-sm-offset-1 col-sm-3 btn btn-default" ng-click="togglePopup($event)" type="button">Cancel</button>
+        <button class="col-sm-offset-1 col-sm-3 btn btn-default" ng-click="toggleAddForm()" type="button">Cancel</button>
       </div>
     </form>
   </div>
   <div id="subjDelConfirm" ng-show="isDelVisible()">
     <p class="space-up-10">Are you sure you want to remove</p>
     <p><b ng-bind="delSubjCode"></b></p>
-    <i class="close-popup glyphicon glyphicon-remove" ng-click="toggleDelPopup($event)"></i>
-    <button class="btn btn-danger" type="button" ng-click="deleteSubject($event)">Remove</button>
-    <button class="btn btn-default" type="button" ng-click="toggleDelPopup($event)">Cancel</button>
+    <i class="close-popup glyphicon glyphicon-remove" ng-click="toggleDelForm()"></i>
+    <button class="btn btn-danger" type="button" ng-click="deleteSubject()">Remove</button>
+    <button class="btn btn-default" type="button" ng-click="toggleDelForm()">Cancel</button>
   </div>
 </div>
