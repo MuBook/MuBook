@@ -8,6 +8,10 @@ from django.views.decorators.cache import cache_page
 from django.views.decorators.csrf import csrf_protect
 from django.shortcuts import render, redirect
 from django.template import RequestContext
+
+from shared.utils import devlog
+from shared.response import r200, r201, r400, r401, r404
+
 from xbook.ajax.models import Subject
 from xbook.front.models import UserSubject
 
@@ -35,13 +39,13 @@ def send_feedback(request):
     message = data.get("message", "error")
     send_mail("Feedback from " + name, email + "\n\n" + message, "xbookfeedback@gmail.com",
               ["xbookfeedback@gmail.com"], fail_silently=False)
-    return HttpResponse()
+    return r200()
 
 
 @require_POST
 def add_subject(request):
     if not request.user.is_authenticated():
-        return HttpResponse(status=401)
+        return r401()
 
     currentUser = request.user
     subjectCode = request.POST["subject"]
@@ -50,22 +54,22 @@ def add_subject(request):
     subjectSemester = request.POST["semester"]
 
     if not subjectCode or not subjectYear or not subjectState or not subjectSemester:
-        return HttpResponse(status=400)
+        return r400()
 
     try:
         selectedSubject = Subject.objects.get(code=subjectCode)
     except Subject.DoesNotExist:
-        return HttpResponse(status=404)
+        return r404()
 
     UserSubject.add(currentUser, selectedSubject, subjectYear, subjectSemester, subjectState)
 
-    return HttpResponse(status=201)
+    return r201()
 
 
 @require_POST
 def delete_subject(request, subject):
     if not request.user.is_authenticated():
-        return HttpResponse(status=401)
+        return r401()
 
     user = request.user
     subject = Subject.objects.get(code=subject)
@@ -73,7 +77,7 @@ def delete_subject(request, subject):
     try:
         relation = UserSubject.objects.get(user=user, subject=subject)
     except UserSubject.DoesNotExist:
-        return HttpResponse(status=404)
+        return r404()
 
     relation.delete()
 
