@@ -561,7 +561,31 @@ mubook.controller("SidePaneCtrl",
   "UserSubject", "GeneralStatistics", "SocialStatistics", "SubjectDetails",
 function SidePaneCtrl($scope, $routeParams, $sce, PopupControl,
     UserSubject, GeneralStatistics, SocialStatistics, SubjectDetails) {
-  var updateSubjectInfo = function(event, route) {
+  var graphLoaded = function(event, nodes, successful, status) {
+    if (successful && $routeParams.subjectCode) {
+      updateSubjectInfo(event, $routeParams.subjectCode);
+    } else if (successful && $routeParams.username) {
+      userNode = nodes[nodes.length - 1];
+      updateSubjectInfo(event, $routeParams.username, userNode, nodes.length);
+    } else if (!successful && $routeParams.subjectCode) {
+      $scope.name = "Oops!";
+      $scope.code = "The subject does not exist.";
+    } else if (!successful && $routeParams.username) {
+      $scope.name = "Oops!";
+      $scope.code = "The user does not exist.";
+    }
+  };
+
+  var updateSubjectInfo = function(event, route, userNode, userSubjectsCount) {
+    if (userNode) {
+      $scope.name = userNode.name;
+      if (userSubjectsCount == 1) {
+        $scope.code = "Oops! You haven't added any subjects yet."
+      } else {
+        $scope.code = "";
+      }
+    }
+
     var subjectCode;
     if (angular.isString(route)) {
       subjectCode = route;
@@ -582,6 +606,12 @@ function SidePaneCtrl($scope, $routeParams, $sce, PopupControl,
       ]), function(val, key, obj) {
         obj[key] = $sce.trustAsHtml(val);
       }));
+    }).error(function() {
+      $scope.extend(_.zipObject(
+        [ "credit", "commenceDate", "timeCommitment", "prereq",
+        "assessment", "coreq", "overview", "objectives" ],
+        []
+      ));
     });
   };
 
@@ -596,11 +626,11 @@ function SidePaneCtrl($scope, $routeParams, $sce, PopupControl,
     toggleFriendsList();
   };
 
-  $scope.$on("$routeChangeSuccess", updateSubjectInfo);
+  $scope.$on("graphDataLoaded", graphLoaded);
   $scope.$on("selectedSubjectChange", updateSubjectInfo);
 }]);
 
-mubook.factory("visualizeGraph", function ($http, $cookies, $window, Global) {
+mubook.factory("visualizeGraph", function ($rootScope, $http, $cookies, $window, $routeParams, Global) {
   var $sidePane    = $("#sidePane"),
       $topBar      = $("#topBar"),
       $searchInput = $("#searchInput"),
@@ -609,7 +639,9 @@ mubook.factory("visualizeGraph", function ($http, $cookies, $window, Global) {
       GRAPH_HEIGHT = $window.innerHeight - $topBar.height();
 
   return function (url) {
-    $http.get(url).success(function(data) {
+    $http.get(url).success(function(data, status) {
+      $rootScope.$broadcast("graphDataLoaded", data.nodes, true, status);
+
       $cookies.subjCode = Global.code;
 
       var graph = new Graph({
@@ -638,12 +670,13 @@ mubook.factory("visualizeGraph", function ($http, $cookies, $window, Global) {
         }
       };
 
-      $searchInput.val(data.nodes[0].code + " - " + data.nodes[0].name);
-    }).error(fail);
+      if ($routeParams.subjectCode) {
+        $searchInput.val(data.nodes[0].code + " - " + data.nodes[0].name);
+      } else {
+        $searchInput.val("");
+      }
+    }).error(function(data, status) {
+      $rootScope.$broadcast("graphDataLoaded", data, false, status);
+    });
   };
 });
-
-var fail = function(type, name) {
-  $("#selectedName").text("Oops!");
-  $("#selectedCode").text("The subject does not exist.");
-};

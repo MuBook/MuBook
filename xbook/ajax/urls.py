@@ -9,9 +9,9 @@ urlpatterns = [
 
     url(r"^u-(?P<uni>.*?)/subject_list$", views.subject_list),
 
-    url(r"subjects/(?P<subjectCode>\w+?)/general_statistics", views.subject_statistics),
-    url(r"subjects/(?P<subjectCode>\w+?)/social_statistics", views.social_statistics),
-    url(r"my_subjects/(?P<subjectCode>\w+)", views.user_subject),
+    url(r"subjects/(?P<subjectCode>.*?)/general_statistics", views.subject_statistics),
+    url(r"subjects/(?P<subjectCode>.*?)/social_statistics", views.social_statistics),
+    url(r"my_subjects/(?P<subjectCode>.*)", views.user_subject),
 
     url(r"^profile/(?P<username>.*?)/?$", views.profile)
 ]
