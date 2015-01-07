@@ -457,6 +457,10 @@ function SubjectAddCtrl($scope, $timeout, $route, $cookies, $http, Global, Popup
     }
   });
 
+  $scope.$on("userNodeSelected", function(event, value) {
+    $scope.isSubjectNode = value;
+  });
+
   $scope.isVisible = PopupControl.visibilityOf("addSubject");
 
   $scope.isDelVisible = PopupControl.visibilityOf("delSubject");
@@ -557,9 +561,9 @@ mubook.filter("state", function() {
 });
 
 mubook.controller("SidePaneCtrl",
-["$scope", "$routeParams", "$sce", "PopupControl",
+["$scope", "$rootScope", "$routeParams", "$sce", "PopupControl",
   "UserSubject", "GeneralStatistics", "SocialStatistics", "SubjectDetails",
-function SidePaneCtrl($scope, $routeParams, $sce, PopupControl,
+function SidePaneCtrl($scope, $rootScope, $routeParams, $sce, PopupControl,
     UserSubject, GeneralStatistics, SocialStatistics, SubjectDetails) {
   var graphLoaded = function(event, nodes, successful, status) {
     if (successful && $routeParams.subjectCode) {
@@ -585,6 +589,8 @@ function SidePaneCtrl($scope, $routeParams, $sce, PopupControl,
         $scope.code = "";
       }
     }
+
+    $rootScope.$broadcast("userNodeSelected", !userNode);
 
     var subjectCode;
     if (angular.isString(route)) {
