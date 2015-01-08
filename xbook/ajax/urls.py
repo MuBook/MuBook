@@ -13,5 +13,6 @@ urlpatterns = [
     url(r"subjects/(?P<subjectCode>.*?)/social_statistics", views.social_statistics),
     url(r"my_subjects/(?P<subjectCode>.*)", views.user_subject),
 
-    url(r"^profile/(?P<username>.*?)/?$", views.profile)
+    url(r"^profile/(?P<username>.*?)/details$", views.profile_details),
+    url(r"^profile/(?P<username>.*?)/?$", views.profile),
 ]

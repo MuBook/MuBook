@@ -172,11 +172,14 @@ Graph.prototype.onClickHandler = function(nodeData, graph, clickedNode, config) 
   graph.setStyle({ dimOpacity: true, removeSelected: true });
 
   if (nodeData.code != graph.prevHighlightNode) {
-    $rootScope.setSelected(nodeData.code);
+    $rootScope.setSelected(nodeData.isUserNode ? "u" : "s", nodeData.code);
 
     if (!(config && config.isLegendNode)) {
-      $rootScope.$broadcast("selectedSubjectChange", nodeData.code,
-      nodeData.isUserNode ? nodeData : undefined, graph.nodes[0].length);
+      $rootScope.$broadcast(
+        "selectedSubjectChange",
+        nodeData.code,
+        nodeData.isUserNode ? nodeData : undefined
+      );
     }
 
     graph.highlightSubtree(nodeData.code);
@@ -186,8 +189,12 @@ Graph.prototype.onClickHandler = function(nodeData, graph, clickedNode, config) 
     $rootScope.setSelected();
 
     if (!(config && config.isLegendNode)) {
-      $rootScope.$broadcast("selectedSubjectChange", $rootScope.getSelected(),
-        nodeData.isUserNode ? nodeData : undefined, graph.nodes[0].length);
+      rootNode = $rootScope.getSelected();
+      $rootScope.$broadcast(
+        "selectedSubjectChange",
+        rootNode.code,
+        rootNode.type == "u"
+      );
     }
 
     clickedNode.classList.remove("selected");
@@ -195,7 +202,7 @@ Graph.prototype.onClickHandler = function(nodeData, graph, clickedNode, config) 
     graph.setStyle({ resetOpacity: true });
 
     var selected = $rootScope.getSelected();
-    var selectedIndex = _(graph.nodeData.nodes).findIndex({ code: selected });
+    var selectedIndex = _(graph.nodeData.nodes).findIndex({ code: selected.code });
     nodeData = graph.nodeData.nodes[selectedIndex];
   }
 };

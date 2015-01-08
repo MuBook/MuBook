@@ -21,14 +21,18 @@ function($location, $rootScope, $window, Global, visualizeGraph) {
   });
 
   $rootScope.gotoSubject = function gotoSubject(code, callback) {
-    Global.code = code;
-    Global.selected = code;
+    Global.code = Global.selected = code;
+    Global.codeType = Global.selectedType = "s";
+
     $location.path("/explorer/" + Global.reqType + "/melbourne/" + code);
 
     if (callback) { callback() };
   };
 
   $rootScope.gotoUser = function gotoUser(username, callback) {
+    Global.code = Global.selected = username;
+    Global.codeType = Global.selectedType = "u";
+
     $location.path("/profile/" + username);
 
     if (callback) { callback() };
@@ -39,12 +43,16 @@ function($location, $rootScope, $window, Global, visualizeGraph) {
     visualizeGraph(url);
   };
 
-  $rootScope.setSelected = function setSelected(code) {
+  $rootScope.setSelected = function setSelected(type, code) {
+    Global.selectedType = type || Global.codeType;
     Global.selected = code || Global.code;
   };
 
   $rootScope.getSelected = function getSelected() {
-    return Global.selected;
+    return {
+      code: Global.selected,
+      type: Global.selectedType
+    };
   };
 
   $rootScope.extend = function(data) {
@@ -68,11 +76,13 @@ mubook.factory("Subjects", function($http) {
   return $http.get("/ajax/u-melbourne/subject_list");
 });
 
-mubook.factory("Global", function() {
+mubook.factory("Global", function($routeParams) {
   return {
     code: "COMP30018",
+    codeType: "s",
     reqType: "prereq",
-    selected: "COMP30018"
+    selected: "COMP30018",
+    selectedType: "s"
   };
 });
 
@@ -554,6 +564,12 @@ mubook.factory("SubjectDetails", function($http) {
   };
 });
 
+mubook.factory("ProfileDetails", function($http) {
+  return function(username) {
+    return $http.get("/ajax/profile/" + username + "/details")
+  }
+});
+
 mubook.filter("state", function() {
   return function(list, state) {
     return _.where(list, { state: state }).length;
@@ -562,15 +578,14 @@ mubook.filter("state", function() {
 
 mubook.controller("SidePaneCtrl",
 ["$scope", "$rootScope", "$routeParams", "$sce", "PopupControl",
-  "UserSubject", "GeneralStatistics", "SocialStatistics", "SubjectDetails",
+  "UserSubject", "GeneralStatistics", "SocialStatistics", "SubjectDetails", "ProfileDetails",
 function SidePaneCtrl($scope, $rootScope, $routeParams, $sce, PopupControl,
-    UserSubject, GeneralStatistics, SocialStatistics, SubjectDetails) {
-  var graphLoaded = function(event, nodes, successful, status) {
+    UserSubject, GeneralStatistics, SocialStatistics, SubjectDetails, ProfileDetails) {
+  var graphLoaded = function(event, successful, status) {
     if (successful && $routeParams.subjectCode) {
       updateSubjectInfo(event, $routeParams.subjectCode);
     } else if (successful && $routeParams.username) {
-      userNode = nodes[nodes.length - 1];
-      updateSubjectInfo(event, $routeParams.username, userNode, nodes.length);
+      updateSubjectInfo(event, $routeParams.username, true);
     } else if (!successful && $routeParams.subjectCode) {
       $scope.name = "Oops!";
       $scope.code = "The subject does not exist.";
@@ -580,18 +595,22 @@ function SidePaneCtrl($scope, $rootScope, $routeParams, $sce, PopupControl,
     }
   };
 
-  var updateSubjectInfo = function(event, route, userNode, userSubjectsCount) {
-    if (userNode) {
-      $scope.name = userNode.name;
-      if (userSubjectsCount == 1) {
-        $scope.code = "Oops! You haven't added any subjects yet."
-      } else {
-        $scope.code = "";
-      }
-    }
+  var updateSubjectInfo = function(event, route, isUserNode) {
+    $rootScope.$broadcast("userNodeSelected", !isUserNode);
+    $scope.isSubjectNode = !isUserNode;
 
-    $rootScope.$broadcast("userNodeSelected", !userNode);
-    $scope.isSubjectNode = !userNode;
+    var userNode;
+    if (isUserNode) {
+      ProfileDetails($routeParams.username).success(function(profileDetails) {
+        $scope.name = profileDetails.name;
+        if (!profileDetails.subjectsCount) {
+          $scope.code = "Oops! You haven't added any subjects yet."
+        } else {
+          $scope.code = "";
+        }
+      });
+      return;
+    }
 
     var subjectCode;
     if (angular.isString(route)) {
@@ -647,9 +666,15 @@ mubook.factory("visualizeGraph", function ($rootScope, $http, $cookies, $window,
 
   return function (url) {
     $http.get(url).success(function(data, status) {
-      $rootScope.$broadcast("graphDataLoaded", data.nodes, true, status);
+      $rootScope.$broadcast("graphDataLoaded", true, status);
 
-      $cookies.subjCode = Global.code;
+      Global.code = Global.selected = $routeParams.subjectCode || $routeParams.username;
+      Global.codeType = Global.selectedType = $routeParams.subjectCode ? "s" : "u";
+      Global.reqType = "prereq";
+
+      if (!!$routeParams.subjectCode) {
+        $cookies.subjCode = Global.code;
+      }
 
       var graph = new Graph({
         name: "graphSVG", nodeData: data,
@@ -683,7 +708,7 @@ mubook.factory("visualizeGraph", function ($rootScope, $http, $cookies, $window,
         $searchInput.val("");
       }
     }).error(function(data, status) {
-      $rootScope.$broadcast("graphDataLoaded", data, false, status);
+      $rootScope.$broadcast("graphDataLoaded", false, status);
     });
   };
 });

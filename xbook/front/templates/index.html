@@ -8,7 +8,7 @@
       {% verbatim %}
       <h2 id="selectedName" ng-cloak>{{name}}</h2>
       <h4 id="selectedCode" ng-cloak>{{code}}</h4>
-      <p id="userSubjectStatus" class="space-up-20" ng-show="status" ng-cloak>
+      <p id="userSubjectStatus" class="space-up-20" ng-show="status && isSubjectNode" ng-cloak>
         {{status}} - {{year}} {{semester}}
       </p>
       {% endverbatim %}
