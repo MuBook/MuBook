@@ -69,9 +69,6 @@ def social_statistics(request, subjectCode):
 
     localFriends = SocialAccount.objects.filter(uid__in=friendUIDs, provider="facebook")
 
-    if not localFriends:
-        return r404()
-
     return json({ "friends": friends_info(localFriends, subjectCode) })
 
 
@@ -153,8 +150,6 @@ def subject_list(request, uni):
 @cache_page(60 * 60 * 4)
 def subject_statistics(request, subjectCode):
     userSubjects = UserSubject.objects.filter(subject__code=subjectCode)
-    if not userSubjects:
-        return r404()
 
     return json({
         "planned": userSubjects.filter(state=PLANNED).count(),
