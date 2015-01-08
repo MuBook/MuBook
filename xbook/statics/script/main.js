@@ -591,6 +591,7 @@ function SidePaneCtrl($scope, $rootScope, $routeParams, $sce, PopupControl,
     }
 
     $rootScope.$broadcast("userNodeSelected", !userNode);
+    $scope.isSubjectNode = !userNode;
 
     var subjectCode;
     if (angular.isString(route)) {
