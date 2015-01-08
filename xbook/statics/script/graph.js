@@ -173,15 +173,23 @@ Graph.prototype.onClickHandler = function(nodeData, graph, clickedNode, config) 
 
   if (nodeData.code != graph.prevHighlightNode) {
     $rootScope.setSelected(nodeData.code);
-    $rootScope.$broadcast("selectedSubjectChange", nodeData.code,
+
+    if (!(config && config.isLegendNode)) {
+      $rootScope.$broadcast("selectedSubjectChange", nodeData.code,
       nodeData.isUserNode ? nodeData : undefined, graph.nodes[0].length);
+    }
+
     graph.highlightSubtree(nodeData.code);
     clickedNode.classList.add("selected");
     graph.prevHighlightNode = nodeData.code;
   } else {
     $rootScope.setSelected();
-    $rootScope.$broadcast("selectedSubjectChange", $rootScope.getSelected(),
-      nodeData.isUserNode ? nodeData : undefined, graph.nodes[0].length);
+
+    if (!(config && config.isLegendNode)) {
+      $rootScope.$broadcast("selectedSubjectChange", $rootScope.getSelected(),
+        nodeData.isUserNode ? nodeData : undefined, graph.nodes[0].length);
+    }
+
     clickedNode.classList.remove("selected");
     graph.prevHighlightNode = "";
     graph.setStyle({ resetOpacity: true });
