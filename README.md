@@ -2,12 +2,23 @@
 
 ## Things you need to have
 
-* Python 2.7
-* Django 1.6.0+
+* Python 2.7+
+* Django 1.7+
 * Postgres DB
-* Maybe: things mentioned in `requirements.txt`
+* required python modules: `pip install -r requirements.txt`
+* node.js and npm dependencies: `npm install`
 
-## What need to be done
+## Assets compilation
+
+	gulp
+
+This command will pick up `gulpfile.js` and run the default command, which I've set to lint the js and compile both js and css
+
+If you are working on js or css changes, make sure you run `gulp watch` along with `python manage.py runserver` (in different terminal sessions of course). Gulp will automatically pick up changs you made in the files and re-compile the assets.
+
+For more information, read `gulpfile.js`
+
+## Local setup
 
 * OPTIONAL: Put test data into your own DB
 	- Command: `pg_restore --verbose --clean --no-acl --no-owner -h localhost -U USER_NAME -d DB_NAME DUMP_NAME.dump`
@@ -39,5 +50,3 @@ Exclude the last line if you want to turn off debugging
 # How to update the database
 
 - [Heroku documentation link](https://devcenter.heroku.com/articles/heroku-postgres-import-export)
-
-tell me if you need more instructions
