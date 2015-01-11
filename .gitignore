@@ -9,3 +9,6 @@ venv
 
 *.db
 *.dump
+
+node_modules/
+compiled/
