@@ -11,5 +11,4 @@ venv
 *.dump
 
 node_modules/
-xbook/statics/compiled/*
-!xbook/statics/compiled/.gitkeep
+compiled/
