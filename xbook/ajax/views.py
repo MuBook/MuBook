@@ -204,7 +204,7 @@ def profile(request, username):
     return json(graph)
 
 def profile_details(request, username):
-    if not len(User.objects.filter(username=username)):
+    if not User.objects.filter(username=username).exists():
         return r404()
 
     selected_user = User.objects.get(username=username)

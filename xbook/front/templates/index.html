@@ -8,7 +8,7 @@
       {% verbatim %}
       <h2 id="selectedName" ng-cloak>{{name}}</h2>
       <h4 id="selectedCode" ng-cloak>{{code}}</h4>
-      <p id="userSubjectStatus" class="space-up-20" ng-show="status && isSubjectNode" ng-cloak>
+      <p id="userSubjectStatus" class="space-up-20" ng-if="isSubjectNode" ng-show="status" ng-cloak>
         {{status}} - {{year}} {{semester}}
       </p>
       {% endverbatim %}
@@ -25,7 +25,7 @@
       </div>
     </div>
 
-    <div id="statistics" popup ng-cloak ng-show="isSubjectNode">
+    <div id="statistics" popup ng-cloak ng-if="isSubjectNode">
       <h4 class="subjectMeta">Status</h4>
       <h5 class="statisticsLabel">All Students</h5>
       <ul id="statisticsInfo" class="statisticsList">

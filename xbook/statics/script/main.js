@@ -22,7 +22,7 @@ function($location, $rootScope, $window, Global, visualizeGraph) {
 
   $rootScope.gotoSubject = function gotoSubject(code, callback) {
     Global.code = Global.selected = code;
-    Global.codeType = Global.selectedType = "s";
+    Global.codeType = Global.selectedType = "subject";
 
     $location.path("/explorer/" + Global.reqType + "/melbourne/" + code);
 
@@ -31,7 +31,7 @@ function($location, $rootScope, $window, Global, visualizeGraph) {
 
   $rootScope.gotoUser = function gotoUser(username, callback) {
     Global.code = Global.selected = username;
-    Global.codeType = Global.selectedType = "u";
+    Global.codeType = Global.selectedType = "user";
 
     $location.path("/profile/" + username);
 
@@ -76,13 +76,13 @@ mubook.factory("Subjects", function($http) {
   return $http.get("/ajax/u-melbourne/subject_list");
 });
 
-mubook.factory("Global", function($routeParams) {
+mubook.factory("Global", function() {
   return {
     code: "COMP30018",
-    codeType: "s",
+    codeType: "subject",
     reqType: "prereq",
     selected: "COMP30018",
-    selectedType: "s"
+    selectedType: "subject"
   };
 });
 
@@ -625,17 +625,20 @@ function SidePaneCtrl($scope, $rootScope, $routeParams, $sce, PopupControl,
     UserSubject(subjectCode).success($scope.extend.bind($scope)).error(function() {
       $scope.status = $scope.year = $scope.semester = undefined;
     });
+
+    sidepaneDataSections = [
+      "code", "name", "credit", "commenceDate", "timeCommitment", "prereq",
+      "assessment", "coreq", "overview", "objectives"
+    ]
     SubjectDetails(subjectCode).success(function(subjectDetails) {
-      $scope.extend(_.forOwn(_.pick(subjectDetails, [
-        "code", "name", "credit", "commenceDate", "timeCommitment", "prereq",
-        "assessment", "coreq", "overview", "objectives"
-      ]), function(val, key, obj) {
+      $scope.extend(_.forOwn(
+        _.pick(subjectDetails, sidepaneDataSections),
+        function(val, key, obj) {
         obj[key] = $sce.trustAsHtml(val);
       }));
     }).error(function() {
       $scope.extend(_.zipObject(
-        [ "credit", "commenceDate", "timeCommitment", "prereq",
-        "assessment", "coreq", "overview", "objectives" ],
+        sidepaneDataSections.slice(2),
         []
       ));
     });
@@ -669,10 +672,10 @@ mubook.factory("visualizeGraph", function ($rootScope, $http, $cookies, $window,
       $rootScope.$broadcast("graphDataLoaded", true, status);
 
       Global.code = Global.selected = $routeParams.subjectCode || $routeParams.username;
-      Global.codeType = Global.selectedType = $routeParams.subjectCode ? "s" : "u";
+      Global.codeType = Global.selectedType = $routeParams.subjectCode ? "subject" : "user";
       Global.reqType = "prereq";
 
-      if (!!$routeParams.subjectCode) {
+      if ($routeParams.subjectCode) {
         $cookies.subjCode = Global.code;
       }
 

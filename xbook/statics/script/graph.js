@@ -164,6 +164,7 @@ Graph.prototype.highlightSubtree = function(subjectCode) {
 };
 
 Graph.prototype.onClickHandler = function(nodeData, graph, clickedNode, config) {
+  config = config || {}
   if (config.enableDelete && d3.event.button === 0 && d3.event.shiftKey) {
     graph.deleteNode(nodeData.code, clickedNode);
     return;
@@ -172,13 +173,13 @@ Graph.prototype.onClickHandler = function(nodeData, graph, clickedNode, config) 
   graph.setStyle({ dimOpacity: true, removeSelected: true });
 
   if (nodeData.code != graph.prevHighlightNode) {
-    $rootScope.setSelected(nodeData.isUserNode ? "u" : "s", nodeData.code);
+    $rootScope.setSelected(nodeData.isUserNode ? "user" : "subject", nodeData.code);
 
-    if (!(config && config.isLegendNode)) {
+    if (!config.isLegendNode) {
       $rootScope.$broadcast(
         "selectedSubjectChange",
         nodeData.code,
-        nodeData.isUserNode ? nodeData : undefined
+        nodeData.isUserNode ? nodeData : null
       );
     }
 
@@ -188,12 +189,12 @@ Graph.prototype.onClickHandler = function(nodeData, graph, clickedNode, config) 
   } else {
     $rootScope.setSelected();
 
-    if (!(config && config.isLegendNode)) {
+    if (!config.isLegendNode) {
       rootNode = $rootScope.getSelected();
       $rootScope.$broadcast(
         "selectedSubjectChange",
         rootNode.code,
-        rootNode.type == "u"
+        rootNode.type == "user"
       );
     }
 
