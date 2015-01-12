@@ -65,6 +65,6 @@
   graph.makeGraph();
   graph.renderGraph();
   graph.nodes.on("click", function(d) {
-    graph.onClickHandler(d, graph, this, {});
+    graph.onClickHandler(d, graph, this, { isLegendNode: true });
   });
 })();

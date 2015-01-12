@@ -166,19 +166,7 @@ def attach_userinfo_node(user):
         "code": user,
         "name": user,
         "root": True,
-        "credit": "",
-        "commenceDate": "",
-        "timeCommitment": "",
-        "overview": "",
-        "objectives": "",
-        "assessment": "",
-        "prereq": "",
-        "coreq": "",
-        "isUserNode": True,
-        "hasCompleted": False,
-        "yearCompleted": 0,
-        "semesterCompleted": "",
-        "state": ""
+        "isUserNode": True
     }
 
 
@@ -187,12 +175,14 @@ def profile(request, username):
     graph = { "nodes": nodes, "links": links }
 
     if not len(User.objects.filter(username=username)):
-        return json(graph)
+        return r404()
 
     selected_user = User.objects.get(username=username)
     user_subjects = selected_user.user_subject.all()
 
-    parent_index = -1
+    nodes.append(attach_userinfo_node(selected_user))
+
+    parent_index = 0
     for user_subject in user_subjects:
         subj = user_subject.subject
 
@@ -204,13 +194,23 @@ def profile(request, username):
         relations = SubjectPrereq.objects.filter(subject__code=subj.code)
 
         for relation in relations:
-            compare_index = 0
+            compare_index = 1
             for taken_subject in user_subjects:
                 related = relation.prereq
                 if taken_subject.subject.code == related.code:
                     links.append({ "source": parent_index, "target": compare_index })
                 compare_index += 1
 
-    nodes.append(attach_userinfo_node(selected_user))
-
     return json(graph)
+
+def profile_details(request, username):
+    if not User.objects.filter(username=username).exists():
+        return r404()
+
+    selected_user = User.objects.get(username=username)
+    user_subjects_count = selected_user.user_subject.count()
+
+    user_node = attach_userinfo_node(selected_user)
+    user_node.update({ "subjectsCount": user_subjects_count })
+
+    return json(user_node)

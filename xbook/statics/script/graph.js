@@ -166,30 +166,48 @@ Graph.prototype.highlightSubtree = function(subjectCode) {
   }
 };
 
-Graph.prototype.onClickHandler = function(d, graph, clickedNode, config) {
+Graph.prototype.onClickHandler = function(nodeData, graph, clickedNode, config) {
+  config = config || {};
   if (config.enableDelete && d3.event.button === 0 && d3.event.shiftKey) {
-    graph.deleteNode(d.code, clickedNode);
+    graph.deleteNode(nodeData.code, clickedNode);
     return;
   }
 
   graph.setStyle({ dimOpacity: true, removeSelected: true });
 
-  if (d.code != graph.prevHighlightNode) {
-    $rootScope.setSelected(d.code);
-    $rootScope.$broadcast("selectedSubjectChange", d.code);
-    graph.highlightSubtree(d.code);
+  if (nodeData.code != graph.prevHighlightNode) {
+    $rootScope.setSelected(nodeData.isUserNode ? "user" : "subject", nodeData.code);
+
+    if (!config.isLegendNode) {
+      $rootScope.$broadcast(
+        "selectedSubjectChange",
+        nodeData.code,
+        nodeData.isUserNode ? nodeData : null
+      );
+    }
+
+    graph.highlightSubtree(nodeData.code);
     clickedNode.classList.add("selected");
-    graph.prevHighlightNode = d.code;
+    graph.prevHighlightNode = nodeData.code;
   } else {
     $rootScope.setSelected();
-    $rootScope.$broadcast("selectedSubjectChange", $rootScope.getSelected());
+
+    if (!config.isLegendNode) {
+      rootNode = $rootScope.getSelected();
+      $rootScope.$broadcast(
+        "selectedSubjectChange",
+        rootNode.code,
+        rootNode.type == "user"
+      );
+    }
+
     clickedNode.classList.remove("selected");
     graph.prevHighlightNode = "";
     graph.setStyle({ resetOpacity: true });
 
     var selected = $rootScope.getSelected();
-    var selectedIndex = _(graph.nodeData.nodes).findIndex({ code: selected });
-    d = graph.nodeData.nodes[selectedIndex];
+    var selectedIndex = _(graph.nodeData.nodes).findIndex({ code: selected.code });
+    nodeData = graph.nodeData.nodes[selectedIndex];
   }
 };
 
