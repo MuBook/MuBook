@@ -1,0 +1,30 @@
+{
+  "name": "MuBook",
+  "version": "1.0.0",
+  "main": "gulpfile.js",
+  "scripts": {
+    "install": "gulp",
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/MuBook/MuBook.git"
+  },
+  "bugs": {
+    "url": "https://github.com/MuBook/MuBook/issues"
+  },
+  "homepage": "https://github.com/MuBook/MuBook",
+
+  "devDependencies": {
+    "gulp": "latest",
+    "gulp-concat": "latest",
+    "gulp-uglify": "latest",
+    "gulp-jshint": "latest",
+    "gulp-sass": "latest",
+    "gulp-minify-css": "latest",
+    "gulp-autoprefixer": "latest",
+    "gulp-add-src": "latest",
+    "gulp-ng-annotate": "latest",
+    "gulp-rename": "latest"
+  }
+}

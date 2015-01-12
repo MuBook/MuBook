@@ -1,11 +1,10 @@
 var mubook = angular.module("mubook", ["ngRoute", "ngAnimate", "ngCookies", "angular-loading"]);
 
-mubook.run(["$templateCache", function($templateCache) {
+mubook.run(function($templateCache) {
   $templateCache.put("view.html", '<div id="graph"></div>');
-}]);
+});
 
-mubook.run(["$location", "$rootScope", "$window", "Global", "visualizeGraph",
-function($location, $rootScope, $window, Global, visualizeGraph) {
+mubook.run(function($location, $rootScope, $window, Global, visualizeGraph) {
   $window.$rootScope = $rootScope;
 
   $rootScope.jumpTo = function(url) {
@@ -26,7 +25,7 @@ function($location, $rootScope, $window, Global, visualizeGraph) {
 
     $location.path("/explorer/" + Global.reqType + "/melbourne/" + code);
 
-    if (callback) { callback() };
+    if (callback) { callback(); }
   };
 
   $rootScope.gotoUser = function gotoUser(username, callback) {
@@ -35,7 +34,7 @@ function($location, $rootScope, $window, Global, visualizeGraph) {
 
     $location.path("/profile/" + username);
 
-    if (callback) { callback() };
+    if (callback) { callback(); }
   };
 
   $rootScope.loadGraph = function(type, code) {
@@ -58,9 +57,9 @@ function($location, $rootScope, $window, Global, visualizeGraph) {
   $rootScope.extend = function(data) {
     angular.extend(this, data);
   };
-}]);
+});
 
-mubook.run(["$window", "PopupControl", function($window, PopupControl) {
+mubook.run(function($window, PopupControl) {
   $($window).on("keyup", function(event) {
     if (event.which === 27) {
       PopupControl.closeAll();
@@ -70,7 +69,7 @@ mubook.run(["$window", "PopupControl", function($window, PopupControl) {
       PopupControl.closeAll();
     }
   });
-}]);
+});
 
 mubook.factory("Subjects", function($http) {
   return $http.get("/ajax/u-melbourne/subject_list");
@@ -149,7 +148,7 @@ mubook.directive("popup", function() {
   };
 });
 
-mubook.factory("PopupControl", ["$rootScope", "$timeout", function($rootScope, $timeout) {
+mubook.factory("PopupControl", function($rootScope, $timeout) {
   var popups = {},
       visiblePopups = {};
 
@@ -167,7 +166,7 @@ mubook.factory("PopupControl", ["$rootScope", "$timeout", function($rootScope, $
   function closeHelper(group) {
     if (!group) { return; }
     var popup = visiblePopups[group];
-    popup && popup.close();
+    if (popup) { popup.close(); }
     visiblePopups[group] = undefined;
   }
 
@@ -176,7 +175,7 @@ mubook.factory("PopupControl", ["$rootScope", "$timeout", function($rootScope, $
       if (popups[key]) { throw key + " already exists"; }
       if (!config.scope) { throw "Required parameter is missing: scope"; }
 
-      var popup = popups[key] = new Popup;
+      var popup = popups[key] = new Popup();
 
       angular.extend(popup, config);
 
@@ -202,27 +201,27 @@ mubook.factory("PopupControl", ["$rootScope", "$timeout", function($rootScope, $
       };
     },
 
-    closeAll: function(group) {
-      if (group === undefined) {
+    closeAll: function(chosenGroup) {
+      if (chosenGroup === undefined) {
         for (var group in visiblePopups) {
           closeHelper(group);
         }
       } else {
-        closeHelper(group);
+        closeHelper(chosenGroup);
       }
       $rootScope.$applyAsync();
     }
   };
 
   return controller;
-}]);
+});
 
 mubook.constant("NotifyDefault", {
   duration: 5000,
   dismissable: true
 });
 
-mubook.provider("Notify", ["NotifyDefault", function(NotifyDefault) {
+mubook.provider("Notify", function(NotifyDefault) {
   var _config = NotifyDefault;
 
   this.config = function(config) {
@@ -257,9 +256,9 @@ mubook.provider("Notify", ["NotifyDefault", function(NotifyDefault) {
     };
     return Notify;
   }];
-}]);
+});
 
-mubook.directive("notification", ["Notify", function(Notify) {
+mubook.directive("notification", function(Notify) {
   return {
     restrict: "E",
     scope: true,
@@ -276,7 +275,7 @@ mubook.directive("notification", ["Notify", function(Notify) {
       };
     }
   };
-}]);
+});
 
 mubook.controller("SearchCtrl", function SearchCtrl($scope, $timeout, Subjects, Global, PopupControl) {
   var $input = $("#searchInput");
@@ -380,8 +379,7 @@ mubook.controller("GraphTypeCtrl", function GraphTypeCtrl($scope, $location, Glo
   };
 });
 
-mubook.controller("FeedbackCtrl",
-function FeedbackCtrl($scope, $http, $timeout, Global, PopupControl, Notify) {
+mubook.controller("FeedbackCtrl", function FeedbackCtrl($scope, $http, $timeout, Global, PopupControl, Notify) {
   $scope.toggleForm = PopupControl.register("feedback", {
     scope: $scope,
     onOpen: function() {
@@ -401,7 +399,7 @@ function FeedbackCtrl($scope, $http, $timeout, Global, PopupControl, Notify) {
         $("#feedback-message").focus();
       });
       return;
-    };
+    }
 
     var data = $.param({
       record: {
@@ -494,7 +492,7 @@ function SubjectAddCtrl($scope, $timeout, $route, $cookies, $http, Global, Popup
   $scope.formDisabled = false;
 
   $scope.resetForm = function() {
-    $scope.modelYear = (new Date).getFullYear();
+    $scope.modelYear = (new Date()).getFullYear();
     $scope.modelSemester = $scope.semesters[0];
     $scope.modelState = $scope.states[0];
   };
@@ -577,8 +575,6 @@ mubook.filter("state", function() {
 });
 
 mubook.controller("SidePaneCtrl",
-["$scope", "$rootScope", "$routeParams", "$sce", "PopupControl",
-  "UserSubject", "GeneralStatistics", "SocialStatistics", "SubjectDetails", "ProfileDetails",
 function SidePaneCtrl($scope, $rootScope, $routeParams, $sce, PopupControl,
     UserSubject, GeneralStatistics, SocialStatistics, SubjectDetails, ProfileDetails) {
   var graphLoaded = function(event, successful, status) {
@@ -627,18 +623,21 @@ function SidePaneCtrl($scope, $rootScope, $routeParams, $sce, PopupControl,
     });
 
     sidepaneDataSections = [
-      "code", "name", "credit", "commenceDate", "timeCommitment", "prereq",
-      "assessment", "coreq", "overview", "objectives"
+      "code", "name", "credit", "commenceDate", "timeCommitment",
+      "prereq", "assessment", "coreq", "overview", "objectives"
     ]
-    SubjectDetails(subjectCode).success(function(subjectDetails) {
-      $scope.extend(_.forOwn(
-        _.pick(subjectDetails, sidepaneDataSections),
-        function(val, key, obj) {
-        obj[key] = $sce.trustAsHtml(val);
-      }));
-    }).error(function() {
-      $scope.extend(_.zipObject(sidepaneDataSections.slice(2), []));
-    });
+    SubjectDetails(subjectCode)
+      .success(function(subjectDetails) {
+        $scope.extend(_.forOwn(
+          _.pick(subjectDetails, sidepaneDataSections),
+          function(val, key, obj) {
+            obj[key] = $sce.trustAsHtml(val);
+          }
+        ));
+      })
+      .error(function() {
+        $scope.extend(_.zipObject(sidepaneDataSections.slice(2), []));
+      });
   };
 
   $scope.name = "No Subject Selected";
@@ -654,9 +653,9 @@ function SidePaneCtrl($scope, $rootScope, $routeParams, $sce, PopupControl,
 
   $scope.$on("graphDataLoaded", graphLoaded);
   $scope.$on("selectedSubjectChange", updateSubjectInfo);
-}]);
+});
 
-mubook.factory("visualizeGraph", function ($rootScope, $http, $cookies, $window, $routeParams, Global) {
+mubook.factory("visualizeGraph", function($rootScope, $http, $cookies, $window, $routeParams, Global) {
   var $sidePane    = $("#sidePane"),
       $topBar      = $("#topBar"),
       $searchInput = $("#searchInput"),
@@ -691,12 +690,12 @@ mubook.factory("visualizeGraph", function ($rootScope, $http, $cookies, $window,
         graph.onClickHandler(d, graph, this, { enableDelete: true });
       });
       graph.nodes.on("dblclick", graph.onDblClickHandler);
-      makeRestoreButton().onclick = function (e) {
-        if (graph.deletedNodeContainer.length != 0) {
-          var curNode = graph.deletedNodeContainer.pop();
-          graph.restoreNode(curNode);
-          updateCorrespondingEdge(graph, curNode, RESTORE);
-          if (graph.deletedNodeContainer.length == 0) {
+      makeRestoreButton().onclick = function(e) {
+        if (graph.deletedNodeContainer.length) {
+          var toBeRestored = graph.deletedNodeContainer.pop();
+          graph.restoreNode(toBeRestored);
+          updateCorrespondingEdge(graph, toBeRestored, RESTORE);
+          if (!graph.deletedNodeContainer.length) {
             restoreBtn.style.display = "none";
           }
         }

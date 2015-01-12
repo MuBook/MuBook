@@ -60,7 +60,9 @@ STATIC_URL = '/static/'
 #     # Don't forget to use absolute paths, not relative paths.
 # )
 STATICFILES_DIRS = (
-    os.path.join(BASE_DIR, 'statics'),
+    os.path.join(BASE_DIR, 'statics', 'images'),
+    os.path.join(BASE_DIR, 'statics', 'compiled'),
+    os.path.join(BASE_DIR, 'statics', 'vendor'),
 )
 
 ADMINS = (

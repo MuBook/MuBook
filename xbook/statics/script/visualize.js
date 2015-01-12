@@ -50,7 +50,7 @@
       .remove();
 
     return svgEdgePaths;
-  };
+  }
 
   var graph = new Graph({
     nodeData: graphData,

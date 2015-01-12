@@ -1,6 +1,3 @@
-var DELETE  = 0,
-    RESTORE = 1;
-
 function Graph(config) {
   config = config || {};
 
@@ -28,15 +25,21 @@ function Graph(config) {
   }
 }
 
+Graph.DELETE  = 0;
+Graph.RESTORE = 1;
+
 Graph.prototype._makeNode = function(node) { return { label: node.code || node.id }; };
 
 Graph.prototype.makeGraph = function() {
-  for (var i = 0; i < this.nodeData.nodes.length; ++i) {
-    this.g.addNode(i, this._makeNode(this.nodeData.nodes[i]));
-  }
+  var index,
+      nodes = this.nodeData.nodes,
+      links = this.nodeData.links;
 
-  for (var i = 0; i < this.nodeData.links.length; ++i) {
-    this.g.addEdge(null, this.nodeData.links[i].source, this.nodeData.links[i].target);
+  for (index = 0; index < nodes.length; ++index) {
+    this.g.addNode(index, this._makeNode(nodes[index]));
+  }
+  for (index = 0; index < links.length; ++index) {
+    this.g.addEdge(null, links[index].source, links[index].target);
   }
 };
 
@@ -128,7 +131,7 @@ Graph.prototype.addPanZoom = function(scaleRange) {
 Graph.prototype.deleteNode = function(subjectCode, node) {
   document.querySelector("#restoreBtn").style.display = "inline";
   node.classList.add("deleted");
-  updateCorrespondingEdge(this, subjectCode, DELETE);
+  updateCorrespondingEdge(this, subjectCode, Graph.DELETE);
   this.setStyle({ resetOpacity: true, removeSelected: true });
 };
 
@@ -226,19 +229,19 @@ function updateCorrespondingEdge(graph, subjectCode, operation) {
         target = data.links[i].target;
     if (position === source || position === target) {
       switch (operation) {
-        case DELETE:
+        case Graph.DELETE:
           edges[i].style.display = "none";
           break;
-        case RESTORE:
-          if (graph.deletedNodeContainer.indexOf(data.nodes[source].code) === -1
-            && graph.deletedNodeContainer.indexOf(data.nodes[target].code) === -1) {
+        case Graph.RESTORE:
+          if (graph.deletedNodeContainer.indexOf(data.nodes[source].code) === -1 &&
+            graph.deletedNodeContainer.indexOf(data.nodes[target].code) === -1) {
             edges[i].style.display = "inline";
-        }
+          }
       }
     }
   }
 
-  if (operation === DELETE) {
+  if (operation === Graph.DELETE) {
     graph.deletedNodeContainer.push(subjectCode);
   } else {
     var nodePosition = graph.deletedNodeContainer.indexOf(subjectCode);
