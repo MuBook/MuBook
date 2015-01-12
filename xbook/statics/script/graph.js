@@ -164,7 +164,7 @@ Graph.prototype.highlightSubtree = function(subjectCode) {
 };
 
 Graph.prototype.onClickHandler = function(nodeData, graph, clickedNode, config) {
-  config = config || {}
+  config = config || {};
   if (config.enableDelete && d3.event.button === 0 && d3.event.shiftKey) {
     graph.deleteNode(nodeData.code, clickedNode);
     return;

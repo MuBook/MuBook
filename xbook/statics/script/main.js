@@ -637,10 +637,7 @@ function SidePaneCtrl($scope, $rootScope, $routeParams, $sce, PopupControl,
         obj[key] = $sce.trustAsHtml(val);
       }));
     }).error(function() {
-      $scope.extend(_.zipObject(
-        sidepaneDataSections.slice(2),
-        []
-      ));
+      $scope.extend(_.zipObject(sidepaneDataSections.slice(2), []));
     });
   };
 
