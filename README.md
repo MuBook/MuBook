@@ -41,12 +41,6 @@ Exclude the last line if you want to turn off debugging
 * run this command `python manage.py runserver`
 	- then open browser, go to http://127.0.0.1:8000/
 
-# Admin Login
-
-**Both Testing and Production**
-- username: mubookadmin
-- password: dawsonkhkzpo
-
 # How to update the database
 
 - [Heroku documentation link](https://devcenter.heroku.com/articles/heroku-postgres-import-export)
